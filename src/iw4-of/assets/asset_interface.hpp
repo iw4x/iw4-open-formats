@@ -21,7 +21,7 @@ namespace iw4of
 		}
 
 		template <typename T>
-		T* read(const std::string name)
+		T* read(const std::string name) const
 		{
 			return reinterpret_cast<T*>(read_internal(name));
 		};
@@ -34,7 +34,17 @@ namespace iw4of
 	protected:
 		virtual void* read_internal(const std::string& name) const = 0;
 		virtual bool write_internal(const native::XAssetHeader& header) const = 0;
-		virtual std::filesystem::path get_file_path(const std::string& name) const = 0;
+		virtual std::filesystem::path get_file_name(const std::string& asset_name) const = 0;
+		virtual std::filesystem::path get_folder_name() const = 0;
+
+		virtual std::filesystem::path get_file_name(const native::XAssetHeader& header) const
+		{
+			return get_file_name(header.physPreset->name);
+		};
+
+		std::filesystem::path get_work_path(const std::string& asset_name) const;
+
+		std::filesystem::path get_work_path(const native::XAssetHeader& header) const;
 
 		mutable utils::memory::allocator local_allocator{};
 

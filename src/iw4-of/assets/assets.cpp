@@ -31,6 +31,67 @@ namespace iw4of
 		return asset_interfaces[assetType] != nullptr;
 	}
 
+	bool assets::check_type_is_supported(int iw4_int_type) const
+	{
+		if (iw4_int_type < 0 || iw4_int_type >= native::ASSET_TYPE_COUNT)
+		{
+			print_error(std::format("invalid asset type {}", iw4_int_type));
+			return false;
+		}
+
+		auto iw4of_type = static_cast<iw4of::native::XAssetType>(iw4_int_type);
+
+		if (!interface_exists(iw4of_type))
+		{
+			print_error(std::format("no interface for asset type {}", iw4_int_type));
+			return false;
+		}
+
+		return true;
+	}
+
+	std::string assets::read_file(const std::string& name) const
+	{
+		if (params.fs_read_file)
+		{
+			return params.fs_read_file(name);
+		}
+
+		// Fallback
+		return utils::io::read_file(name);
+	}
+
+	std::string assets::get_work_directory() const
+	{
+		return params.work_directory.string();
+	}
+
+	void assets::print_error(const std::string& message) const
+	{
+		if (params.print)
+		{
+			params.print(params_t::print_type::P_ERR, message);
+		}
+	}
+
+	void assets::print(const std::string& message) const
+	{
+		if (params.print)
+		{
+			params.print(params_t::print_type::P_WARN, message);
+		}
+	}
+
+	void* assets::find_other_asset(int type, const std::string& name) const
+	{
+		if (params.find_other_asset)
+		{
+			return params.find_other_asset(type, name);
+		}
+
+		return nullptr;
+	}
+
 	assets::assets(const params_t& params)
 	{
 		this->params = params;
@@ -53,6 +114,14 @@ namespace iw4of
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_FXWORLD] = new interfaces::ifxworld();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_FX] = new interfaces::ifx();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_XANIMPARTS] = new interfaces::ixanimparts();
+	}
+
+	assets::params_t::params_t(const std::filesystem::path& work_directory, std::function<void* (int type, const std::string& name)> find_other_asset, std::function<std::string(const std::string& filename)> fs_read_file, std::function<void* (int, const std::string&)> print_function)
+	{
+		this->find_other_asset = find_other_asset;
+		this->work_directory = work_directory;
+		this->print = print_function;
+		this->fs_read_file = fs_read_file;
 	}
 
 }

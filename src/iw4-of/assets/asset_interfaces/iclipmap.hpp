@@ -19,9 +19,11 @@ namespace iw4of::interfaces
 		bool write_internal(const native::XAssetHeader& header) const override;
 		void* read_internal(const std::string& name) const override;
 		bool write_plaintext(const native::XAssetHeader& header) const;
-		std::filesystem::path get_file_path(const std::string& name) const
+
+		std::filesystem::path get_file_name(const std::string& basename) const override;
+		std::filesystem::path get_folder_name() const override
 		{
-			return std::format("{}/clipmap/{}.iw4x.json", assets->get_work_directory(), name);
+			return "clipmap";
 		}
 	};
 }

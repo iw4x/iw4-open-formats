@@ -26,17 +26,14 @@ namespace iw4of
 			std::filesystem::path work_directory{};
 			std::function<void*(int type, const std::string& name)> find_other_asset{};
 			std::function<void(print_type, const std::string&)> print{};
+			std::function<std::string(const std::string& filename)> fs_read_file{};
 
 			params_t(
-				std::filesystem::path work_directory,
+				const std::filesystem::path& work_directory,
 				std::function<void* (int type, const std::string& name)> find_other_asset = nullptr,
+				std::function<std::string(const std::string& filename)> fs_read_file = nullptr,
 				std::function<void* (int, const std::string&)> print_function = nullptr
-			)
-			{
-				this->find_other_asset = find_other_asset;
-				this->work_directory = work_directory;
-				this->print = print_function;
-			};
+			);
 
 			params_t() {};
 		};
@@ -53,7 +50,7 @@ namespace iw4of
 		}
 
 		template <typename T>
-		T* read(int iw4_int_type, const std::string& name)
+		T* read(int iw4_int_type, const std::string& name) const
 		{
 			if (check_type_is_supported(iw4_int_type))
 			{
@@ -63,63 +60,24 @@ namespace iw4of
 			return nullptr;
 		}
 		
+		std::string read_file(const std::string& name) const;
 
-		std::string get_work_directory() const
-		{
-			return params.work_directory.string();
-		}
+		std::string get_work_directory() const;
 
-		void print_error(const std::string& message) const
-		{
-			if (params.print)
-			{
-				params.print(params_t::print_type::P_ERR, message);
-			}
-		}
+		void print_error(const std::string& message) const;
 
-		void print(const std::string& message) const
-		{
-			if (params.print)
-			{
-				params.print(params_t::print_type::P_WARN, message);
-			}
-		}
+		void print(const std::string& message) const;
 
-		void* find_other_asset(int type, const std::string& name) const
-		{
-			if (params.find_other_asset)
-			{
-				return params.find_other_asset(type, name);
-			}
-
-			return nullptr;
-		}
+		void* find_other_asset(int type, const std::string& name) const;
 		
 		assets(const params_t& params);
 
 	private:
 		bool interface_exists(native::XAssetType assetType) const;
-		bool check_type_is_supported(int iw4_int_type) const
-		{
-			if (iw4_int_type < 0 || iw4_int_type >= native::ASSET_TYPE_COUNT)
-			{
-				print_error(std::format("invalid asset type {}", iw4_int_type));
-				return false;
-			}
-
-			auto iw4of_type = static_cast<iw4of::native::XAssetType>(iw4_int_type);
-
-			if (!interface_exists(iw4of_type))
-			{
-				print_error(std::format("no interface for asset type {}", iw4_int_type));
-				return false;
-			}
-
-			return true;
-		}
+		bool check_type_is_supported(int iw4_int_type) const;
 
 		params_t params;
 
-		class asset_interface* asset_interfaces[native::ASSET_TYPE_COUNT]{};
+		asset_interface* asset_interfaces[native::ASSET_TYPE_COUNT]{};
 	};
 }

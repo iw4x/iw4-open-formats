@@ -34,7 +34,29 @@ namespace utils
 
 			char* duplicate_string(const std::string& string);
 
+
+			bool is_pointer_mapped(void* ptr) const
+			{
+				return this->ptr_map.contains(ptr);
+			}
+
+			template <typename T> T* get_pointer(void* oldPtr)
+			{
+				if (this->is_pointer_mapped(oldPtr))
+				{
+					return static_cast<T*>(this->ptr_map[oldPtr]);
+				}
+
+				return nullptr;
+			}
+
+			void map_pointer(void* oldPtr, void* newPtr)
+			{
+				this->ptr_map[oldPtr] = newPtr;
+			}
+
 		private:
+			std::unordered_map<void*, void*> ptr_map;
 			std::mutex mutex_;
 			std::vector<void*> pool_;
 		};

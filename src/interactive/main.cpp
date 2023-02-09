@@ -10,7 +10,7 @@ int main() {
 
 	clip.name = test_name;
 
-	auto params = iw4of::assets::params_t(
+	const auto& params = iw4of::assets::params_t(
 		std::filesystem::path(".\\")
 	);
 

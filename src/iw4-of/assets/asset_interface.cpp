@@ -16,3 +16,13 @@ void iw4of::asset_interface::print_error_internal(const std::string& message) co
 {
 	assets->print_error(message);
 }
+
+std::filesystem::path iw4of::asset_interface::get_work_path(const std::string& asset_name) const
+{
+	return std::format("{}/{}/{}", assets->get_work_directory(), get_folder_name().string(), get_file_name(asset_name).string());
+}
+
+std::filesystem::path iw4of::asset_interface::get_work_path(const native::XAssetHeader& header) const
+{
+	return std::format("{}/{}/{}", assets->get_work_directory(), get_folder_name().string(), get_file_name(header).string());
+}

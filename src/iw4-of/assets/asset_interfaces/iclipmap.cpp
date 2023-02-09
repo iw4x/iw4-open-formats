@@ -27,13 +27,21 @@ namespace iw4of::interfaces
 	static_assert(sizeof native::cmodel_t == 68);
 	static_assert(sizeof native::SModelAabbNode == 28);
 
+	std::filesystem::path iclipmap::get_file_name(const std::string& name) const
+	{
+		constexpr auto prefix = "maps/mp/";
+		constexpr auto suffix = ".d3dbsp";
+
+		std::string basename = name;
+		utils::string::replace(basename, prefix, "");
+		utils::string::replace(basename, suffix, "");
+
+		return std::format("{}.iw4x.json", basename);
+	}
+
 	void* iclipmap::read_internal(const std::string& _name) const
 	{
-		std::string name = _name;
-		utils::string::replace(name, "maps/mp/", "");
-		utils::string::replace(name, ".d3dbsp", "");
-
-		auto path = get_file_path(name);
+		auto path = iclipmap::get_work_path(_name);
 
 		if (!utils::io::file_exists(path.string())) return nullptr;
 
@@ -46,7 +54,7 @@ namespace iw4of::interfaces
 		}
 		catch (const std::exception& e)
 		{
-			print_error("Invalid JSON for clipmap {}! {}", name, e.what());
+			print_error("Invalid JSON for clipmap {}! {}", _name, e.what());
 			return nullptr;
 		}
 
@@ -449,7 +457,7 @@ namespace iw4of::interfaces
 		}
 		catch (const std::exception& e)
 		{
-			print_error("Malformed JSON for clipmap {}! {}", name, e.what());
+			print_error("Malformed JSON for clipmap {}! {}", _name, e.what());
 			return nullptr;
 		}
 
@@ -1127,21 +1135,8 @@ namespace iw4of::interfaces
 		writer.SetFormatOptions(rapidjson::PrettyFormatOptions::kFormatSingleLineArray);
 		output.Accept(writer);
 
-		constexpr auto prefix = "maps/mp/";
-		constexpr auto suffix = ".d3dbsp";
 
-		std::string basename{};
-		if (header.clipMap->name)
-		{
-			basename = header.clipMap->name;
-			utils::string::replace(basename, prefix, "");
-			utils::string::replace(basename, suffix, "");
-		}
-		else {
-			basename = "unk_clipmap";
-		}
-
-		utils::io::write_file(std::format("{}/clipmap/{}.iw4x.json", assets->get_work_directory(), basename), buff.GetString());
+		utils::io::write_file(get_work_path(header).string(), buff.GetString());
 
 		return true;
 	}
