@@ -1775,6 +1775,7 @@ namespace iw4of::native
 		unsigned char textureAtlasColumnCount;
 		GfxDrawSurf drawSurf;
 		unsigned int surfaceTypeBits;
+		unsigned __int16 hashIndex;
 	};
 
 	struct Material
@@ -2310,7 +2311,7 @@ namespace iw4of::native
 
 	union MaterialArgumentDef
 	{
-		const float(*literalConst)[4];
+		float(*literalConst)[4];
 		MaterialArgumentCodeConst codeConst;
 		unsigned int codeSampler;
 		unsigned int nameHash;

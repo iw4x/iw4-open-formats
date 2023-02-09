@@ -58,7 +58,7 @@ namespace iw4of::interfaces
 			return nullptr;
 		}
 
-		auto clipmap =local_allocator.allocate<native::clipMap_t>();
+		auto clipmap = local_allocator.allocate<native::clipMap_t>();
 
 		try
 		{
@@ -141,12 +141,12 @@ namespace iw4of::interfaces
 			for (size_t i = 0; i < clipmap->numNodes; i++)
 			{
 				auto node = &clipmap->nodes[i];
-				auto& jsonNode = clipmap_json["nodes"][i];
+				auto& json_node = clipmap_json["nodes"][i];
 
 				assert(clipmap->planes);
-				node->plane = &clipmap->planes[std::stoi(jsonNode["plane"].Get<std::string>().substr(1))];
-				node->children[0] = jsonNode["children"][0].Get<short>();
-				node->children[1] = jsonNode["children"][1].Get<short>();
+				node->plane = &clipmap->planes[std::stoi(json_node["plane"].Get<std::string>().substr(1))];
+				node->children[0] = json_node["children"][0].Get<short>();
+				node->children[1] = json_node["children"][1].Get<short>();
 			}
 
 
@@ -157,14 +157,14 @@ namespace iw4of::interfaces
 			for (size_t i = 0; i < clipmap->numLeafs; i++)
 			{
 				auto leaf = &clipmap->leafs[i];
-				auto& jsonLeaf = clipmap_json["leafs"][i];
+				auto& json_leaf = clipmap_json["leafs"][i];
 
-				leaf->bounds = utils::json::read_bounds(jsonLeaf["bounds"]);
-				leaf->firstCollAabbIndex = jsonLeaf["firstCollAabbIndex"].Get<unsigned short>();
-				leaf->collAabbCount = jsonLeaf["collAabbCount"].Get<unsigned short>();
-				leaf->brushContents = jsonLeaf["brushContents"].Get<int>();
-				leaf->terrainContents = jsonLeaf["terrainContents"].Get<int>();
-				leaf->leafBrushNode = jsonLeaf["leafBrushNode"].Get<int>();
+				leaf->bounds = utils::json::read_bounds(json_leaf["bounds"]);
+				leaf->firstCollAabbIndex = json_leaf["firstCollAabbIndex"].Get<unsigned short>();
+				leaf->collAabbCount = json_leaf["collAabbCount"].Get<unsigned short>();
+				leaf->brushContents = json_leaf["brushContents"].Get<int>();
+				leaf->terrainContents = json_leaf["terrainContents"].Get<int>();
+				leaf->leafBrushNode = json_leaf["leafBrushNode"].Get<int>();
 			}
 
 			// Leafbrushnodes

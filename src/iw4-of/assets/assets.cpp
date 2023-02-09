@@ -1,8 +1,5 @@
 #include <std_include.hpp>
 
-//#include <module/asset_interfaces/igfximage.hpp>
-//#include <module/asset_interfaces/imaterial.hpp>
-//#include <module/asset_interfaces/itechniqueset.hpp>
 //#include <module/asset_interfaces/ixmodel.hpp>
 //#include <module/asset_interfaces/iphyspreset.hpp>
 //#include <module/asset_interfaces/igfxworld.hpp>
@@ -19,6 +16,12 @@
 //#include <module/asset_interfaces/ixanimparts.hpp>
 
 #include <assets/asset_interfaces/iclipmap.hpp>
+#include <assets/asset_interfaces/igfximage.hpp>
+#include <assets/asset_interfaces/imaterial.hpp>
+#include <assets/asset_interfaces/itechniqueset.hpp>
+#include <assets/asset_interfaces/ipixelshader.hpp>
+#include <assets/asset_interfaces/ivertexshader.hpp>
+#include <assets/asset_interfaces/ivertexdecl.hpp>
 
 #include "assets.hpp"
 #include <utils/io.hpp>
@@ -96,9 +99,12 @@ namespace iw4of
 	{
 		this->params = params;
 
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_IMAGE] = new interfaces::igfximage();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_MATERIAL] = new interfaces::imaterial();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_TECHNIQUE_SET] = new interfaces::itechniqueset();
+		asset_interfaces[native::XAssetType::ASSET_TYPE_IMAGE] = new interfaces::igfximage(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_MATERIAL] = new interfaces::imaterial(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_TECHNIQUE_SET] = new interfaces::itechniqueset(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_PIXELSHADER] = new interfaces::ipixelshader(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_VERTEXSHADER] = new interfaces::ivertexshader(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_VERTEXDECL] = new interfaces::ivertexdecl(this);
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_PHYSPRESET] = new interfaces::iphyspreset();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_XMODEL] = new interfaces::ixmodel();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_GFXWORLD] = new interfaces::igfxworld();

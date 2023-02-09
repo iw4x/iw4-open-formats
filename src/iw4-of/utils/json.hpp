@@ -47,6 +47,7 @@ namespace utils::json
 	}
 
 	iw4of::native::Bounds read_bounds(const rapidjson::Value& value);
+	unsigned long read_flags(const std::string binaryFlags, std::size_t size);
 
 	template <typename T> void copy_array(T* destination, const rapidjson::Value& json_member, size_t count = 0)
 	{
