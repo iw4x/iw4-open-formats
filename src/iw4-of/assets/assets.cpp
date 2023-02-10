@@ -1,6 +1,5 @@
 #include <std_include.hpp>
 
-//#include <module/asset_interfaces/ixmodel.hpp>
 //#include <module/asset_interfaces/iphyspreset.hpp>
 //#include <module/asset_interfaces/iglassworld.hpp>
 //#include <module/asset_interfaces/icomworld.hpp>
@@ -22,6 +21,7 @@
 #include <assets/asset_interfaces/iloadedsound.hpp>
 #include <assets/asset_interfaces/igfxworld.hpp>
 #include <assets/asset_interfaces/imapents.hpp>
+#include <assets/asset_interfaces/ixmodel.hpp>
 
 #include "assets.hpp"
 #include <utils/io.hpp>
@@ -95,6 +95,28 @@ namespace iw4of
 		return nullptr;
 	}
 
+	unsigned int assets::write_in_stringtable(const std::string& text) const
+	{
+		if (params.store_in_string_table)
+		{
+			return params.store_in_string_table(text);
+		}
+
+		print_error(std::format("IW4OF is missing stringtable function and cannot store text {} from stringtable!", text));
+		return 0xDEADC0DE;
+	}
+
+	std::string assets::read_from_stringtable(const unsigned int& index) const
+	{
+		if (params.get_from_string_table)
+		{
+			return params.get_from_string_table(index);
+		}
+
+		print_error(std::format("IW4OF is missing stringtable function and cannot read index {} from stringtable!", index));
+		return std::format("iw4of-missing-{}", index);
+	}
+
 	assets::assets(const params_t& params)
 	{
 		this->params = params;
@@ -106,7 +128,7 @@ namespace iw4of
 		asset_interfaces[native::XAssetType::ASSET_TYPE_VERTEXSHADER] = new interfaces::ivertexshader(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_VERTEXDECL] = new interfaces::ivertexdecl(this);
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_PHYSPRESET] = new interfaces::iphyspreset();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_XMODEL] = new interfaces::ixmodel();
+		asset_interfaces[native::XAssetType::ASSET_TYPE_XMODEL] = new interfaces::ixmodel(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_GFXWORLD] = new interfaces::igfxworld(this);
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_GAMEWORLD_MP] = new interfaces::iglassworld();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_COMWORLD] = new interfaces::icomworld();
@@ -122,12 +144,21 @@ namespace iw4of
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_XANIMPARTS] = new interfaces::ixanimparts();
 	}
 
-	assets::params_t::params_t(const std::filesystem::path& work_directory, std::function<void* (int type, const std::string& name)> find_other_asset, std::function<std::string(const std::string& filename)> fs_read_file, std::function<void(print_type, const std::string&)> print_function)
+	assets::params_t::params_t(
+		const std::filesystem::path& work_directory,
+		std::function<void(print_type level, const std::string& message)> print_function,
+		std::function<void* (int type, const std::string& name)> find_other_asset,
+		std::function<std::string(const std::string& filename)> fs_read_file,
+		std::function<unsigned int(const std::string& text)> store_in_string_table,
+		std::function<std::string(const unsigned int& index)> get_from_string_table
+	)
 	{
 		this->find_other_asset = find_other_asset;
 		this->work_directory = work_directory;
 		this->print = print_function;
 		this->fs_read_file = fs_read_file;
+		this->store_in_string_table = store_in_string_table;
+		this->get_from_string_table = get_from_string_table;
 	}
 
 }

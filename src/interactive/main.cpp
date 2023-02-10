@@ -39,8 +39,6 @@ int main() {
 		{
 			const auto& params = iw4of::assets::params_t(
 				std::filesystem::path(work_path),
-				nullptr,
-				nullptr,
 				print
 			);
 

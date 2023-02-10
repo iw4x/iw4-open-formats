@@ -215,16 +215,6 @@ namespace iw4of::interfaces
 		{
 			if (name[0] == '*') name.erase(name.begin());
 
-			if (name == "reflection_probe0"s)
-			{
-				// Reflection probe 0 is "all red" for IW3, IW4, and IW5
-				// This is a sort of... tradition, i assume
-				// But some IW5 maps like mp_nola still _use_ this reflection probe
-				// On IW5 this is probably supported, but in IW4 it makes it look all red
-				// Let's skip it and write RP1 instead over RP0.
-				return false;
-			}
-
 			utils::stream buffer;
 			buffer.save_array("IW4xImg", 7); // just stick version in the magic since we have an extra char
 			buffer.save_byte(static_cast<unsigned char>(IW4X_IMG_VERSION));

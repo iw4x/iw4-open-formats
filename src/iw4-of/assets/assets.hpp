@@ -25,14 +25,20 @@ namespace iw4of
 
 			std::filesystem::path work_directory{};
 			std::function<void*(int type, const std::string& name)> find_other_asset{};
-			std::function<void(print_type, const std::string&)> print{};
+			std::function<void(print_type level, const std::string& message)> print{};
 			std::function<std::string(const std::string& filename)> fs_read_file{};
+			std::function<unsigned int(const std::string& text)> store_in_string_table{};
+			std::function<std::string(const unsigned int& index)> get_from_string_table{};
 
 			params_t(
 				const std::filesystem::path& work_directory,
+
+				// All of these are somewhat facultative but if you want solid data you'll want all of them
+				std::function<void(print_type level, const std::string& message)> print_function = nullptr,
 				std::function<void* (int type, const std::string& name)> find_other_asset = nullptr,
 				std::function<std::string(const std::string& filename)> fs_read_file = nullptr,
-				std::function<void(print_type, const std::string&)> print_function = nullptr
+				std::function<unsigned int(const std::string& text)> store_in_string_table = nullptr,
+				std::function<std::string(const unsigned int& index)> get_from_string_table = nullptr
 			);
 
 			params_t() {};
@@ -69,6 +75,10 @@ namespace iw4of
 		void print(const std::string& message) const;
 
 		void* find_other_asset(int type, const std::string& name) const;
+
+		unsigned int write_in_stringtable(const std::string& text) const;
+
+		std::string read_from_stringtable(const unsigned int& index) const;
 		
 		assets(const params_t& params);
 
