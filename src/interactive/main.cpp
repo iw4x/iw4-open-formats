@@ -9,7 +9,7 @@
 
 void print(int a, const std::string& str)
 {
-	printf("%s\n", str.data());
+	printf("%i %s\n", a, str.data());
 }
 
 int main() {

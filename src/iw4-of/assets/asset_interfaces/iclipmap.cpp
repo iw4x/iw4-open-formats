@@ -91,7 +91,7 @@ namespace iw4of::interfaces
 
 				const std::string model_name = json_model["xmodel"].GetString();
 				model->xmodel = find<native::XModel>(native::XAssetType::ASSET_TYPE_XMODEL, model_name);
-				SHOULD_NOT_BE_NULL(model->xmodel);
+				RETURN_IF_NULL(model->xmodel);
 
 				utils::json::copy_array(model->origin, json_model["origin"], 3);
 				for (size_t j = 0; j < 3; j++)
@@ -356,7 +356,7 @@ namespace iw4of::interfaces
 			{
 				auto ents_name = json_ents["name"].GetString();
 				clipmap->mapEnts = find<native::MapEnts>(native::XAssetType::ASSET_TYPE_MAP_ENTS, ents_name);
-				SHOULD_NOT_BE_NULL(clipmap->mapEnts);
+				RETURN_IF_NULL(clipmap->mapEnts);
 
 				if (clipmap->mapEnts)
 				{

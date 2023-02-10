@@ -7,9 +7,11 @@ namespace iw4of
 {
 	class asset_interface
 	{
-#define SHOULD_NOT_BE_NULL(x)\
+#define RETURN_IF_NULL(x)\
 	if (x == nullptr){\
 		print_error("{} was unexpectedly null! could not find the asset for it", #x);\
+		assert(false);\
+		return 0;\
 	}
 
 	public:

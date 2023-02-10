@@ -848,8 +848,8 @@ namespace iw4of::native
 	{
 		const char* name;
 		const char* baseName;
-		int planeCount;
-		int nodeCount;
+		unsigned int planeCount;
+		unsigned int nodeCount;
 		unsigned int surfaceCount;
 		int skyCount;
 		GfxSky* skies;

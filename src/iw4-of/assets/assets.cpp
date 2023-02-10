@@ -2,12 +2,10 @@
 
 //#include <module/asset_interfaces/ixmodel.hpp>
 //#include <module/asset_interfaces/iphyspreset.hpp>
-//#include <module/asset_interfaces/igfxworld.hpp>
 //#include <module/asset_interfaces/iglassworld.hpp>
 //#include <module/asset_interfaces/icomworld.hpp>
 //#include <module/asset_interfaces/ilightdef.hpp>
 //#include <module/asset_interfaces/irawfile.hpp>
-//#include <module/asset_interfaces/imapents.hpp>
 //#include <module/asset_interfaces/ifxworld.hpp>
 //#include <module/asset_interfaces/ifx.hpp>
 //#include <module/asset_interfaces/ixanimparts.hpp>
@@ -22,6 +20,8 @@
 #include <assets/asset_interfaces/isndalias.hpp>
 #include <assets/asset_interfaces/isndcurve.hpp>
 #include <assets/asset_interfaces/iloadedsound.hpp>
+#include <assets/asset_interfaces/igfxworld.hpp>
+#include <assets/asset_interfaces/imapents.hpp>
 
 #include "assets.hpp"
 #include <utils/io.hpp>
@@ -107,12 +107,12 @@ namespace iw4of
 		asset_interfaces[native::XAssetType::ASSET_TYPE_VERTEXDECL] = new interfaces::ivertexdecl(this);
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_PHYSPRESET] = new interfaces::iphyspreset();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_XMODEL] = new interfaces::ixmodel();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_GFXWORLD] = new interfaces::igfxworld();
+		asset_interfaces[native::XAssetType::ASSET_TYPE_GFXWORLD] = new interfaces::igfxworld(this);
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_GAMEWORLD_MP] = new interfaces::iglassworld();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_COMWORLD] = new interfaces::icomworld();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_LIGHT_DEF] = new interfaces::ilightdef();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_RAWFILE] = new interfaces::irawfile();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_MAP_ENTS] = new interfaces::imapents();
+		asset_interfaces[native::XAssetType::ASSET_TYPE_MAP_ENTS] = new interfaces::imapents(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_CLIPMAP_MP] = new interfaces::iclipmap(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_SOUND] = new interfaces::isndalias(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_LOADED_SOUND] = new interfaces::iloadedsound(this);
