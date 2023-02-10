@@ -32,7 +32,7 @@ namespace iw4of
 				const std::filesystem::path& work_directory,
 				std::function<void* (int type, const std::string& name)> find_other_asset = nullptr,
 				std::function<std::string(const std::string& filename)> fs_read_file = nullptr,
-				std::function<void* (int, const std::string&)> print_function = nullptr
+				std::function<void(print_type, const std::string&)> print_function = nullptr
 			);
 
 			params_t() {};

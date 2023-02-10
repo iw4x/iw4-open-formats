@@ -39,7 +39,7 @@ namespace iw4of::interfaces
 
 		// This could be an array but it's practical to have the enum index in front
 		// Otherwise on a ~48 keys long array the mapping is not immediatly obvious
-		rapidjson::Value techniqueMap(rapidjson::kObjectType);
+		rapidjson::Value technique_map(rapidjson::kObjectType);
 
 		for (size_t i = 0; i < native::TECHNIQUE_COUNT; i++)
 		{
@@ -60,13 +60,13 @@ namespace iw4of::interfaces
 				}
 			}
 
-			techniqueMap.AddMember(
+			technique_map.AddMember(
 				rapidjson::Value(std::to_string(i).c_str(), allocator),
 				value,
 				allocator);
 		}
 
-		output.AddMember("techniques", techniqueMap, allocator);
+		output.AddMember("techniques", technique_map, allocator);
 
 		rapidjson::StringBuffer buff;
 		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buff);

@@ -8,9 +8,6 @@
 //#include <module/asset_interfaces/ilightdef.hpp>
 //#include <module/asset_interfaces/irawfile.hpp>
 //#include <module/asset_interfaces/imapents.hpp>
-//#include <module/asset_interfaces/isndalias.hpp>
-//#include <module/asset_interfaces/isndcurve.hpp>
-//#include <module/asset_interfaces/iloadedsound.hpp>
 //#include <module/asset_interfaces/ifxworld.hpp>
 //#include <module/asset_interfaces/ifx.hpp>
 //#include <module/asset_interfaces/ixanimparts.hpp>
@@ -22,6 +19,9 @@
 #include <assets/asset_interfaces/ipixelshader.hpp>
 #include <assets/asset_interfaces/ivertexshader.hpp>
 #include <assets/asset_interfaces/ivertexdecl.hpp>
+#include <assets/asset_interfaces/isndalias.hpp>
+#include <assets/asset_interfaces/isndcurve.hpp>
+#include <assets/asset_interfaces/iloadedsound.hpp>
 
 #include "assets.hpp"
 #include <utils/io.hpp>
@@ -114,15 +114,15 @@ namespace iw4of
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_RAWFILE] = new interfaces::irawfile();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_MAP_ENTS] = new interfaces::imapents();
 		asset_interfaces[native::XAssetType::ASSET_TYPE_CLIPMAP_MP] = new interfaces::iclipmap(this);
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_SOUND] = new interfaces::isndalias();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_LOADED_SOUND] = new interfaces::iloadedsound();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_SOUND_CURVE] = new interfaces::isndcurve();
+		asset_interfaces[native::XAssetType::ASSET_TYPE_SOUND] = new interfaces::isndalias(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_LOADED_SOUND] = new interfaces::iloadedsound(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_SOUND_CURVE] = new interfaces::isndcurve(this);
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_FXWORLD] = new interfaces::ifxworld();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_FX] = new interfaces::ifx();
 		//asset_interfaces[native::XAssetType::ASSET_TYPE_XANIMPARTS] = new interfaces::ixanimparts();
 	}
 
-	assets::params_t::params_t(const std::filesystem::path& work_directory, std::function<void* (int type, const std::string& name)> find_other_asset, std::function<std::string(const std::string& filename)> fs_read_file, std::function<void* (int, const std::string&)> print_function)
+	assets::params_t::params_t(const std::filesystem::path& work_directory, std::function<void* (int type, const std::string& name)> find_other_asset, std::function<std::string(const std::string& filename)> fs_read_file, std::function<void(print_type, const std::string&)> print_function)
 	{
 		this->find_other_asset = find_other_asset;
 		this->work_directory = work_directory;

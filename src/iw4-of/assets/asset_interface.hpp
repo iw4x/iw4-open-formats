@@ -10,7 +10,6 @@ namespace iw4of
 #define SHOULD_NOT_BE_NULL(x)\
 	if (x == nullptr){\
 		print_error("{} was unexpectedly null! could not find the asset for it", #x);\
-		__debugbreak();\
 	}
 
 	public:

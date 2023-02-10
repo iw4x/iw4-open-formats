@@ -89,8 +89,8 @@ namespace iw4of::interfaces
 				auto model = &clipmap->staticModelList[i];
 				auto& json_model = clipmap_json["staticModelList"][i];
 
-				const std::string aaa = json_model["xmodel"].GetString();
-				model->xmodel = find<native::XModel>(native::XAssetType::ASSET_TYPE_XMODEL, aaa);
+				const std::string model_name = json_model["xmodel"].GetString();
+				model->xmodel = find<native::XModel>(native::XAssetType::ASSET_TYPE_XMODEL, model_name);
 				SHOULD_NOT_BE_NULL(model->xmodel);
 
 				utils::json::copy_array(model->origin, json_model["origin"], 3);
@@ -356,51 +356,56 @@ namespace iw4of::interfaces
 			{
 				auto ents_name = json_ents["name"].GetString();
 				clipmap->mapEnts = find<native::MapEnts>(native::XAssetType::ASSET_TYPE_MAP_ENTS, ents_name);
+				SHOULD_NOT_BE_NULL(clipmap->mapEnts);
 
-				auto& json_trigger = json_ents["trigger"];
-				auto trigger = &clipmap->mapEnts->trigger;
-				trigger->count = json_trigger["models"].Size();
-				trigger->models = local_allocator.allocate_array<native::TriggerModel>(trigger->count);
-
-				for (size_t i = 0; i < trigger->count; i++)
+				if (clipmap->mapEnts)
 				{
-					trigger->models[i].contents = json_trigger["models"][i]["contents"].Get<int>();
-					trigger->models[i].hullCount = json_trigger["models"][i]["hullCount"].Get<unsigned short>();
-					trigger->models[i].firstHull = json_trigger["models"][i]["firstHull"].Get<unsigned short>();
-				}
 
-				trigger->hullCount = json_trigger["hulls"].Size();
-				trigger->hulls = local_allocator.allocate_array<native::TriggerHull>(trigger->hullCount);
-				for (size_t i = 0; i < trigger->hullCount; i++)
-				{
-					trigger->hulls[i].bounds = utils::json::read_bounds(json_trigger["hulls"][i]["bounds"]);
+					auto& json_trigger = json_ents["trigger"];
+					auto trigger = &clipmap->mapEnts->trigger;
+					trigger->count = json_trigger["models"].Size();
+					trigger->models = local_allocator.allocate_array<native::TriggerModel>(trigger->count);
 
-					trigger->hulls[i].contents = json_trigger["hulls"][i]["contents"].Get<int>();
-					trigger->hulls[i].firstSlab = json_trigger["hulls"][i]["firstSlab"].Get<unsigned short>();
-					trigger->hulls[i].slabCount = json_trigger["hulls"][i]["slabCount"].Get<unsigned short>();
-				}
+					for (size_t i = 0; i < trigger->count; i++)
+					{
+						trigger->models[i].contents = json_trigger["models"][i]["contents"].Get<int>();
+						trigger->models[i].hullCount = json_trigger["models"][i]["hullCount"].Get<unsigned short>();
+						trigger->models[i].firstHull = json_trigger["models"][i]["firstHull"].Get<unsigned short>();
+					}
 
-				trigger->slabCount = json_trigger["slabs"].Size();
-				trigger->slabs = local_allocator.allocate_array<native::TriggerSlab>(trigger->slabCount);
-				for (size_t i = 0; i < trigger->slabCount; i++)
-				{
-					utils::json::copy_array(trigger->slabs[i].dir, json_trigger["slabs"][i]["dir"]);
-					trigger->slabs[i].midPoint = json_trigger["slabs"][i]["midPoint"].Get<float>();
-					trigger->slabs[i].halfSize = json_trigger["slabs"][i]["halfSize"].Get<float>();
-				}
+					trigger->hullCount = json_trigger["hulls"].Size();
+					trigger->hulls = local_allocator.allocate_array<native::TriggerHull>(trigger->hullCount);
+					for (size_t i = 0; i < trigger->hullCount; i++)
+					{
+						trigger->hulls[i].bounds = utils::json::read_bounds(json_trigger["hulls"][i]["bounds"]);
 
-				// Stages
-				clipmap->mapEnts->stageCount = static_cast<char>(json_ents["stages"].Size());
-				clipmap->mapEnts->stages = local_allocator.allocate_array <native::Stage>(clipmap->mapEnts->stageCount);
-				for (auto i = 0; i < clipmap->mapEnts->stageCount; i++)
-				{
-					auto stage = &clipmap->mapEnts->stages[i];
-					auto& json_stage = json_ents["stages"][i];
+						trigger->hulls[i].contents = json_trigger["hulls"][i]["contents"].Get<int>();
+						trigger->hulls[i].firstSlab = json_trigger["hulls"][i]["firstSlab"].Get<unsigned short>();
+						trigger->hulls[i].slabCount = json_trigger["hulls"][i]["slabCount"].Get<unsigned short>();
+					}
 
-					stage->name = local_allocator.duplicate_string(json_stage["name"].GetString());
-					utils::json::copy_array(stage->origin, json_stage["origin"]);
-					stage->triggerIndex = json_stage["triggerIndex"].Get<unsigned short>();
-					stage->sunPrimaryLightIndex = json_stage["sunPrimaryLightIndex"].Get<char>();
+					trigger->slabCount = json_trigger["slabs"].Size();
+					trigger->slabs = local_allocator.allocate_array<native::TriggerSlab>(trigger->slabCount);
+					for (size_t i = 0; i < trigger->slabCount; i++)
+					{
+						utils::json::copy_array(trigger->slabs[i].dir, json_trigger["slabs"][i]["dir"]);
+						trigger->slabs[i].midPoint = json_trigger["slabs"][i]["midPoint"].Get<float>();
+						trigger->slabs[i].halfSize = json_trigger["slabs"][i]["halfSize"].Get<float>();
+					}
+
+					// Stages
+					clipmap->mapEnts->stageCount = static_cast<char>(json_ents["stages"].Size());
+					clipmap->mapEnts->stages = local_allocator.allocate_array <native::Stage>(clipmap->mapEnts->stageCount);
+					for (auto i = 0; i < clipmap->mapEnts->stageCount; i++)
+					{
+						auto stage = &clipmap->mapEnts->stages[i];
+						auto& json_stage = json_ents["stages"][i];
+
+						stage->name = local_allocator.duplicate_string(json_stage["name"].GetString());
+						utils::json::copy_array(stage->origin, json_stage["origin"]);
+						stage->triggerIndex = json_stage["triggerIndex"].Get<unsigned short>();
+						stage->sunPrimaryLightIndex = json_stage["sunPrimaryLightIndex"].Get<char>();
+					}
 				}
 			}
 
@@ -594,7 +599,7 @@ namespace iw4of::interfaces
 			auto static_model = &clip_map->staticModelList[i];
 
 			json_static_model.AddMember(
-				"xmodel", RAPIDJSON_STR(static_model->xmodel->name), allocator
+				"xmodel", static_model->xmodel == nullptr ? rapidjson::Value(rapidjson::kNullType) : RAPIDJSON_STR(static_model->xmodel->name), allocator
 			);
 			json_static_model.AddMember(
 				"origin",

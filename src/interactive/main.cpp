@@ -1,25 +1,73 @@
+#include <string>
+#include <vector>
 #include <stdio.h>
 #include <windows.h>
+#include <iostream>
+
+#include "utils/io.hpp"
 #include "assets/assets.hpp"
+
+void print(int a, const std::string& str)
+{
+	printf("%s\n", str.data());
+}
 
 int main() {
 	// printf() displays the string inside quotation
 
-	const auto test_name = "my_clipmap";
-	iw4of::native::clipMap_t clip {};
+	printf("enter work path to begin:\n");
+	std::string work_path;
+	std::getline(std::cin, work_path);
 
-	clip.name = test_name;
 
-	const auto& params = iw4of::assets::params_t(
-		std::filesystem::path(".\\")
-	);
+	while (true)
+	{
+		printf("enter asset type to test:\n");
+		int type = 0;
+		scanf_s("%i", &type);
 
-	iw4of::assets iw4of(params);
+		printf("enter asset name to test:\n");
+		std::cin.ignore();
+		std::string input_str;
+		std::getline(std::cin, input_str);
 
-	iw4of.write(iw4of::native::ASSET_TYPE_CLIPMAP_MP, &clip);
+		if (input_str == "exit")
+		{
+			return 0;
+		}
 
-	auto str = std::string(test_name);
-	auto returned_clip = iw4of.read<iw4of::native::clipMap_t>(iw4of::native::ASSET_TYPE_CLIPMAP_MP, str);
+		{
+			const auto& params = iw4of::assets::params_t(
+				std::filesystem::path(work_path),
+				nullptr,
+				nullptr,
+				print
+			);
 
-	return 0;
+			iw4of::assets iw4of(params);
+
+			printf("Reading...\n");
+			auto result = iw4of.read<void>(type, input_str);
+
+			if (result)
+			{
+				printf("Writing...\n");
+				bool success = iw4of.write<void>(type, result);
+
+				if (success)
+				{
+					printf("Success!\n");
+				}
+				else {
+					printf("Failed. You might need a debugger to know why.\n");
+				}
+			}
+			else {
+				printf("Failed reading, result is nullptr\n");
+			}
+		}
+
+	}
+
+	return 1;
 }
