@@ -116,6 +116,9 @@ workspace "iw4-of"
 			"./src/iw4-of"
 		}
 		
+		pchheader "STDInclude.hpp" -- must be exactly same as used in #include directives
+		pchsource "src/STDInclude.cpp" -- real path
+
 		dependencies.imports()
 
 	group "Dependencies"

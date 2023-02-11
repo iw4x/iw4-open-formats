@@ -19,10 +19,32 @@ void iw4of::asset_interface::print_error_internal(const std::string& message) co
 
 std::filesystem::path iw4of::asset_interface::get_work_path(const std::string& asset_name) const
 {
-	return std::format("{}/{}/{}", assets->get_work_directory(), get_folder_name().string(), get_file_name(asset_name).string());
+	std::stringstream final_path{};
+
+	final_path << assets->get_work_directory() << "/";
+
+	if (!get_folder_name().empty())
+	{
+		final_path << get_folder_name().string() << "/";
+	}
+
+	final_path << get_file_name(asset_name).string();
+
+	return final_path.str();
 }
 
 std::filesystem::path iw4of::asset_interface::get_work_path(const native::XAssetHeader& header) const
 {
-	return std::format("{}/{}/{}", assets->get_work_directory(), get_folder_name().string(), get_file_name(header).string());
+	std::stringstream final_path{};
+
+	final_path << assets->get_work_directory() << "/";
+
+	if (!get_folder_name().empty())
+	{
+		final_path << get_folder_name().string() << "/";
+	}
+
+	final_path << get_file_name(header).string();
+
+	return final_path.str();
 }

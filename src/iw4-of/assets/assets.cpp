@@ -1,14 +1,13 @@
 #include <std_include.hpp>
 
-//#include <module/asset_interfaces/iphyspreset.hpp>
-//#include <module/asset_interfaces/iglassworld.hpp>
-//#include <module/asset_interfaces/icomworld.hpp>
-//#include <module/asset_interfaces/ilightdef.hpp>
-//#include <module/asset_interfaces/irawfile.hpp>
-//#include <module/asset_interfaces/ifxworld.hpp>
-//#include <module/asset_interfaces/ifx.hpp>
-//#include <module/asset_interfaces/ixanimparts.hpp>
-
+#include <assets/asset_interfaces/iphyspreset.hpp>
+#include <assets/asset_interfaces/iglassworld.hpp>
+#include <assets/asset_interfaces/icomworld.hpp>
+#include <assets/asset_interfaces/ilightdef.hpp>
+#include <assets/asset_interfaces/irawfile.hpp>
+#include <assets/asset_interfaces/ifxworld.hpp>
+#include <assets/asset_interfaces/ifx.hpp>
+#include <assets/asset_interfaces/ixanimparts.hpp>
 #include <assets/asset_interfaces/iclipmap.hpp>
 #include <assets/asset_interfaces/igfximage.hpp>
 #include <assets/asset_interfaces/imaterial.hpp>
@@ -127,21 +126,21 @@ namespace iw4of
 		asset_interfaces[native::XAssetType::ASSET_TYPE_PIXELSHADER] = new interfaces::ipixelshader(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_VERTEXSHADER] = new interfaces::ivertexshader(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_VERTEXDECL] = new interfaces::ivertexdecl(this);
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_PHYSPRESET] = new interfaces::iphyspreset();
+		asset_interfaces[native::XAssetType::ASSET_TYPE_PHYSPRESET] = new interfaces::iphyspreset(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_XMODEL] = new interfaces::ixmodel(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_GFXWORLD] = new interfaces::igfxworld(this);
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_GAMEWORLD_MP] = new interfaces::iglassworld();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_COMWORLD] = new interfaces::icomworld();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_LIGHT_DEF] = new interfaces::ilightdef();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_RAWFILE] = new interfaces::irawfile();
+		asset_interfaces[native::XAssetType::ASSET_TYPE_GAMEWORLD_MP] = new interfaces::iglassworld(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_COMWORLD] = new interfaces::icomworld(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_LIGHT_DEF] = new interfaces::ilightdef(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_RAWFILE] = new interfaces::irawfile(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_MAP_ENTS] = new interfaces::imapents(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_CLIPMAP_MP] = new interfaces::iclipmap(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_SOUND] = new interfaces::isndalias(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_LOADED_SOUND] = new interfaces::iloadedsound(this);
 		asset_interfaces[native::XAssetType::ASSET_TYPE_SOUND_CURVE] = new interfaces::isndcurve(this);
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_FXWORLD] = new interfaces::ifxworld();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_FX] = new interfaces::ifx();
-		//asset_interfaces[native::XAssetType::ASSET_TYPE_XANIMPARTS] = new interfaces::ixanimparts();
+		asset_interfaces[native::XAssetType::ASSET_TYPE_FXWORLD] = new interfaces::ifxworld(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_FX] = new interfaces::ifx(this);
+		asset_interfaces[native::XAssetType::ASSET_TYPE_XANIMPARTS] = new interfaces::ixanimparts(this);
 	}
 
 	assets::params_t::params_t(
