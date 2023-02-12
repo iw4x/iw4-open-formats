@@ -101,21 +101,20 @@ workspace "iw4-of"
 		language "C++"
 
 		pchheader "std_include.hpp" -- must be exactly same as used in #include directives
-		pchsource "src/std_include.cpp" -- real path
+		pchsource "src/iw4-of/std_include.cpp" -- real path
 		
 		linkoptions {
 			"/IGNORE:4254"
 		}
 
 		files {
-			"./include/*.hpp",
 			"./src/iw4-of/**.hpp",
 			"./src/iw4-of/**.cpp"
 		}
 		
 		includedirs {
 			"./src/iw4-of",
-			"./include",
+			"./include"
 		}
 
 		dependencies.imports()
