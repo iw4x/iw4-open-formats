@@ -103,10 +103,6 @@ workspace "iw4-of"
 		pchheader "std_include.hpp" -- must be exactly same as used in #include directives
 		pchsource "src/iw4-of/std_include.cpp" -- real path
 		
-		linkoptions {
-			"/IGNORE:4254"
-		}
-
 		files {
 			"./src/iw4-of/**.hpp",
 			"./src/iw4-of/**.cpp"
