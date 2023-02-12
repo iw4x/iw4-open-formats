@@ -16,7 +16,7 @@ namespace iw4of
 
 	public:
 		template <typename T>
-		bool write(T* header)
+		bool write(T* header) const
 		{
 			return write_internal({ header });
 		}
@@ -30,6 +30,10 @@ namespace iw4of
 		asset_interface(const class assets* assets)
 		{
 			this->assets = assets;
+		}
+
+		virtual ~asset_interface()
+		{
 		}
 
 	protected:

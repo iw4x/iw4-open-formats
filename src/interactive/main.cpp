@@ -4,8 +4,7 @@
 #include <windows.h>
 #include <iostream>
 
-#include "utils/io.hpp"
-#include "assets/assets.hpp"
+#include "api.hpp"
 
 void print(int a, const std::string& str)
 {
@@ -37,12 +36,12 @@ int main() {
 		}
 
 		{
-			const auto& params = iw4of::assets::params_t(
+			const auto& params = iw4of::params_t(
 				std::filesystem::path(work_path),
 				print
 			);
 
-			iw4of::assets iw4of(params);
+			iw4of::api iw4of(params);
 
 			printf("Reading...\n");
 			auto result = iw4of.read<void>(type, input_str);

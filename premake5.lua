@@ -91,7 +91,7 @@ workspace "iw4-of"
 		}
 
 		includedirs {
-			"./src/iw4-of"
+			"./include"
 		}
 		
 		links { "iw4-of" }
@@ -100,24 +100,23 @@ workspace "iw4-of"
 		kind "StaticLib"
 		language "C++"
 
-		pchheader "std_include.hpp"
-		pchsource "src/std_include.cpp"
+		pchheader "std_include.hpp" -- must be exactly same as used in #include directives
+		pchsource "src/std_include.cpp" -- real path
 		
 		linkoptions {
 			"/IGNORE:4254"
 		}
 
 		files {
+			"./include/*.hpp",
 			"./src/iw4-of/**.hpp",
 			"./src/iw4-of/**.cpp"
 		}
 		
 		includedirs {
-			"./src/iw4-of"
+			"./src/iw4-of",
+			"./include",
 		}
-		
-		pchheader "STDInclude.hpp" -- must be exactly same as used in #include directives
-		pchsource "src/STDInclude.cpp" -- real path
 
 		dependencies.imports()
 

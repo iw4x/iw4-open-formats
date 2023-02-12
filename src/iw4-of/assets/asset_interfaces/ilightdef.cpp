@@ -41,8 +41,10 @@ namespace iw4of::interfaces
 
 		if (asset->name)
 		{
-			utils::io::write_file(get_file_name(asset->name).string(), buffer.to_buffer());
+			return utils::io::write_file(get_file_name(asset->name).string(), buffer.to_buffer());
 		}
+
+		return false;
 	}
 
 	void* interfaces::ilightdef::read_internal(const std::string& name) const

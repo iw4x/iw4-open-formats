@@ -281,7 +281,11 @@ namespace iw4of::interfaces
 					}
 				}
 			}
+
+			return asset;
 		}
+
+		return nullptr;
 	}
 
 	std::filesystem::path iw4of::interfaces::ifx::get_file_name(const std::string& basename) const
