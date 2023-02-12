@@ -10,16 +10,15 @@ namespace iw4of
 	{
 
 	public:
-		template <typename T>
-		bool write(int iw4_int_type, T* header) const
+		bool write(int iw4_int_type, void* header) const
 		{
-			return write(iw4_int_type, header);
+			return write_internal(iw4_int_type, header);
 		}
 
 		template <typename T>
 		T* read(int iw4_int_type, const std::string& name) const
 		{
-			return reinterpret_cast<T*>(read(iw4_int_type, name));
+			return reinterpret_cast<T*>(read_internal(iw4_int_type, name));
 		}
 
 		void set_work_path(const std::filesystem::path& path);
@@ -32,9 +31,9 @@ namespace iw4of
 
 		class assets* _assets;
 
-		bool write(int t, void* asset) const;
+		bool write_internal(int t, void* asset) const;
 
-		void* read(int t, std::string name) const;
+		void* read_internal(int t, std::string name) const;
 
 	};
 }
