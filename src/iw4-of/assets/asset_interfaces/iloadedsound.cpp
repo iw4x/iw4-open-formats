@@ -110,9 +110,9 @@ namespace iw4of::interfaces
 		assert(header.loadSnd);
 
 		auto loaded_sound = header.loadSnd;
-		if (loaded_sound->sound.data)
+		if (!loaded_sound->sound.data)
 		{
-			print_error("Tried to save sound %s which was never loaded before!", loaded_sound->name);
+			print_error("Tried to save sound {} which was never loaded before!", loaded_sound->name);
 			return false;
 		}
 

@@ -258,7 +258,7 @@ namespace iw4of::interfaces
 					return false;
 				}
 
-				print("Image %s not found, mapping to normalmap!\n", name.data());
+				print("Image {} not found, mapping to normalmap!\n", name.data());
 
 				contents = assets->read_file("images/$identitynormalmap.iwi");
 			}
