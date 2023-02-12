@@ -2,7 +2,7 @@
 #include "json.hpp"
 #include <bitset>
 
-namespace utils::json
+namespace iw4of::utils::json
 {
 	iw4of::native::Bounds read_bounds(const rapidjson::Value& value)
 	{

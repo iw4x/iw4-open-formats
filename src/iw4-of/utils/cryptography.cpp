@@ -4,7 +4,7 @@
 
 /// http://www.opensource.apple.com/source/CommonCrypto/CommonCrypto-55010/Source/libtomcrypt/doc/libTomCryptDoc.pdf
 
-namespace utils::cryptography
+namespace iw4of::utils::cryptography
 {
 	ecc::key::key()
 	{

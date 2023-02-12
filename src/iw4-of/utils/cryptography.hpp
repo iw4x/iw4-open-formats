@@ -1,6 +1,6 @@
 #pragma once
 
-namespace utils::cryptography
+namespace iw4of::utils::cryptography
 {
 	class ecc final
 	{

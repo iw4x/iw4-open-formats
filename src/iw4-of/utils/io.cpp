@@ -1,7 +1,7 @@
 #include <std_include.hpp>
 #include "io.hpp"
 
-namespace utils::io
+namespace iw4of::utils::io
 {
 	bool file_exists(const std::string& file)
 	{

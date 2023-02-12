@@ -1,7 +1,7 @@
 #pragma once
 #include "memory.hpp"
 
-namespace utils::string
+namespace iw4of::utils::string
 {
 	template <size_t Buffers, size_t MinBufferSize>
 	class va_provider final

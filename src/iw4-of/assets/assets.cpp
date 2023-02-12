@@ -24,7 +24,6 @@
 
 #include "assets.hpp"
 #include <utils/io.hpp>
-#include <utils/flags.hpp>
 
 namespace iw4of
 {

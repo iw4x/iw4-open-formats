@@ -22,6 +22,8 @@ namespace iw4of
 			return reinterpret_cast<T*>(read(iw4_int_type, name));
 		}
 
+		void set_work_path(const std::filesystem::path& path);
+
 		api(const params_t& params);
 
 		~api();

@@ -3,7 +3,7 @@
 #include "memory.hpp"
 #include "stream.hpp"
 
-namespace utils
+namespace iw4of::utils
 {
 	std::string stream::reader::read_string()
 	{

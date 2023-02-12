@@ -38,6 +38,11 @@ namespace iw4of
 
 			return nullptr;
 		}
+
+		void set_work_path(const std::filesystem::path& path)
+		{
+			params.work_directory = path;
+		}
 		
 		std::string read_file(const std::string& name) const;
 

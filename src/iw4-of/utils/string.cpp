@@ -1,7 +1,7 @@
 #include <std_include.hpp>
 #include "string.hpp"
 
-namespace utils::string
+namespace iw4of::utils::string
 {
 	const char* va(const char* fmt, ...)
 	{

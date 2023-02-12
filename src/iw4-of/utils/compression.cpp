@@ -2,7 +2,7 @@
 #include "memory.hpp"
 #include "compression.hpp"
 
-namespace utils::compression
+namespace iw4of::utils::compression
 {
 	std::string zlib::compress(const std::string& data)
 	{

@@ -1,7 +1,7 @@
 #include <std_include.hpp>
 #include "memory.hpp"
 
-namespace utils
+namespace iw4of::utils
 {
 	memory::allocator memory::mem_allocator_;
 

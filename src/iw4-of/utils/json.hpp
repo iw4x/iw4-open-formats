@@ -3,7 +3,7 @@
 #include "rapidjson/document.h"
 #include "game/structs.hpp"
 
-namespace utils::json
+namespace iw4of::utils::json
 {
 	// Helpers for rapidjson
 	template<typename ValueType>

@@ -2,7 +2,7 @@
 
 #define CHUNK 16384
 
-namespace utils::compression
+namespace iw4of::utils::compression
 {
 	class zlib final
 	{

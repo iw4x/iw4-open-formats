@@ -2,7 +2,7 @@
 
 #include <mutex>
 
-namespace utils
+namespace iw4of::utils
 {
 	class memory final
 	{

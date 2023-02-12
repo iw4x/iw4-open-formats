@@ -1,6 +1,6 @@
 #pragma once
 
-namespace utils::io
+namespace iw4of::utils::io
 {
 	bool file_exists(const std::string& file);
 	bool write_file(const std::string& file, const std::string& data, bool append = false);

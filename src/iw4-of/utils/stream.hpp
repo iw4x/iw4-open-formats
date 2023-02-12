@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace utils
+namespace iw4of::utils
 {
 	class stream
 	{

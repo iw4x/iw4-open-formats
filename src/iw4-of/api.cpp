@@ -22,3 +22,8 @@ void* iw4of::api::read(int t, std::string name) const
 {
 	return _assets->read<void>(t, name);
 }
+
+void iw4of::api::set_work_path(const std::filesystem::path& path)
+{
+	_assets->set_work_path(path);
+}
