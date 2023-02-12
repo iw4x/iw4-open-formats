@@ -290,7 +290,7 @@ namespace iw4of::interfaces
 
 	std::filesystem::path iw4of::interfaces::ifx::get_file_name(const std::string& basename) const
 	{
-		return std::format("{}.iw4xFx");
+		return std::format("{}.iw4xFx", basename);
 	}
 
 	void ifx::write(const native::FxElemVisuals* visuals, char elemType, utils::stream* buffer) const

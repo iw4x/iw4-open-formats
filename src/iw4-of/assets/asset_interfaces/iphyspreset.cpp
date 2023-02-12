@@ -95,7 +95,7 @@ namespace iw4of::interfaces
 
 	std::filesystem::path iphyspreset::get_file_name(const std::string& basename) const
 	{
-		return std::format("{}.iw4x.json");
+		return std::format("{}.iw4x.json", basename);
 	}
 
 }
