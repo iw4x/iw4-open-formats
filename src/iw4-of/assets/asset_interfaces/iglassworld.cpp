@@ -210,8 +210,15 @@ namespace iw4of::interfaces
 		return nullptr;
 	}
 
-	std::filesystem::path interfaces::iglassworld::get_file_name(const std::string& basename) const
+	std::filesystem::path interfaces::iglassworld::get_file_name(const std::string& name) const
 	{
+		constexpr auto prefix = "maps/mp/";
+		constexpr auto suffix = ".d3dbsp";
+
+		std::string basename = name;
+		utils::string::replace(basename, prefix, "");
+		utils::string::replace(basename, suffix, "");
+
 		return std::format("{}.iw4x.json", basename);
 	}
 }
