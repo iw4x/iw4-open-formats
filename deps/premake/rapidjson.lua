@@ -1,5 +1,5 @@
 rapidjson = {
-	source = path.join(dependencies.basePath, "rapidjson"),
+	source = path.join(iw4of_dependencies.basePath, "rapidjson"),
 }
 
 function rapidjson.import()
@@ -16,4 +16,4 @@ function rapidjson.project()
 
 end
 
-table.insert(dependencies, rapidjson)
+table.insert(iw4of_dependencies, rapidjson)

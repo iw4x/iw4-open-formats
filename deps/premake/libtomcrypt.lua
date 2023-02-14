@@ -1,5 +1,5 @@
 libtomcrypt = {
-	source = path.join(dependencies.basePath, "libtomcrypt"),
+	source = path.join(iw4of_dependencies.basePath, "libtomcrypt"),
 }
 
 function libtomcrypt.import()
@@ -61,4 +61,4 @@ function libtomcrypt.project()
 		kind "StaticLib"
 end
 
-table.insert(dependencies, libtomcrypt)
+table.insert(iw4of_dependencies, libtomcrypt)

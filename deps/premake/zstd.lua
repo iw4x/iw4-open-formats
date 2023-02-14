@@ -1,5 +1,5 @@
 zstd = {
-	source = path.join(dependencies.basePath, "zstd"),
+	source = path.join(iw4of_dependencies.basePath, "zstd"),
 }
 
 function zstd.import()
@@ -40,4 +40,4 @@ function zstd.project()
 		kind "StaticLib"
 end
 
-table.insert(dependencies, zstd)
+table.insert(iw4of_dependencies, zstd)

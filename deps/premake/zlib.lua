@@ -1,5 +1,5 @@
 zlib = {
-	source = path.join(dependencies.basePath, "zlib"),
+	source = path.join(iw4of_dependencies.basePath, "zlib"),
 }
 
 function zlib.import()
@@ -36,4 +36,4 @@ function zlib.project()
 		kind "StaticLib"
 end
 
-table.insert(dependencies, zlib)
+table.insert(iw4of_dependencies, zlib)

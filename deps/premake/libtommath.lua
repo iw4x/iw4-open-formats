@@ -1,5 +1,5 @@
 libtommath = {
-	source = path.join(dependencies.basePath, "libtommath"),
+	source = path.join(iw4of_dependencies.basePath, "libtommath"),
 }
 
 function libtommath.import()
@@ -49,4 +49,4 @@ function libtommath.project()
 		kind "StaticLib"
 end
 
-table.insert(dependencies, libtommath)
+table.insert(iw4of_dependencies, libtommath)

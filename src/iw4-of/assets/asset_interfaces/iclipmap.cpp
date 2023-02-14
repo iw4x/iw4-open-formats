@@ -303,7 +303,6 @@ namespace iw4of::interfaces
 				leaf->terrainContents = json_leaf["terrainContents"].Get<int>();
 				leaf->leafBrushNode = json_leaf["leafBrushNode"].Get<int>();
 				leaf->bounds = utils::json::read_bounds(json_leaf["bounds"]);
-				printf("");
 			}
 
 			// Brushes
