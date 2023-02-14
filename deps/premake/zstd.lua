@@ -1,34 +1,34 @@
-zstd = {
+iw4of.zstd = {
 	source = path.join(iw4of_dependencies.basePath, "zstd"),
 }
 
-function zstd.import()
+function iw4of.zstd.import()
 	links { "zstd" }
-	zstd.includes()
+	iw4of.zstd.includes()
 end
 
-function zstd.includes()
+function iw4of.zstd.includes()
 	includedirs {
-		path.join(zstd.source, "lib"),
-		path.join(zstd.source, "lib/common"),
+		path.join(iw4of.zstd.source, "lib"),
+		path.join(iw4of.zstd.source, "lib/common"),
 		--path.join(zstd.source, "zlibWrapper")
 	}
 end
 
-function zstd.project()
+function iw4of.zstd.project()
 	project "zstd"
 		language "C"
 
-		zstd.includes()
+		iw4of.zstd.includes()
 
 		files {
-			path.join(zstd.source, "lib/**.h"),
-			path.join(zstd.source, "lib/**.c"),
+			path.join(iw4of.zstd.source, "lib/**.h"),
+			path.join(iw4of.zstd.source, "lib/**.c"),
 			--path.join(zstd.source, "zlibWrapper/zstd_zlibwrapper.h"),
 			--path.join(zstd.source, "zlibWrapper/zstd_zlibwrapper.c"),
 		}
 		removefiles {
-			path.join(zstd.source, "lib/legacy/**.*"),
+			path.join(iw4of.zstd.source, "lib/legacy/**.*"),
 			--path.join(zstd.source, "zlibWrapper/examples/**.*"),
 		}
 		defines {
@@ -40,4 +40,3 @@ function zstd.project()
 		kind "StaticLib"
 end
 
-table.insert(iw4of_dependencies, zstd)
