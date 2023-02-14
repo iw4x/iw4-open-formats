@@ -49,7 +49,7 @@ int main() {
 			if (result)
 			{
 				printf("Writing...\n");
-				bool success = iw4of.write<void>(type, result);
+				bool success = iw4of.write(type, result);
 
 				if (success)
 				{
