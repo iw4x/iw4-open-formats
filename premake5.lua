@@ -1,3 +1,5 @@
+iw4of = {}
+
 iw4of_dependencies = {
 	basePath = "./deps"
 }
@@ -13,18 +15,14 @@ function iw4of_dependencies.load()
 end
 
 function iw4of_dependencies.imports()
-	for i, proj in pairs(iw4of_dependencies) do
-		if type(i) == 'number' then
-			proj.import()
-		end
+	for dep_name, dependency in pairs(iw4of) do
+		dependency.import()
 	end
 end
 
 function iw4of_dependencies.projects()
-	for i, proj in pairs(iw4of_dependencies) do
-		if type(i) == 'number' then
-			proj.project()
-		end
+	for dep_name, dependency in pairs(iw4of) do
+		dependency.project()
 	end
 end
 
