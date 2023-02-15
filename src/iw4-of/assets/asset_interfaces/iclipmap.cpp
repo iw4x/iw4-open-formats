@@ -1,10 +1,11 @@
 ﻿#include <std_include.hpp>
+#include "iclipmap.hpp"
 
 #include <rapidjson/document.h>
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 
-#include <iclipmap.hpp>
+
 #include <utils/io.hpp>
 #include <utils/json.hpp>
 #include <utils/stream.hpp>
