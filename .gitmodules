@@ -13,6 +13,3 @@
 [submodule "deps/rapidjson"]
 	path = deps/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
-[submodule "deps/zstd"]
-	path = deps/zstd
-	url = https://github.com/facebook/zstd.git
