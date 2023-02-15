@@ -1,16 +1,16 @@
 #pragma once
 
 #pragma warning(push)
-#pragma warning(disable: 4244)
-#pragma warning(disable: 4458)
-#pragma warning(disable: 6297)
-#pragma warning(disable: 6385)
-#pragma warning(disable: 6386)
-#pragma warning(disable: 26451)
-#pragma warning(disable: 26444)
-#pragma warning(disable: 26451)
-#pragma warning(disable: 26495)
-#pragma warning(disable: 28020)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4458)
+#pragma warning(disable : 6297)
+#pragma warning(disable : 6385)
+#pragma warning(disable : 6386)
+#pragma warning(disable : 26451)
+#pragma warning(disable : 26444)
+#pragma warning(disable : 26451)
+#pragma warning(disable : 26495)
+#pragma warning(disable : 28020)
 
 #define _CRT_SECURE_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
@@ -28,11 +28,11 @@
 
 // min and max is required by gdi, therefore NOMINMAX won't work
 #ifdef max
-#undef max
+  #undef max
 #endif
 
 #ifdef min
-#undef min
+  #undef min
 #endif
 
 #include <atomic>
@@ -51,16 +51,12 @@
 #include <vector>
 
 #include <zlib.h>
-#include <zstd.h>
 
 #include <tomcrypt.h>
 
-#pragma comment(lib, "gdiplus.lib")
-#pragma comment(lib, "ws2_32.lib")
-
 #pragma warning(pop)
 
-#pragma warning(disable: 4100)
-#pragma warning(disable: 26812)
+#pragma warning(disable : 4100)
+#pragma warning(disable : 26812)
 
 using namespace std::literals;

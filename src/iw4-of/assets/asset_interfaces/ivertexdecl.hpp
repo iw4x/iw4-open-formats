@@ -4,19 +4,23 @@
 
 namespace iw4of::interfaces
 {
-	struct ivertexdecl : asset_interface
-	{
-	public:
-		ivertexdecl(const iw4of::assets* assets) : asset_interface(assets) {}
+  struct ivertexdecl : asset_interface
+  {
+   public:
+    ivertexdecl(const iw4of::assets* assets)
+        : asset_interface(assets)
+    {
+    }
 
-	protected:
-		bool write_internal(const native::XAssetHeader& header) const override;
-		void* read_internal(const std::string& name) const override;
+   protected:
+    bool write_internal(const native::XAssetHeader& header) const override;
+    void* read_internal(const std::string& name) const override;
 
-		std::filesystem::path get_file_name(const std::string& basename) const override;
-		std::filesystem::path get_folder_name() const override
-		{
-			return "decl";
-		}
-	};
-}
+    std::filesystem::path get_file_name(
+        const std::string& basename) const override;
+    std::filesystem::path get_folder_name() const override
+    {
+      return "decl";
+    }
+  };
+} // namespace iw4of::interfaces
