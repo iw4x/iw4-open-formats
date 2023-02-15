@@ -2780,6 +2780,7 @@ namespace iw4of::native
     const char* subtitle;
     const char* secondaryAliasName;
     const char* chainAliasName;
+    const char* mixerGroup;
     SoundFile* soundFile;
     int32_t sequence;
     float volMin;
@@ -2788,6 +2789,7 @@ namespace iw4of::native
     float pitchMax;
     float distMin;
     float distMax;
+    float velocityMin;
     SoundAliasFlags flags;
     float slavePercentage;
     float probability;

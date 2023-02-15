@@ -43,7 +43,8 @@ namespace iw4of::interfaces
     const char* temp_name = image->name;
     if (temp_name[0] == '*') temp_name++;
 
-    const auto special_path = get_special_file_name(temp_name).string();
+    const auto special_path =
+        get_work_path(get_special_file_name(temp_name)).string();
     if (utils::io::file_exists(special_path))
     {
       auto contents = utils::io::read_file(special_path);
@@ -132,7 +133,8 @@ namespace iw4of::interfaces
     }
     else if (name[0] != '*')
     {
-      const auto file_path = get_file_name(name).string();
+      const auto file_path =
+          get_work_path(get_file_name(temp_name)).string();
 
       if (!utils::io::file_exists(file_path))
       {

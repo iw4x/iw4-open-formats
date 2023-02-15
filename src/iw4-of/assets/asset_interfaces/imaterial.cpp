@@ -320,7 +320,7 @@ namespace iw4of::interfaces
       return nullptr;
     }
 
-    if (materialJson["gfxDrawSurface"].IsObject())
+    if (materialJson.HasMember("gfxDrawSurface") && materialJson["gfxDrawSurface"].IsObject())
     {
       asset->info.drawSurf.fields.customIndex =
           materialJson["gfxDrawSurface"]["customIndex"].Get<int64_t>();
@@ -349,7 +349,7 @@ namespace iw4of::interfaces
     asset->stateFlags = static_cast<char>(utils::json::read_flags(
         materialJson["stateFlags"].Get<std::string>(), sizeof(char)));
 
-    if (materialJson["textureTable"].IsArray())
+    if (materialJson.HasMember("textureTable") && materialJson["textureTable"].IsArray())
     {
       const auto& textureTable = materialJson["textureTable"];
       asset->textureCount = static_cast<uint8_t>(textureTable.Size());
@@ -443,9 +443,9 @@ namespace iw4of::interfaces
             textureDef->u.image = nullptr;
             if (textureJson["image"].IsString())
             {
+              const auto& image_name = textureJson["image"].Get<std::string>();
               textureDef->u.image = find<native::GfxImage>(
-                  native::XAssetType::ASSET_TYPE_IMAGE,
-                  textureJson["image"].Get<std::string>());
+                  native::XAssetType::ASSET_TYPE_IMAGE, image_name);
 
               assert(textureDef->u.image);
             }
@@ -459,7 +459,7 @@ namespace iw4of::interfaces
     }
 
     // Statebits
-    if (materialJson["stateBitsEntry"].IsArray())
+    if (materialJson.HasMember("stateBitsEntry") && materialJson["stateBitsEntry"].IsArray())
     {
       const auto& stateBitsEntry = materialJson["stateBitsEntry"];
 
@@ -469,7 +469,7 @@ namespace iw4of::interfaces
       }
     }
 
-    if (materialJson["stateBitsTable"].IsArray())
+    if (materialJson.HasMember("stateBitsTable") && materialJson["stateBitsTable"].IsArray())
     {
       const auto& array = materialJson["stateBitsTable"];
       asset->stateBitsCount = static_cast<uint8_t>(array.Size());
@@ -631,7 +631,7 @@ namespace iw4of::interfaces
       }
 
       // Constant table
-      if (materialJson["constantTable"].IsArray())
+      if (materialJson.HasMember("constantTable") && materialJson["constantTable"].IsArray())
       {
         const auto& constants = materialJson["constantTable"];
         asset->constantCount = static_cast<char>(constants.Size());

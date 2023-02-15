@@ -52,6 +52,9 @@ namespace iw4of
     std::filesystem::path get_work_path(const std::string& asset_name) const;
 
     std::filesystem::path get_work_path(
+        const std::filesystem::path& file_path) const;
+
+    std::filesystem::path get_work_path(
         const native::XAssetHeader& header) const;
 
     mutable utils::memory::allocator local_allocator{};

@@ -22,7 +22,6 @@ namespace iw4of
 
     void set_work_path(const std::filesystem::path& path);
 
-    api() = default;
     api(const params_t& params);
 
     ~api();

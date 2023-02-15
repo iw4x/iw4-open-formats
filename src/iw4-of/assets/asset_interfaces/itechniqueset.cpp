@@ -125,7 +125,7 @@ namespace iw4of::interfaces
     asset->hasBeenUploaded = techset["hasBeenUploaded"].Get<bool>();
     asset->worldVertFormat = techset["worldVertFormat"].Get<char>();
 
-    if (techset["remappedTechniqueSet"].IsString())
+    if (techset.HasMember("remappedTechniqueSet") && techset["remappedTechniqueSet"].IsString())
     {
       auto remapped = techset["remappedTechniqueSet"].Get<std::string>();
 

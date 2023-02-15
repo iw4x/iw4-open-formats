@@ -433,9 +433,9 @@ namespace iw4of::interfaces
 
         if (lightmapArray->primary)
         {
+          auto primaryLightmapName = reader->read_string().data();
           lightmapArray->primary =
-              find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE,
-                                     reader->read_string().data());
+              find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, primaryLightmapName);
           RETURN_IF_NULL(lightmapArray->primary);
         }
 

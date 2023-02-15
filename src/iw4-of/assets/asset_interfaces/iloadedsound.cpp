@@ -25,8 +25,6 @@ namespace iw4of::interfaces
       return nullptr;
     }
 
-    native::LoadedSound* reference = nullptr;
-    std::memcpy(sound, reference, sizeof(native::LoadedSound));
     sound->sound.data = nullptr;
 
     auto contents = utils::io::read_file(path);
