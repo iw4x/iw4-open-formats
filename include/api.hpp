@@ -33,7 +33,7 @@ namespace iw4of
 
 		bool write_internal(int t, void* asset) const;
 
-		void* read_internal(int t, std::string name) const;
+		void* read_internal(int t, const std::string& name) const;
 
 	};
 }

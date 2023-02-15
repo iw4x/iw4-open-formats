@@ -42,4 +42,3 @@ jobs:
 
       - name: Build ${{matrix.configuration}} binaries
         run: msbuild /m /v:minimal /p:Configuration=${{matrix.configuration}} /p:Platform=Win32 build/iw4-of.sln
-    

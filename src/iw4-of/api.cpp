@@ -1,7 +1,7 @@
 #include "std_include.hpp"
 
 #include "assets/assets.hpp"
-#include "api.hpp"
+#include <api.hpp>
 
 iw4of::api::~api()
 {
@@ -18,7 +18,7 @@ bool iw4of::api::write_internal(int t, void* asset) const
 	return _assets->write<void>(t, asset);
 }
 
-void* iw4of::api::read_internal(int t, std::string name) const
+void* iw4of::api::read_internal(int t, const std::string& name) const
 {
 	return _assets->read<void>(t, name);
 }
