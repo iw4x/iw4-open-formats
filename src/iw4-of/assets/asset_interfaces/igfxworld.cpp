@@ -11,8 +11,7 @@
 
 namespace iw4of::interfaces
 {
-  bool interfaces::igfxworld::write_internal(
-      const native::XAssetHeader& header) const
+  bool interfaces::igfxworld::write_internal(const native::XAssetHeader& header) const
   {
     const auto asset = header.gfxWorld;
 
@@ -72,8 +71,7 @@ namespace iw4of::interfaces
         if (cellTree->aabbTree)
         {
           AssertSize(native::GfxAabbTree, 44);
-          buffer.save_array(cellTree->aabbTree,
-                            asset->aabbTreeCounts[i].aabbTreeCount);
+          buffer.save_array(cellTree->aabbTree, asset->aabbTreeCounts[i].aabbTreeCount);
 
           for (int j = 0; j < asset->aabbTreeCounts[i].aabbTreeCount; ++j)
           {
@@ -176,14 +174,12 @@ namespace iw4of::interfaces
 
         if (shadowGeometry->sortedSurfIndex)
         {
-          buffer.save_array(shadowGeometry->sortedSurfIndex,
-                            shadowGeometry->surfaceCount);
+          buffer.save_array(shadowGeometry->sortedSurfIndex, shadowGeometry->surfaceCount);
         }
 
         if (shadowGeometry->smodelIndex)
         {
-          buffer.save_array(shadowGeometry->smodelIndex,
-                            shadowGeometry->smodelCount);
+          buffer.save_array(shadowGeometry->smodelIndex, shadowGeometry->smodelCount);
         }
       }
     }
@@ -204,14 +200,12 @@ namespace iw4of::interfaces
 
           for (uint32_t j = 0; j < lightRegion->hullCount; ++j)
           {
-            native::GfxLightRegionHull* lightRegionHull =
-                &lightRegion->hulls[j];
+            native::GfxLightRegionHull* lightRegionHull = &lightRegion->hulls[j];
 
             if (lightRegionHull->axis)
             {
               AssertSize(native::GfxLightRegionAxis, 20);
-              buffer.save_array(lightRegionHull->axis,
-                                lightRegionHull->axisCount);
+              buffer.save_array(lightRegionHull->axis, lightRegionHull->axisCount);
             }
           }
         }
@@ -231,17 +225,13 @@ namespace iw4of::interfaces
     return true;
   }
 
-  void igfxworld::write(const native::GfxWorld* world,
-                        const native::GfxWorldDpvsStatic* asset,
-                        utils::stream* buffer) const
+  void igfxworld::write(const native::GfxWorld* world, const native::GfxWorldDpvsStatic* asset, utils::stream* buffer) const
   {
     AssertSize(native::GfxWorldDpvsStatic, 108);
 
     if (asset->sortedSurfIndex)
     {
-      buffer->save_array(
-          asset->sortedSurfIndex,
-          asset->staticSurfaceCount + asset->staticSurfaceCountNoDecal);
+      buffer->save_array(asset->sortedSurfIndex, asset->staticSurfaceCount + asset->staticSurfaceCountNoDecal);
     }
 
     if (asset->smodelInsts)
@@ -261,10 +251,8 @@ namespace iw4of::interfaces
 
         if (surface->material)
         {
-          buffer->save_string(
-              world->dpvs.surfaces[i]
-                  .material->info.name); // Redundant, but too lazy to implement
-                                         // pointer support
+          buffer->save_string(world->dpvs.surfaces[i].material->info.name); // Redundant, but too lazy to implement
+                                                                            // pointer support
         }
       }
     }
@@ -293,16 +281,13 @@ namespace iw4of::interfaces
     }
   }
 
-  void igfxworld::write(const native::GfxLightGrid* asset,
-                        utils::stream* buffer) const
+  void igfxworld::write(const native::GfxLightGrid* asset, utils::stream* buffer) const
   {
     AssertSize(native::GfxLightGrid, 56);
 
     if (asset->rowDataStart)
     {
-      buffer->save_array(
-          asset->rowDataStart,
-          (asset->maxs[asset->rowAxis] - asset->mins[asset->rowAxis]) + 1);
+      buffer->save_array(asset->rowDataStart, (asset->maxs[asset->rowAxis] - asset->mins[asset->rowAxis]) + 1);
     }
 
     if (asset->rawRowData)
@@ -324,26 +309,21 @@ namespace iw4of::interfaces
     }
   }
 
-  bool igfxworld::read_dpvs_static(const native::GfxWorld* world,
-                                   native::GfxWorldDpvsStatic* asset,
-                                   utils::stream::reader* reader) const
+  bool igfxworld::read_dpvs_static(const native::GfxWorld* world, native::GfxWorldDpvsStatic* asset, utils::stream::reader* reader) const
   {
     if (asset->sortedSurfIndex)
     {
-      asset->sortedSurfIndex = reader->read_array<uint16_t>(
-          asset->staticSurfaceCount + asset->staticSurfaceCountNoDecal);
+      asset->sortedSurfIndex = reader->read_array<uint16_t>(asset->staticSurfaceCount + asset->staticSurfaceCountNoDecal);
     }
 
     if (asset->smodelInsts)
     {
-      asset->smodelInsts =
-          reader->read_array<native::GfxStaticModelInst>(asset->smodelCount);
+      asset->smodelInsts = reader->read_array<native::GfxStaticModelInst>(asset->smodelCount);
     }
 
     if (asset->surfaces)
     {
-      asset->surfaces =
-          reader->read_array<native::GfxSurface>(world->surfaceCount);
+      asset->surfaces = reader->read_array<native::GfxSurface>(world->surfaceCount);
 
       for (uint32_t i = 0; i < world->surfaceCount; ++i)
       {
@@ -352,8 +332,7 @@ namespace iw4of::interfaces
         if (surface->material)
         {
           auto materialName = reader->read_string();
-          world->dpvs.surfaces[i].material = find<native::Material>(
-              native::XAssetType::ASSET_TYPE_MATERIAL, materialName.data());
+          world->dpvs.surfaces[i].material = find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, materialName.data());
           RETURN_IF_NULL(world->dpvs.surfaces[i].material);
         }
       }
@@ -361,15 +340,12 @@ namespace iw4of::interfaces
 
     if (asset->surfacesBounds)
     {
-      asset->surfacesBounds =
-          reader->read_array<native::GfxSurfaceBounds>(world->surfaceCount);
+      asset->surfacesBounds = reader->read_array<native::GfxSurfaceBounds>(world->surfaceCount);
     }
 
     if (asset->smodelDrawInsts)
     {
-      asset->smodelDrawInsts =
-          reader->read_array<native::GfxStaticModelDrawInst>(
-              asset->smodelCount);
+      asset->smodelDrawInsts = reader->read_array<native::GfxStaticModelDrawInst>(asset->smodelCount);
 
       for (uint32_t i = 0; i < asset->smodelCount; ++i)
       {
@@ -389,8 +365,7 @@ namespace iw4of::interfaces
             name = name.substr(0, name.size() - 1);
           }
 
-          model->model = find<native::XModel>(
-              native::XAssetType::ASSET_TYPE_XMODEL, name.data());
+          model->model = find<native::XModel>(native::XAssetType::ASSET_TYPE_XMODEL, name.data());
 
           RETURN_IF_NULL(model->model);
         }
@@ -400,32 +375,29 @@ namespace iw4of::interfaces
     return true;
   }
 
-  bool igfxworld::read_gfx_world_draw(native::GfxWorldDraw* asset,
-                                      utils::stream::reader* reader) const
+  bool igfxworld::read_gfx_world_draw(native::GfxWorldDraw* asset, utils::stream::reader* reader) const
   {
     if (asset->reflectionProbes)
     {
-      asset->reflectionProbes =
-          reader->read_array<native::GfxImage*>(asset->reflectionProbeCount);
+      asset->reflectionProbes = reader->read_array<native::GfxImage*>(asset->reflectionProbeCount);
 
       for (uint32_t i = 0; i < asset->reflectionProbeCount; ++i)
       {
-        asset->reflectionProbes[i] = find<native::GfxImage>(
-            native::XAssetType::ASSET_TYPE_IMAGE, reader->read_string().data());
+        const auto& imgName = reader->read_string();
+        asset->reflectionProbes[i] = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, imgName.data());
+
+        assert(asset->reflectionProbes[i]);
       }
     }
 
     if (asset->reflectionProbeOrigins)
     {
-      asset->reflectionProbeOrigins =
-          reader->read_array<native::GfxReflectionProbe>(
-              asset->reflectionProbeCount);
+      asset->reflectionProbeOrigins = reader->read_array<native::GfxReflectionProbe>(asset->reflectionProbeCount);
     }
 
     if (asset->lightmaps)
     {
-      asset->lightmaps =
-          reader->read_array<native::GfxLightmapArray>(asset->lightmapCount);
+      asset->lightmaps = reader->read_array<native::GfxLightmapArray>(asset->lightmapCount);
 
       for (int i = 0; i < asset->lightmapCount; ++i)
       {
@@ -433,17 +405,14 @@ namespace iw4of::interfaces
 
         if (lightmapArray->primary)
         {
-          auto primaryLightmapName = reader->read_string().data();
-          lightmapArray->primary =
-              find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, primaryLightmapName);
+          auto primaryLightmapName = reader->read_string();
+          lightmapArray->primary = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, primaryLightmapName.data());
           RETURN_IF_NULL(lightmapArray->primary);
         }
 
         if (lightmapArray->secondary)
         {
-          lightmapArray->secondary =
-              find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE,
-                                     reader->read_string().data());
+          lightmapArray->secondary = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, reader->read_string().data());
           RETURN_IF_NULL(lightmapArray->secondary);
         }
       }
@@ -451,23 +420,20 @@ namespace iw4of::interfaces
 
     if (asset->lightmapOverridePrimary)
     {
-      asset->lightmapOverridePrimary = find<native::GfxImage>(
-          native::XAssetType::ASSET_TYPE_IMAGE, reader->read_string().data());
+      asset->lightmapOverridePrimary = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, reader->read_string().data());
       RETURN_IF_NULL(asset->lightmapOverridePrimary);
     }
 
     if (asset->lightmapOverrideSecondary)
     {
-      asset->lightmapOverrideSecondary = find<native::GfxImage>(
-          native::XAssetType::ASSET_TYPE_IMAGE, reader->read_string().data());
+      asset->lightmapOverrideSecondary = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, reader->read_string().data());
       RETURN_IF_NULL(asset->lightmapOverrideSecondary);
     }
 
     {
       if (asset->vd.vertices)
       {
-        asset->vd.vertices =
-            reader->read_array<native::GfxWorldVertex>(asset->vertexCount);
+        asset->vd.vertices = reader->read_array<native::GfxWorldVertex>(asset->vertexCount);
       }
     }
 
@@ -475,8 +441,7 @@ namespace iw4of::interfaces
       if (asset->vld.data)
       {
         // no align for char
-        asset->vld.data =
-            reader->read_array<uint8_t>(asset->vertexLayerDataSize);
+        asset->vld.data = reader->read_array<uint8_t>(asset->vertexLayerDataSize);
       }
     }
 
@@ -511,11 +476,7 @@ namespace iw4of::interfaces
       int32_t version = reader.read<int32_t>();
       if (version > IW4X_GFXMAP_VERSION)
       {
-        print_error(
-            "Reading gfxworld '{}' failed, expected version is {}, but it was {}!",
-            name,
-            IW4X_GFXMAP_VERSION,
-            version);
+        print_error("Reading gfxworld '{}' failed, expected version is {}, but it was {}!", name, IW4X_GFXMAP_VERSION, version);
       }
 
       native::GfxWorld* asset = reader.read_object<native::GfxWorld>();
@@ -545,9 +506,7 @@ namespace iw4of::interfaces
 
           if (sky->skyImage)
           {
-            sky->skyImage =
-                find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE,
-                                       reader.read_string().data());
+            sky->skyImage = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, reader.read_string().data());
           }
         }
       }
@@ -556,35 +515,29 @@ namespace iw4of::interfaces
       {
         if (asset->dpvsPlanes.planes)
         {
-          asset->dpvsPlanes.planes =
-              reader.read_array<native::cplane_s>(asset->planeCount);
+          asset->dpvsPlanes.planes = reader.read_array<native::cplane_s>(asset->planeCount);
 
-          auto clip = find<native::clipMap_t>(
-              native::XAssetType::ASSET_TYPE_CLIPMAP_MP, asset->name);
+          auto clip = find<native::clipMap_t>(native::XAssetType::ASSET_TYPE_CLIPMAP_MP, asset->name);
 
           if (clip)
           {
             assert(clip->planeCount == asset->planeCount);
             for (size_t i = 0; i < clip->planeCount; i++)
             {
-              assert(0 == memcmp(&clip->planes[i],
-                                 &asset->dpvsPlanes.planes[i],
-                                 sizeof native::cplane_s));
+              assert(0 == memcmp(&clip->planes[i], &asset->dpvsPlanes.planes[i], sizeof native::cplane_s));
             }
 
             asset->dpvsPlanes.planes = clip->planes;
           }
           else
           {
-            print_error(
-                "GfxWorld dpvs planes not mapped. This shouldn't happen. Make sure to load the ClipMap first! They are co-dependant\n");
+            print_error("GfxWorld dpvs planes not mapped. This shouldn't happen. Make sure to load the ClipMap first! They are co-dependant\n");
           }
         }
 
         if (asset->dpvsPlanes.nodes)
         {
-          asset->dpvsPlanes.nodes =
-              reader.read_array<uint16_t>(asset->nodeCount);
+          asset->dpvsPlanes.nodes = reader.read_array<uint16_t>(asset->nodeCount);
         }
       }
 
@@ -592,8 +545,7 @@ namespace iw4of::interfaces
 
       if (asset->aabbTreeCounts)
       {
-        asset->aabbTreeCounts =
-            reader.read_array<native::GfxCellTreeCount>(cell_count);
+        asset->aabbTreeCounts = reader.read_array<native::GfxCellTreeCount>(cell_count);
       }
 
       if (asset->aabbTrees)
@@ -606,8 +558,7 @@ namespace iw4of::interfaces
 
           if (cell_tree->aabbTree)
           {
-            cell_tree->aabbTree = reader.read_array<native::GfxAabbTree>(
-                asset->aabbTreeCounts[i].aabbTreeCount);
+            cell_tree->aabbTree = reader.read_array<native::GfxAabbTree>(asset->aabbTreeCounts[i].aabbTreeCount);
 
             for (int j = 0; j < asset->aabbTreeCounts[i].aabbTreeCount; ++j)
             {
@@ -621,18 +572,15 @@ namespace iw4of::interfaces
                   // We still have to read it
                   reader.read_array<uint16_t>(aabbTree->smodelIndexCount);
 
-                  aabbTree->smodelIndexes =
-                      local_allocator.get_pointer<uint16_t>(oldPointer);
+                  aabbTree->smodelIndexes = local_allocator.get_pointer<uint16_t>(oldPointer);
                 }
                 else
                 {
-                  aabbTree->smodelIndexes =
-                      reader.read_array<uint16_t>(aabbTree->smodelIndexCount);
+                  aabbTree->smodelIndexes = reader.read_array<uint16_t>(aabbTree->smodelIndexCount);
 
                   for (uint16_t k = 0; k < aabbTree->smodelIndexCount; ++k)
                   {
-                    local_allocator.map_pointer(&oldPointer[k],
-                                                &aabbTree->smodelIndexes[k]);
+                    local_allocator.map_pointer(&oldPointer[k], &aabbTree->smodelIndexes[k]);
                   }
                 }
               }
@@ -651,8 +599,7 @@ namespace iw4of::interfaces
 
           if (cell->portals)
           {
-            cell->portals =
-                reader.read_array<native::GfxPortal>(cell->portalCount);
+            cell->portals = reader.read_array<native::GfxPortal>(cell->portalCount);
 
             for (int j = 0; j < cell->portalCount; ++j)
             {
@@ -660,16 +607,14 @@ namespace iw4of::interfaces
 
               if (portal->vertices)
               {
-                portal->vertices =
-                    reader.read_array<native::vec3_t>(portal->vertexCount);
+                portal->vertices = reader.read_array<native::vec3_t>(portal->vertexCount);
               }
             }
           }
 
           if (cell->reflectionProbes)
           {
-            cell->reflectionProbes =
-                reader.read_array<uint8_t>(cell->reflectionProbeCount);
+            cell->reflectionProbes = reader.read_array<uint8_t>(cell->reflectionProbeCount);
           }
         }
       }
@@ -684,43 +629,34 @@ namespace iw4of::interfaces
       {
         if (asset->lightGrid.rowDataStart)
         {
-          asset->lightGrid.rowDataStart = reader.read_array<uint16_t>(
-              (asset->lightGrid.maxs[asset->lightGrid.rowAxis] -
-               asset->lightGrid.mins[asset->lightGrid.rowAxis]) +
-              1);
+          asset->lightGrid.rowDataStart =
+              reader.read_array<uint16_t>((asset->lightGrid.maxs[asset->lightGrid.rowAxis] - asset->lightGrid.mins[asset->lightGrid.rowAxis]) + 1);
         }
 
         if (asset->lightGrid.rawRowData)
         {
-          asset->lightGrid.rawRowData =
-              reader.read_array<uint8_t>(asset->lightGrid.rawRowDataSize);
+          asset->lightGrid.rawRowData = reader.read_array<uint8_t>(asset->lightGrid.rawRowDataSize);
         }
 
         if (asset->lightGrid.entries)
         {
-          asset->lightGrid.entries =
-              reader.read_array<native::GfxLightGridEntry>(
-                  asset->lightGrid.entryCount);
+          asset->lightGrid.entries = reader.read_array<native::GfxLightGridEntry>(asset->lightGrid.entryCount);
         }
 
         if (asset->lightGrid.colors)
         {
-          asset->lightGrid.colors =
-              reader.read_array<native::GfxLightGridColors>(
-                  asset->lightGrid.colorCount);
+          asset->lightGrid.colors = reader.read_array<native::GfxLightGridColors>(asset->lightGrid.colorCount);
         }
       }
 
       if (asset->models)
       {
-        asset->models =
-            reader.read_array<native::GfxBrushModel>(asset->modelCount);
+        asset->models = reader.read_array<native::GfxBrushModel>(asset->modelCount);
       }
 
       if (asset->materialMemory)
       {
-        asset->materialMemory = reader.read_array<native::MaterialMemory>(
-            asset->materialMemoryCount);
+        asset->materialMemory = reader.read_array<native::MaterialMemory>(asset->materialMemoryCount);
 
         for (int i = 0; i < asset->materialMemoryCount; ++i)
         {
@@ -729,8 +665,7 @@ namespace iw4of::interfaces
           if (material_memory->material)
           {
             auto materialName = reader.read_string();
-            material_memory->material = find<native::Material>(
-                native::XAssetType::ASSET_TYPE_MATERIAL, materialName.data());
+            material_memory->material = find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, materialName.data());
             assert(material_memory->material);
           }
         }
@@ -739,24 +674,21 @@ namespace iw4of::interfaces
       if (asset->sun.spriteMaterial)
       {
         auto material_name = reader.read_string();
-        asset->sun.spriteMaterial = find<native::Material>(
-            native::XAssetType::ASSET_TYPE_MATERIAL, material_name.data());
+        asset->sun.spriteMaterial = find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, material_name.data());
         assert(asset->sun.spriteMaterial);
       }
 
       if (asset->sun.flareMaterial)
       {
         auto material_name = reader.read_string();
-        asset->sun.flareMaterial = find<native::Material>(
-            native::XAssetType::ASSET_TYPE_MATERIAL, material_name.data());
+        asset->sun.flareMaterial = find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, material_name.data());
         assert(asset->sun.flareMaterial);
       }
 
       if (asset->outdoorImage)
       {
         auto material_name = reader.read_string();
-        asset->outdoorImage = find<native::GfxImage>(
-            native::XAssetType::ASSET_TYPE_IMAGE, material_name.data());
+        asset->outdoorImage = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, material_name.data());
         assert(asset->outdoorImage);
       }
 
@@ -770,8 +702,7 @@ namespace iw4of::interfaces
       {
         asset->sceneDynModel = reinterpret_cast<native::GfxSceneDynModel*>(-1);
         asset->primaryLightDynEntShadowVis[0] = reinterpret_cast<uint32_t*>(-1);
-        asset->nonSunPrimaryLightForModelDynEnt =
-            reinterpret_cast<uint8_t*>(-1);
+        asset->nonSunPrimaryLightForModelDynEnt = reinterpret_cast<uint8_t*>(-1);
       }
 
       if (asset->dpvsDyn.dynEntClientCount[1] > 0)
@@ -783,8 +714,7 @@ namespace iw4of::interfaces
 
       if (asset->shadowGeom)
       {
-        asset->shadowGeom = reader.read_array<native::GfxShadowGeometry>(
-            asset->primaryLightCount);
+        asset->shadowGeom = reader.read_array<native::GfxShadowGeometry>(asset->primaryLightCount);
 
         for (uint32_t i = 0; i < asset->primaryLightCount; ++i)
         {
@@ -792,22 +722,19 @@ namespace iw4of::interfaces
 
           if (shadow_geometry->sortedSurfIndex)
           {
-            shadow_geometry->sortedSurfIndex =
-                reader.read_array<uint16_t>(shadow_geometry->surfaceCount);
+            shadow_geometry->sortedSurfIndex = reader.read_array<uint16_t>(shadow_geometry->surfaceCount);
           }
 
           if (shadow_geometry->smodelIndex)
           {
-            shadow_geometry->smodelIndex =
-                reader.read_array<uint16_t>(shadow_geometry->smodelCount);
+            shadow_geometry->smodelIndex = reader.read_array<uint16_t>(shadow_geometry->smodelCount);
           }
         }
       }
 
       if (asset->lightRegion)
       {
-        asset->lightRegion =
-            reader.read_array<native::GfxLightRegion>(asset->primaryLightCount);
+        asset->lightRegion = reader.read_array<native::GfxLightRegion>(asset->primaryLightCount);
 
         for (uint32_t i = 0; i < asset->primaryLightCount; ++i)
         {
@@ -815,19 +742,15 @@ namespace iw4of::interfaces
 
           if (light_region->hulls)
           {
-            light_region->hulls = reader.read_array<native::GfxLightRegionHull>(
-                light_region->hullCount);
+            light_region->hulls = reader.read_array<native::GfxLightRegionHull>(light_region->hullCount);
 
             for (uint32_t j = 0; j < light_region->hullCount; ++j)
             {
-              native::GfxLightRegionHull* lightRegionHull =
-                  &light_region->hulls[j];
+              native::GfxLightRegionHull* lightRegionHull = &light_region->hulls[j];
 
               if (lightRegionHull->axis)
               {
-                lightRegionHull->axis =
-                    reader.read_array<native::GfxLightRegionAxis>(
-                        lightRegionHull->axisCount);
+                lightRegionHull->axis = reader.read_array<native::GfxLightRegionAxis>(lightRegionHull->axisCount);
               }
             }
           }
@@ -842,8 +765,7 @@ namespace iw4of::interfaces
 
       if (asset->heroOnlyLights)
       {
-        asset->heroOnlyLights = reader.read_array<native::GfxHeroOnlyLight>(
-            asset->heroOnlyLightCount);
+        asset->heroOnlyLights = reader.read_array<native::GfxHeroOnlyLight>(asset->heroOnlyLightCount);
       }
 
       return asset;
@@ -852,8 +774,7 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path interfaces::igfxworld::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path interfaces::igfxworld::get_file_name(const std::string& basename) const
   {
     return std::format("{}.iw4xGfxWorld", basename);
   }
@@ -863,8 +784,7 @@ namespace iw4of::interfaces
     return "gfxworld";
   }
 
-  void igfxworld::write(const native::GfxWorldDraw* asset,
-                        utils::stream* buffer) const
+  void igfxworld::write(const native::GfxWorldDraw* asset, utils::stream* buffer) const
   {
     AssertSize(native::GfxWorldDraw, 72);
 
@@ -884,8 +804,7 @@ namespace iw4of::interfaces
     if (asset->reflectionProbeOrigins)
     {
       AssertSize(native::GfxReflectionProbe, 12);
-      buffer->save_array(asset->reflectionProbeOrigins,
-                         asset->reflectionProbeCount);
+      buffer->save_array(asset->reflectionProbeOrigins, asset->reflectionProbeCount);
     }
 
     if (asset->lightmaps)
@@ -942,9 +861,7 @@ namespace iw4of::interfaces
     }
   }
 
-  void igfxworld::write(const native::GfxWorld* world,
-                        const native::GfxWorldDpvsPlanes* asset,
-                        utils::stream* buffer) const
+  void igfxworld::write(const native::GfxWorld* world, const native::GfxWorldDpvsPlanes* asset, utils::stream* buffer) const
   {
     AssertSize(native::GfxWorldDpvsPlanes, 16);
 

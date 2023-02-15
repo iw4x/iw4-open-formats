@@ -38,9 +38,8 @@ namespace iw4of::interfaces
       const auto& buff = utils::io::read_file(path);
 
       vs->prog.loadDef.loadForRenderer = GFX_RENDERER_SHADER_SM3;
-      vs->prog.loadDef.programSize = static_cast<uint16_t>(size);
-      vs->prog.loadDef.program =
-          reinterpret_cast<uint32_t*>(local_allocator.allocate(size));
+      vs->prog.loadDef.programSize = static_cast<uint16_t>(size / sizeof(uint32_t));
+      vs->prog.loadDef.program = local_allocator.allocate_array<uint32_t>(vs->prog.loadDef.programSize);
       memcpy_s(vs->prog.loadDef.program, size, buff.data(), buff.size());
 
       return vs;

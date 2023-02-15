@@ -84,6 +84,7 @@ namespace iw4of::interfaces
           sound->sound.info.data_len = chunkSize;
           sound->sound.info.samples = chunkSize / (sound->sound.info.bits / 8);
           sound->sound.data = reader.read_array<char>(chunkSize);
+          sound->sound.info.data_ptr = sound->sound.data;
           break;
 
         default:
@@ -97,7 +98,7 @@ namespace iw4of::interfaces
 
     if (!sound->sound.info.data_ptr)
     {
-      print_error("Reading sound '{}' failed, invalid format!", name);
+      print_error("Reading sound '{}' failed, missing sound ptr !", name);
       return nullptr;
     }
 
