@@ -10,11 +10,9 @@
 
 namespace iw4of::interfaces
 {
-  std::filesystem::path igfximage::get_file_name(
-      const native::XAssetHeader& header) const
+  std::filesystem::path igfximage::get_file_name(const native::XAssetHeader& header) const
   {
-    return is_special(header.image) ? get_special_file_name(header.image->name)
-                                    : get_file_name(header.image->name);
+    return is_special(header.image) ? get_special_file_name(header.image->name) : get_file_name(header.image->name);
   }
 
   std::filesystem::path igfximage::get_file_name(const std::string& name) const
@@ -22,8 +20,7 @@ namespace iw4of::interfaces
     return std::format("{}.iwi", name);
   }
 
-  std::filesystem::path igfximage::get_special_file_name(
-      const std::string& name) const
+  std::filesystem::path igfximage::get_special_file_name(const std::string& name) const
   {
     return std::format("{}.iw4xImage", name);
   }
@@ -43,21 +40,20 @@ namespace iw4of::interfaces
     const char* temp_name = image->name;
     if (temp_name[0] == '*') temp_name++;
 
-    const auto special_path =
-        get_work_path(get_special_file_name(temp_name)).string();
+    const auto special_path = get_work_path(get_special_file_name(temp_name)).string();
     if (utils::io::file_exists(special_path))
     {
       auto contents = utils::io::read_file(special_path);
       auto reader = utils::stream::reader(&local_allocator, contents);
 
-      void* magic = reader.read(8);
-      if (std::memcmp(&magic, "IW4xImg", 7))
+      const char* magic = reader.read_array<char>(8);
+      if (std::string(magic, 7) != "IW4xImg")
       {
         print_error("Reading image '{}' failed, header is invalid!", name);
         return nullptr;
       }
 
-      uint8_t version = reinterpret_cast<char*>(magic)[7];
+      uint8_t version = magic[7];
       bool isLegacyZeroVersion = false;
 
       if (version == '0')
@@ -67,10 +63,7 @@ namespace iw4of::interfaces
       }
       else if (version > IW4X_IMG_VERSION)
       {
-        print_error(
-            "Reading image '{}' failed, image version is too new! expected {} and got {}!",
-            IW4X_IMG_VERSION,
-            version);
+        print_error("Reading image '{}' failed, image version is too new! expected {} and got {}!", IW4X_IMG_VERSION, version);
         return nullptr;
       }
 
@@ -79,11 +72,12 @@ namespace iw4of::interfaces
       image->category = reader.read<char>();
 
       int32_t dataLength = reader.read<int32_t>();
-      image->cardMemory.platform[0] = dataLength;
-      image->cardMemory.platform[1] = dataLength;
+      image->cardMemory.platform[0] = 0;
+      image->cardMemory.platform[1] = 0;
 
       image->texture.loadDef =
-          local_allocator.allocate<iw4of::native::GfxImageLoadDef>();
+          reinterpret_cast<iw4of::native::GfxImageLoadDef*>(local_allocator.allocate(sizeof(iw4of::native::GfxImageLoadDef) + dataLength - 4));
+
 
       if (isLegacyZeroVersion)
       {
@@ -97,8 +91,7 @@ namespace iw4of::interfaces
           char data[1];
         };
 
-        LegacyLoadDef loadDef = *reinterpret_cast<LegacyLoadDef*>(
-            reader.read_array<char>(dataLength + 16));
+        LegacyLoadDef loadDef = *reinterpret_cast<LegacyLoadDef*>(reader.read_array<char>(dataLength + 16));
 
         image->texture.loadDef->levelCount = loadDef.levelCount;
         image->texture.loadDef->flags = loadDef.flags;
@@ -111,20 +104,25 @@ namespace iw4of::interfaces
       }
       else
       {
+        image->texture.loadDef->levelCount = reader.read<uint8_t>();
         image->texture.loadDef->flags = reader.read<int32_t>();
         image->width = reader.read<uint16_t>();
         image->height = reader.read<uint16_t>();
         image->depth = reader.read<uint16_t>();
+        image->texture.loadDef->resourceSize = dataLength;
 
         image->texture.loadDef->format = reader.read<int32_t>();
       }
+
+      auto data = reader.read_array<uint8_t>(image->texture.loadDef->resourceSize);
+      std::memcpy(image->texture.loadDef->data, data, image->texture.loadDef->resourceSize);
 
       ZeroMemory(image->texture.loadDef->pad, 3);
 
       if (image->texture.loadDef->resourceSize != dataLength)
       {
-        print_error("Resource size doesn't match the data length ({})!\n",
-                    name);
+        print_error(
+            "Resource size doesn't match the data length ({}) Expected {} and got {}!\n", name, image->texture.loadDef->resourceSize, dataLength);
       }
 
       image->delayLoadPixels = true;
@@ -133,8 +131,7 @@ namespace iw4of::interfaces
     }
     else if (name[0] != '*')
     {
-      const auto file_path =
-          get_work_path(get_file_name(temp_name)).string();
+      const auto file_path = get_work_path(get_file_name(temp_name)).string();
 
       if (!utils::io::file_exists(file_path))
       {
@@ -144,8 +141,7 @@ namespace iw4of::interfaces
 
       auto iwiBuffer = utils::io::read_file(file_path);
 
-      const native::GfxImageFileHeader* iwiHeader =
-          reinterpret_cast<const native::GfxImageFileHeader*>(iwiBuffer.data());
+      const native::GfxImageFileHeader* iwiHeader = reinterpret_cast<const native::GfxImageFileHeader*>(iwiBuffer.data());
 
       if (std::memcmp(iwiHeader->tag, "IWi", 3) && iwiHeader->version == 8)
       {
@@ -157,8 +153,7 @@ namespace iw4of::interfaces
       image->cardMemory.platform[0] = iwiHeader->fileSizeForPicmip[0] - 32;
       image->cardMemory.platform[1] = iwiHeader->fileSizeForPicmip[0] - 32;
 
-      image->texture.loadDef =
-          local_allocator.allocate<native::GfxImageLoadDef>();
+      image->texture.loadDef = local_allocator.allocate<native::GfxImageLoadDef>();
       if (!image->texture.loadDef)
       {
         print_error("Failed to allocate GfxImageLoadDef structure!");
@@ -226,9 +221,8 @@ namespace iw4of::interfaces
       if (name[0] == '*') name.erase(name.begin());
 
       utils::stream buffer;
-      buffer.save_array(
-          "IW4xImg",
-          7); // just stick version in the magic since we have an extra char
+      buffer.save_array("IW4xImg",
+                        7); // just stick version in the magic since we have an extra char
       buffer.save_byte(static_cast<uint8_t>(IW4X_IMG_VERSION));
 
       buffer.save_object(static_cast<uint8_t>(image->mapType));
@@ -244,8 +238,7 @@ namespace iw4of::interfaces
       buffer.save_object(image->depth);
       buffer.save_object(image->texture.loadDef->format);
 
-      buffer.save(image->texture.loadDef->data,
-                  image->texture.loadDef->resourceSize);
+      buffer.save(image->texture.loadDef->data, image->texture.loadDef->resourceSize);
 
       auto backup = header.image->name;
       header.image->name = name.data();

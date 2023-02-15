@@ -38,9 +38,8 @@ namespace iw4of::interfaces
       const auto& buff = utils::io::read_file(path);
 
       ps->prog.loadDef.loadForRenderer = GFX_RENDERER_SHADER_SM3;
-      ps->prog.loadDef.programSize = static_cast<uint16_t>(size);
-      ps->prog.loadDef.program =
-          reinterpret_cast<uint32_t*>(local_allocator.allocate(size));
+      ps->prog.loadDef.programSize = static_cast<uint16_t>(size/sizeof(uint32_t));
+      ps->prog.loadDef.program = local_allocator.allocate_array<uint32_t>(ps->prog.loadDef.programSize);
       memcpy_s(ps->prog.loadDef.program, size, buff.data(), buff.size());
 
       return ps;
