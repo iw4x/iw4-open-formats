@@ -19,22 +19,22 @@ namespace iw4of
     std::function<std::string(const std::string& filename)> fs_read_file{};
     std::function<unsigned int(const std::string& text)>
         store_in_string_table{};
-    std::function<std::string(const unsigned int& index)>
+    std::function<std::string(const unsigned int index)>
         get_from_string_table{};
 
     params_t(const std::filesystem::path& work_directory,
 
              // All of these are somewhat facultative but if you want solid data
              // you'll want all of them
-             std::function<void(print_type level, const std::string& message)>
+            const std::function<void(print_type level, const std::string& message)>&
                  print_function = nullptr,
-             std::function<void*(int type, const std::string& name)>
+        const std::function<void*(int type, const std::string& name)>&
                  find_other_asset = nullptr,
-             std::function<std::string(const std::string& filename)>
+        const std::function<std::string(const std::string& filename)>&
                  fs_read_file = nullptr,
-             std::function<unsigned int(const std::string& text)>
+        const std::function<unsigned int(const std::string& text)>&
                  store_in_string_table = nullptr,
-             std::function<std::string(const unsigned int& index)>
+        const std::function<std::string(const unsigned int& index)>&
                  get_from_string_table = nullptr)
     {
       this->find_other_asset = find_other_asset;
