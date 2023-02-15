@@ -43,7 +43,7 @@ namespace iw4of::interfaces
 
     if (asset->name)
     {
-      return utils::io::write_file(get_file_name(asset->name).string(),
+      return utils::io::write_file(get_work_path(header).string(),
                                    buffer.to_buffer());
     }
 

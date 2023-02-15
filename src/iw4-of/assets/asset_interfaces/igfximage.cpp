@@ -245,16 +245,7 @@ namespace iw4of::interfaces
       buffer.save(image->texture.loadDef->data,
                   image->texture.loadDef->resourceSize);
 
-      utils::io::write_file(get_file_name(header).string(), buffer.to_buffer());
-
-      if (name.starts_with("reflection_probe"))
-      {
-        auto path_to_rp0 = get_special_file_name("reflection_probe0").string();
-        if (!utils::io::file_exists(path_to_rp0))
-        {
-          utils::io::write_file(path_to_rp0, buffer.to_buffer());
-        }
-      }
+      utils::io::write_file(get_work_path(header).string(), buffer.to_buffer());
     }
     else
     {
