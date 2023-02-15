@@ -30,7 +30,7 @@ namespace iw4of::utils::compression
 			return {};
 		}
 
-		int ret;
+		int32_t ret;
 		memory::allocator allocator;
 
 		const auto dest = allocator.allocate_array<uint8_t>(CHUNK);

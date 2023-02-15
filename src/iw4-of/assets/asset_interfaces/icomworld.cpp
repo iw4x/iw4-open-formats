@@ -32,7 +32,7 @@ namespace iw4of::interfaces
 
 			buffer.save_array(asset->primaryLights, asset->primaryLightCount);
 
-			for (unsigned int i = 0; i < asset->primaryLightCount; ++i)
+			for (uint32_t i = 0; i < asset->primaryLightCount; ++i)
 			{
 				native::ComPrimaryLight* light = &asset->primaryLights[i];
 
@@ -69,14 +69,14 @@ namespace iw4of::interfaces
 			auto contents = utils::io::read_file(path);
 			utils::stream::reader reader(&local_allocator, contents);
 
-			__int64 magic = reader.read<__int64>();
+			int64_t magic = reader.read<int64_t>();
 			if (std::memcmp(&magic, "IW4xComW", 8))
 			{
 				print_error("Reading comworld '{}' failed, header is invalid!", name);
 				return nullptr;
 			}
 
-			int version = reader.read<int>();
+			int32_t version = reader.read<int32_t>();
 			if (version > IW4X_COMMAP_VERSION)
 			{
 				print_error("Reading comworld '{}' failed, expected version is {}, but it was {}!", name, IW4X_COMMAP_VERSION, version);
@@ -94,7 +94,7 @@ namespace iw4of::interfaces
 			{
 				asset->primaryLights = reader.read_array<native::ComPrimaryLight>(asset->primaryLightCount);
 
-				for (unsigned int i = 0; i < asset->primaryLightCount; ++i)
+				for (uint32_t i = 0; i < asset->primaryLightCount; ++i)
 				{
 					native::ComPrimaryLight* light = &asset->primaryLights[i];
 

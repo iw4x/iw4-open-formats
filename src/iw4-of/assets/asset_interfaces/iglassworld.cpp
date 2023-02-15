@@ -126,7 +126,7 @@ namespace iw4of::interfaces
 				return nullptr;
 			}
 
-			auto version = gameWorldJson["version"].IsNumber() ? gameWorldJson["version"].Get<int>() : 0;
+			auto version = gameWorldJson["version"].IsNumber() ? gameWorldJson["version"].Get<int32_t>() : 0;
 			if (version != IW4X_GAMEWORLD_VERSION)
 			{
 				print_error("Invalid GameWorld json version for {}, expected {} and got {}\n", name, IW4X_GAMEWORLD_VERSION, version);
@@ -148,8 +148,8 @@ namespace iw4of::interfaces
 
 				try
 				{
-					glassData->damageToDestroy = jsonGlassData["damageToDestroy"].Get<unsigned short>();
-					glassData->damageToWeaken = jsonGlassData["damageToWeaken"].Get<unsigned short>();
+					glassData->damageToDestroy = jsonGlassData["damageToDestroy"].Get<uint16_t>();
+					glassData->damageToWeaken = jsonGlassData["damageToWeaken"].Get<uint16_t>();
 
 					if (jsonGlassData["glassNames"].IsArray())
 					{
@@ -162,16 +162,16 @@ namespace iw4of::interfaces
 							const auto& jsonGlassName = glassNames[i];
 							glassData->glassNames[i].nameStr = local_allocator.duplicate_string(jsonGlassName["nameStr"].GetString());
 
-							glassData->glassNames[i].name = jsonGlassName["name"].Get<unsigned short>();
+							glassData->glassNames[i].name = jsonGlassName["name"].Get<uint16_t>();
 
 							if (jsonGlassName["piecesIndices"].IsArray())
 							{
 								const auto& jsonPiecesIndices = jsonGlassName["piecesIndices"];
-								glassData->glassNames[i].pieceCount = static_cast<unsigned short>(jsonPiecesIndices.Size());
-								glassData->glassNames[i].pieceIndices = local_allocator.allocate_array<unsigned short>(glassData->glassNames[i].pieceCount);
+								glassData->glassNames[i].pieceCount = static_cast<uint16_t>(jsonPiecesIndices.Size());
+								glassData->glassNames[i].pieceIndices = local_allocator.allocate_array<uint16_t>(glassData->glassNames[i].pieceCount);
 								for (size_t j = 0; j < glassData->glassNames[i].pieceCount; j++)
 								{
-									glassData->glassNames[i].pieceIndices[j] = jsonPiecesIndices[j].Get<unsigned short>();
+									glassData->glassNames[i].pieceIndices[j] = jsonPiecesIndices[j].Get<uint16_t>();
 								}
 							}
 						}
@@ -185,9 +185,9 @@ namespace iw4of::interfaces
 
 						for (size_t i = 0; i < glassData->pieceCount; i++)
 						{
-							glassData->glassPieces[i].collapseTime = glassPieces[i]["collapseTime"].Get<unsigned short>();
-							glassData->glassPieces[i].damageTaken = glassPieces[i]["damageTaken"].Get<unsigned short>();
-							glassData->glassPieces[i].lastStateChangeTime = glassPieces[i]["lastStateChangeTime"].Get<int>();
+							glassData->glassPieces[i].collapseTime = glassPieces[i]["collapseTime"].Get<uint16_t>();
+							glassData->glassPieces[i].damageTaken = glassPieces[i]["damageTaken"].Get<uint16_t>();
+							glassData->glassPieces[i].lastStateChangeTime = glassPieces[i]["lastStateChangeTime"].Get<int32_t>();
 							glassData->glassPieces[i].impactDir = glassPieces[i]["impactDir"].Get<char>();
 
 							const auto& jsonPos = glassPieces[i]["impactPos"];

@@ -7,13 +7,13 @@ namespace iw4of::utils::json
 {
 	// Helpers for rapidjson
 	template<typename ValueType>
-	struct rapidjson::internal::TypeHelper<ValueType, unsigned short> {
-		static unsigned short Get(const ValueType& v) { return static_cast<unsigned short>(v.GetInt()); }
+	struct rapidjson::internal::TypeHelper<ValueType, uint16_t> {
+		static uint16_t Get(const ValueType& v) { return static_cast<uint16_t>(v.GetInt()); }
 	};
 
 	template<typename ValueType>
 	struct rapidjson::internal::TypeHelper<ValueType, short> {
-		static short Get(const ValueType& v) { return static_cast<short>(v.GetInt()); }
+		static short Get(const ValueType& v) { return static_cast<int16_t>(v.GetInt()); }
 	};
 
 	template<typename ValueType>
@@ -27,8 +27,8 @@ namespace iw4of::utils::json
 	};
 
 	template<typename ValueType>
-	struct rapidjson::internal::TypeHelper<ValueType, unsigned char> {
-		static unsigned char Get(const ValueType& v) { return static_cast<unsigned char>(v.GetInt()); }
+	struct rapidjson::internal::TypeHelper<ValueType, uint8_t> {
+		static uint8_t Get(const ValueType& v) { return static_cast<uint8_t>(v.GetInt()); }
 	};
 
 

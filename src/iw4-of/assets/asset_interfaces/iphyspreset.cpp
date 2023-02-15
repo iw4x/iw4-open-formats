@@ -69,7 +69,7 @@ namespace iw4of::interfaces
 			try
 			{
 				asset->name =local_allocator.duplicate_string(physPresetJson["name"].GetString());
-				asset->type = physPresetJson["type"].Get<int>();
+				asset->type = physPresetJson["type"].Get<int32_t>();
 				asset->bounce = physPresetJson["bounce"].Get<float>();
 				asset->mass = physPresetJson["mass"].Get<float>();
 				asset->friction = physPresetJson["friction"].Get<float>();

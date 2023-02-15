@@ -62,10 +62,10 @@ namespace iw4of::interfaces
 
 		try
 		{
-			assert(clipmap_json["version"].Get<int>() <= IW4X_CLIPMAP_VERSION);
+			assert(clipmap_json["version"].Get<int32_t>() <= IW4X_CLIPMAP_VERSION);
 
 			clipmap->name = local_allocator.duplicate_string(clipmap_json["name"].Get<std::string>());
-			clipmap->isInUse = clipmap_json["isInUse"].Get<int>();
+			clipmap->isInUse = clipmap_json["isInUse"].Get<int32_t>();
 
 			// planes
 			clipmap->planeCount = clipmap_json["planes"].Size();
@@ -77,7 +77,7 @@ namespace iw4of::interfaces
 				auto& json_plane = clipmap_json["planes"][i];
 				utils::json::copy_array(plane->normal, clipmap_json["planes"][i]["normal"], 3);
 				plane->dist = json_plane["dist"].Get<float>();
-				plane->type = json_plane["type"].Get<unsigned char>();
+				plane->type = json_plane["type"].Get<uint8_t>();
 			}
 
 			// Smodel list
@@ -111,8 +111,8 @@ namespace iw4of::interfaces
 				auto& json_material = clipmap_json["materials"][i];
 
 				material->name = local_allocator.duplicate_string(json_material["name"].Get<std::string>());
-				material->surfaceFlags = json_material["surfaceFlags"].Get<int>();
-				material->contents = json_material["contents"].Get<int>();
+				material->surfaceFlags = json_material["surfaceFlags"].Get<int32_t>();
+				material->contents = json_material["contents"].Get<int32_t>();
 			}
 
 
@@ -126,13 +126,13 @@ namespace iw4of::interfaces
 
 				assert(clipmap->planes);
 				brushside->plane = &clipmap->planes[std::stoi(json_brushside["plane"].Get<std::string>().substr(1))];
-				brushside->materialNum = json_brushside["materialNum"].Get<unsigned short>();
+				brushside->materialNum = json_brushside["materialNum"].Get<uint16_t>();
 				brushside->firstAdjacentSideOffset = json_brushside["firstAdjacentSideOffset"].Get<char>();
 				brushside->edgeCount = json_brushside["edgeCount"].Get<char>();
 			}
 
 			clipmap->numBrushEdges = clipmap_json["brushEdges"].Size();
-			clipmap->brushEdges = clipmap->numBrushEdges == 0 ? nullptr : local_allocator.allocate_array<unsigned char>(clipmap->numBrushEdges);
+			clipmap->brushEdges = clipmap->numBrushEdges == 0 ? nullptr : local_allocator.allocate_array<uint8_t>(clipmap->numBrushEdges);
 			utils::json::copy_array(clipmap->brushEdges, clipmap_json["brushEdges"]);
 
 			clipmap->numNodes = clipmap_json["nodes"].Size();
@@ -145,8 +145,8 @@ namespace iw4of::interfaces
 
 				assert(clipmap->planes);
 				node->plane = &clipmap->planes[std::stoi(json_node["plane"].Get<std::string>().substr(1))];
-				node->children[0] = json_node["children"][0].Get<short>();
-				node->children[1] = json_node["children"][1].Get<short>();
+				node->children[0] = json_node["children"][0].Get<int16_t>();
+				node->children[1] = json_node["children"][1].Get<int16_t>();
 			}
 
 
@@ -160,11 +160,11 @@ namespace iw4of::interfaces
 				auto& json_leaf = clipmap_json["leafs"][i];
 
 				leaf->bounds = utils::json::read_bounds(json_leaf["bounds"]);
-				leaf->firstCollAabbIndex = json_leaf["firstCollAabbIndex"].Get<unsigned short>();
-				leaf->collAabbCount = json_leaf["collAabbCount"].Get<unsigned short>();
-				leaf->brushContents = json_leaf["brushContents"].Get<int>();
-				leaf->terrainContents = json_leaf["terrainContents"].Get<int>();
-				leaf->leafBrushNode = json_leaf["leafBrushNode"].Get<int>();
+				leaf->firstCollAabbIndex = json_leaf["firstCollAabbIndex"].Get<uint16_t>();
+				leaf->collAabbCount = json_leaf["collAabbCount"].Get<uint16_t>();
+				leaf->brushContents = json_leaf["brushContents"].Get<int32_t>();
+				leaf->terrainContents = json_leaf["terrainContents"].Get<int32_t>();
+				leaf->leafBrushNode = json_leaf["leafBrushNode"].Get<int32_t>();
 			}
 
 			// Leafbrushnodes
@@ -173,11 +173,11 @@ namespace iw4of::interfaces
 
 			// Leafbrushes
 			clipmap->numLeafBrushes = clipmap_json["leafbrushes"].Size();
-			clipmap->leafbrushes = clipmap->numLeafBrushes == 0 ? nullptr : local_allocator.allocate_array<unsigned short>(clipmap->numLeafBrushes);
+			clipmap->leafbrushes = clipmap->numLeafBrushes == 0 ? nullptr : local_allocator.allocate_array<uint16_t>(clipmap->numLeafBrushes);
 			utils::json::copy_array(clipmap->leafbrushes, clipmap_json["leafbrushes"]);
 
 			clipmap->numLeafSurfaces = clipmap_json["leafsurfaces"].Size();
-			clipmap->leafsurfaces = clipmap->numLeafSurfaces == 0 ? nullptr : local_allocator.allocate_array<unsigned int>(clipmap->numLeafSurfaces);
+			clipmap->leafsurfaces = clipmap->numLeafSurfaces == 0 ? nullptr : local_allocator.allocate_array<uint32_t>(clipmap->numLeafSurfaces);
 			utils::json::copy_array(clipmap->leafsurfaces, clipmap_json["leafsurfaces"]);
 
 			clipmap->vertCount = clipmap_json["verts"].Size();
@@ -192,15 +192,15 @@ namespace iw4of::interfaces
 				auto* lbn = &clipmap->leafbrushNodes[i];
 				auto& json_lbn = clipmap_json["leafbrushNodes"][i];
 
-				lbn->axis = json_lbn["axis"].Get<unsigned char>();
-				lbn->leafBrushCount = json_lbn["leafBrushCount"].Get<short>();
-				lbn->contents = json_lbn["contents"].Get<int>();
+				lbn->axis = json_lbn["axis"].Get<uint8_t>();
+				lbn->leafBrushCount = json_lbn["leafBrushCount"].Get<int16_t>();
+				lbn->contents = json_lbn["contents"].Get<int32_t>();
 
 				if (lbn->leafBrushCount > 0)
 				{
-					int index = std::stoi(json_lbn["data"].Get<std::string>().substr(1));
+					int32_t index = std::stoi(json_lbn["data"].Get<std::string>().substr(1));
 
-					assert(index < static_cast<int>(clipmap->numLeafBrushes));
+					assert(index < static_cast<int32_t>(clipmap->numLeafBrushes));
 					assert(index >= 0);
 
 					lbn->data.leaf.brushes = &clipmap->leafbrushes[index];
@@ -217,7 +217,7 @@ namespace iw4of::interfaces
 			// Tri indices
 			auto indiceCountJson = clipmap_json["triIndices"].Size();
 			clipmap->triCount = indiceCountJson;
-			clipmap->triIndices = clipmap->triCount == 0 ? nullptr : local_allocator.allocate_array<unsigned short>(clipmap->triCount * 3);
+			clipmap->triIndices = clipmap->triCount == 0 ? nullptr : local_allocator.allocate_array<uint16_t>(clipmap->triCount * 3);
 
 			for (size_t i = 0; i < clipmap->triCount * 3; i += 3)
 			{
@@ -227,7 +227,7 @@ namespace iw4of::interfaces
 			// Walkable
 			auto walkableCount = 4 * ((3 * clipmap->triCount + 31) >> 5) * 3;
 			assert(clipmap_json["triEdgeIsWalkable"].Size() == walkableCount);
-			clipmap->triEdgeIsWalkable = walkableCount == 0 ? nullptr : local_allocator.allocate_array<unsigned char>(walkableCount);
+			clipmap->triEdgeIsWalkable = walkableCount == 0 ? nullptr : local_allocator.allocate_array<uint8_t>(walkableCount);
 			utils::json::copy_array(clipmap->triEdgeIsWalkable, clipmap_json["triEdgeIsWalkable"]);
 
 			// Borders
@@ -254,10 +254,10 @@ namespace iw4of::interfaces
 				auto partition = &clipmap->partitions[i];
 				auto& json_partition = clipmap_json["partitions"][i];
 
-				partition->triCount = json_partition["triCount"].Get<unsigned char>();
-				partition->firstVertSegment = json_partition["firstVertSegment"].Get<unsigned char>();
-				partition->firstTri = json_partition["firstTri"].Get<int>();
-				partition->borderCount = json_partition["borderCount"].Get<unsigned char>();
+				partition->triCount = json_partition["triCount"].Get<uint8_t>();
+				partition->firstVertSegment = json_partition["firstVertSegment"].Get<uint8_t>();
+				partition->firstTri = json_partition["firstTri"].Get<int32_t>();
+				partition->borderCount = json_partition["borderCount"].Get<uint8_t>();
 
 				if (partition->borderCount > 0)
 				{
@@ -278,9 +278,9 @@ namespace iw4of::interfaces
 
 				utils::json::copy_array(tree->midPoint, json_tree["midPoint"]);
 				utils::json::copy_array(tree->halfSize, json_tree["halfSize"]);
-				tree->materialIndex = json_tree["materialIndex"].Get<unsigned short>();
-				tree->childCount = json_tree["childCount"].Get<unsigned short>();
-				tree->u = json_tree["u"].Get<unsigned int>();
+				tree->materialIndex = json_tree["materialIndex"].Get<uint16_t>();
+				tree->childCount = json_tree["childCount"].Get<uint16_t>();
+				tree->u = json_tree["u"].Get<uint32_t>();
 			}
 
 			// CModels
@@ -297,24 +297,24 @@ namespace iw4of::interfaces
 				auto leaf = &cmodel->leaf;
 				auto& json_leaf = json_cmodel["leaf"];
 
-				leaf->firstCollAabbIndex = json_leaf["firstCollAabbIndex"].Get<unsigned short>();
-				leaf->collAabbCount = json_leaf["collAabbCount"].Get<unsigned short>();
-				leaf->brushContents = json_leaf["brushContents"].Get<int>();
-				leaf->terrainContents = json_leaf["terrainContents"].Get<int>();
-				leaf->leafBrushNode = json_leaf["leafBrushNode"].Get<int>();
+				leaf->firstCollAabbIndex = json_leaf["firstCollAabbIndex"].Get<uint16_t>();
+				leaf->collAabbCount = json_leaf["collAabbCount"].Get<uint16_t>();
+				leaf->brushContents = json_leaf["brushContents"].Get<int32_t>();
+				leaf->terrainContents = json_leaf["terrainContents"].Get<int32_t>();
+				leaf->leafBrushNode = json_leaf["leafBrushNode"].Get<int32_t>();
 				leaf->bounds = utils::json::read_bounds(json_leaf["bounds"]);
 			}
 
 			// Brushes
-			clipmap->numBrushes = static_cast<unsigned short>(clipmap_json["brushes"].Size());
+			clipmap->numBrushes = static_cast<uint16_t>(clipmap_json["brushes"].Size());
 			clipmap->brushes = clipmap->numBrushes == 0 ? nullptr : local_allocator.allocate_array < native::cbrush_t >(clipmap->numBrushes);
 			for (size_t i = 0; i < clipmap->numBrushes; i++)
 			{
 				auto brush = &clipmap->brushes[i];
 				auto& json_brush = clipmap_json["brushes"][i];
 
-				brush->glassPieceIndex = json_brush["glassPieceIndex"].Get<unsigned short>();
-				brush->numsides = json_brush["numsides"].Get<unsigned short>();
+				brush->glassPieceIndex = json_brush["glassPieceIndex"].Get<uint16_t>();
+				brush->numsides = json_brush["numsides"].Get<uint16_t>();
 
 				if (brush->numsides)
 				{
@@ -347,7 +347,7 @@ namespace iw4of::interfaces
 			}
 
 			assert(clipmap_json["brushes"].Size() == clipmap_json["brushContents"].Size());
-			clipmap->brushContents = local_allocator.allocate_array<int>(clipmap->numBrushes);
+			clipmap->brushContents = local_allocator.allocate_array<int32_t>(clipmap->numBrushes);
 			utils::json::copy_array(clipmap->brushContents, clipmap_json["brushContents"]);
 
 			auto& json_ents = clipmap_json["mapEnts"];
@@ -367,9 +367,9 @@ namespace iw4of::interfaces
 
 					for (size_t i = 0; i < trigger->count; i++)
 					{
-						trigger->models[i].contents = json_trigger["models"][i]["contents"].Get<int>();
-						trigger->models[i].hullCount = json_trigger["models"][i]["hullCount"].Get<unsigned short>();
-						trigger->models[i].firstHull = json_trigger["models"][i]["firstHull"].Get<unsigned short>();
+						trigger->models[i].contents = json_trigger["models"][i]["contents"].Get<int32_t>();
+						trigger->models[i].hullCount = json_trigger["models"][i]["hullCount"].Get<uint16_t>();
+						trigger->models[i].firstHull = json_trigger["models"][i]["firstHull"].Get<uint16_t>();
 					}
 
 					trigger->hullCount = json_trigger["hulls"].Size();
@@ -378,9 +378,9 @@ namespace iw4of::interfaces
 					{
 						trigger->hulls[i].bounds = utils::json::read_bounds(json_trigger["hulls"][i]["bounds"]);
 
-						trigger->hulls[i].contents = json_trigger["hulls"][i]["contents"].Get<int>();
-						trigger->hulls[i].firstSlab = json_trigger["hulls"][i]["firstSlab"].Get<unsigned short>();
-						trigger->hulls[i].slabCount = json_trigger["hulls"][i]["slabCount"].Get<unsigned short>();
+						trigger->hulls[i].contents = json_trigger["hulls"][i]["contents"].Get<int32_t>();
+						trigger->hulls[i].firstSlab = json_trigger["hulls"][i]["firstSlab"].Get<uint16_t>();
+						trigger->hulls[i].slabCount = json_trigger["hulls"][i]["slabCount"].Get<uint16_t>();
 					}
 
 					trigger->slabCount = json_trigger["slabs"].Size();
@@ -402,14 +402,14 @@ namespace iw4of::interfaces
 
 						stage->name = local_allocator.duplicate_string(json_stage["name"].GetString());
 						utils::json::copy_array(stage->origin, json_stage["origin"]);
-						stage->triggerIndex = json_stage["triggerIndex"].Get<unsigned short>();
+						stage->triggerIndex = json_stage["triggerIndex"].Get<uint16_t>();
 						stage->sunPrimaryLightIndex = json_stage["sunPrimaryLightIndex"].Get<char>();
 					}
 				}
 			}
 
 			// SmodelNodes
-			clipmap->smodelNodeCount = static_cast<unsigned short>(clipmap_json["smodelNodes"].Size());
+			clipmap->smodelNodeCount = static_cast<uint16_t>(clipmap_json["smodelNodes"].Size());
 			clipmap->smodelNodes = clipmap->smodelNodeCount == 0 ? nullptr : local_allocator.allocate_array<native::SModelAabbNode>(clipmap->smodelNodeCount);
 			for (size_t i = 0; i < clipmap->smodelNodeCount; i++)
 			{
@@ -417,15 +417,15 @@ namespace iw4of::interfaces
 				auto node = &clipmap->smodelNodes[i];
 
 				node->bounds = utils::json::read_bounds(json_node["bounds"]);
-				node->firstChild = json_node["firstChild"].Get<unsigned short>();
-				node->childCount = json_node["childCount"].Get<unsigned short>();
+				node->firstChild = json_node["firstChild"].Get<uint16_t>();
+				node->childCount = json_node["childCount"].Get<uint16_t>();
 			}
 
 			for (size_t i = 0; i < 2; i++)
 			{
 				if (clipmap_json["dynEntities"][i].IsNull()) continue;
 
-				clipmap->dynEntCount[i] = static_cast<unsigned short>(clipmap_json["dynEntities"][i].Size());
+				clipmap->dynEntCount[i] = static_cast<uint16_t>(clipmap_json["dynEntities"][i].Size());
 
 				auto& json_entities = clipmap_json["dynEntities"][i];
 				clipmap->dynEntClientList[i] = clipmap->dynEntCount[i] == 0 ? nullptr : local_allocator.allocate_array<native::DynEntityClient>(clipmap->dynEntCount[i]);
@@ -438,26 +438,26 @@ namespace iw4of::interfaces
 					auto& json_entity = json_entities[j]["dynEntityDef"];
 					auto entity = &clipmap->dynEntDefList[i][j];
 
-					entity->type = static_cast<native::DynEntityType>(json_entity["type"].Get<int>());
+					entity->type = static_cast<native::DynEntityType>(json_entity["type"].Get<int32_t>());
 					utils::json::copy_array(entity->pose.quat, json_entity["pose"]["quat"]);
 					utils::json::copy_array(entity->pose.origin, json_entity["pose"]["origin"]);
 
 					entity->xModel = json_entity["xModel"].IsString() ? find<native::XModel>(native::XAssetType::ASSET_TYPE_XMODEL, json_entity["xModel"].GetString()) : nullptr;
-					entity->brushModel = json_entity["brushModel"].Get<unsigned short>();
-					entity->physicsBrushModel = json_entity["physicsBrushModel"].Get<unsigned short>();
+					entity->brushModel = json_entity["brushModel"].Get<uint16_t>();
+					entity->physicsBrushModel = json_entity["physicsBrushModel"].Get<uint16_t>();
 					entity->destroyFx = json_entity["destroyFx"].IsString() ? find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, json_entity["destroyFx"].GetString()) : nullptr;
 					entity->physPreset = json_entity["physPreset"].IsString() ? find<native::PhysPreset>(native::XAssetType::ASSET_TYPE_PHYSPRESET, json_entity["physPreset"].GetString()) : nullptr;
-					entity->health = json_entity["health"].Get<int>();
+					entity->health = json_entity["health"].Get<int32_t>();
 
 					utils::json::copy_array(entity->mass.centerOfMass, json_entity["mass"]["centerOfMass"]);
 					utils::json::copy_array(entity->mass.momentsOfInertia, json_entity["mass"]["momentsOfInertia"]);
 					utils::json::copy_array(entity->mass.productsOfInertia, json_entity["mass"]["productsOfInertia"]);
 
-					entity->contents = json_entity["contents"].Get<int>();
+					entity->contents = json_entity["contents"].Get<int32_t>();
 				}
 			}
 
-			clipmap->checksum = clipmap_json["checksum"].Get<unsigned int>();
+			clipmap->checksum = clipmap_json["checksum"].Get<uint32_t>();
 		}
 		catch (const std::exception& e)
 		{
@@ -485,8 +485,8 @@ namespace iw4of::interfaces
 
 		std::unordered_map<native::cplane_s*, int> planes{}; // +++
 		std::unordered_map<native::cbrushside_t*, int> brush_sides{}; // +
-		std::unordered_map<unsigned char*, int> brush_edges{}; // +
-		std::unordered_map<unsigned short*, int> leaf_brushes{}; // ++
+		std::unordered_map<uint8_t*, int> brush_edges{}; // +
+		std::unordered_map<uint16_t*, int> leaf_brushes{}; // ++
 		std::unordered_map<native::CollisionBorder*, int> borders{}; // +
 
 		utils::memory::allocator str_duplicator;
@@ -505,7 +505,7 @@ namespace iw4of::interfaces
 			return arr;
 		};
 
-		auto ushort_to_array = [&allocator](const unsigned short* array, int size)
+		auto ushort_to_array = [&allocator](const uint16_t* array, int size)
 		{
 			rapidjson::Value arr(rapidjson::kArrayType);
 
@@ -517,7 +517,7 @@ namespace iw4of::interfaces
 			return arr;
 		};
 
-		auto uchar_to_array = [&allocator](const unsigned char* array, int size)
+		auto uchar_to_array = [&allocator](const uint8_t* array, int size)
 		{
 			rapidjson::Value arr(rapidjson::kArrayType);
 

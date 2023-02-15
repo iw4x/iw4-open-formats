@@ -93,7 +93,7 @@ namespace iw4of
 		return nullptr;
 	}
 
-	unsigned int assets::write_in_stringtable(const std::string& text) const
+	uint32_t assets::write_in_stringtable(const std::string& text) const
 	{
 		if (params.store_in_string_table)
 		{
@@ -104,7 +104,7 @@ namespace iw4of
 		return 0xDEADC0DE;
 	}
 
-	std::string assets::read_from_stringtable(const unsigned int& index) const
+	std::string assets::read_from_stringtable(const uint32_t& index) const
 	{
 		if (params.get_from_string_table)
 		{

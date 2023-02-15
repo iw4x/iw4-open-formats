@@ -43,7 +43,7 @@ namespace iw4of::interfaces
 		try
 		{
 			snd_curve->filename = local_allocator.duplicate_string(snd_curve_json["filename"].GetString());
-			snd_curve->knotCount = snd_curve_json["knotCount"].Get<unsigned short>();
+			snd_curve->knotCount = snd_curve_json["knotCount"].Get<uint16_t>();
 
 			for (auto side = 0; side < 2; side++)
 			{

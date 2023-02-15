@@ -138,7 +138,7 @@ namespace iw4of::utils::cryptography
 		prng_state yarrow;
 		rng_make_prng(128, prng_id, &yarrow, nullptr);
 
-		unsigned char buffer[0x80];
+		uint8_t buffer[0x80];
 		unsigned long length = sizeof(buffer);
 
 		const auto rsa_result = rsa_encrypt_key( //
@@ -301,14 +301,14 @@ namespace iw4of::utils::cryptography
 		return string::dump_hex(hash, "");
 	}
 
-	unsigned int jenkins_one_at_a_time::compute(const std::string& data)
+	uint32_t jenkins_one_at_a_time::compute(const std::string& data)
 	{
 		return compute(data.data(), data.size());
 	}
 
-	unsigned int jenkins_one_at_a_time::compute(const char* key, const size_t len)
+	uint32_t jenkins_one_at_a_time::compute(const char* key, const size_t len)
 	{
-		unsigned int hash, i;
+		uint32_t hash, i;
 		for (hash = i = 0; i < len; ++i)
 		{
 			hash += key[i];

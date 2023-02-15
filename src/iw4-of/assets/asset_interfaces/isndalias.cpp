@@ -134,19 +134,19 @@ namespace iw4of::interfaces
 				alias->chainAliasName = local_allocator.duplicate_string(chainAliasName.GetString());
 			}
 
-			alias->sequence = sequence.Get<int>();
+			alias->sequence = sequence.Get<int32_t>();
 			alias->volMin = volMin.Get<float>();
 			alias->volMax = volMax.Get<float>();
 			alias->pitchMin = pitchMin.Get<float>();
 			alias->pitchMax = pitchMax.Get<float>();
 			alias->distMin = distMin.Get<float>();
 			alias->distMax = distMax.Get<float>();
-			alias->flags.intValue = flags.Get<int>();
+			alias->flags.intValue = flags.Get<int32_t>();
 			alias->slavePercentage = slavePercentage.Get<float>();
 			alias->probability = probability.Get<float>();
 			alias->lfePercentage = lfePercentage.Get<float>();
 			alias->centerPercentage = centerPercentage.Get<float>();
-			alias->startDelay = startDelay.Get<int>();
+			alias->startDelay = startDelay.Get<int32_t>();
 			alias->envelopMin = envelopMin.Get<float>();
 			alias->envelopMax = envelopMax.Get<float>();
 			alias->envelopPercentage = envelopPercentage.Get<float>();
@@ -187,8 +187,8 @@ namespace iw4of::interfaces
 								const auto& speaker = speakers[speakerIndex];
 								alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].levels[0] = speaker["levels0"].Get<float>();
 								alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].levels[1] = speaker["levels1"].Get<float>();
-								alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].numLevels = speaker["numLevels"].Get<int>();
-								alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].speaker = speaker["speaker"].Get<int>();
+								alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].numLevels = speaker["numLevels"].Get<int32_t>();
+								alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].speaker = speaker["speaker"].Get<int32_t>();
 							}
 						}
 					}
@@ -210,18 +210,18 @@ namespace iw4of::interfaces
 				alias->volumeFalloffCurve = curve;
 			}
 
-			if (static_cast<native::snd_alias_type_t>(type.Get<int>()) == native::snd_alias_type_t::SAT_LOADED) // Loaded
+			if (static_cast<native::snd_alias_type_t>(type.Get<int32_t>()) == native::snd_alias_type_t::SAT_LOADED) // Loaded
 			{
 				alias->soundFile->type = native::SAT_LOADED;
 				alias->soundFile->u.loadSnd = find<native::LoadedSound>(native::XAssetType::ASSET_TYPE_LOADED_SOUND, sound_file);
 			}
-			else if (static_cast<native::snd_alias_type_t>(type.Get<int>()) == native::snd_alias_type_t::SAT_STREAMED) // Streamed 
+			else if (static_cast<native::snd_alias_type_t>(type.Get<int32_t>()) == native::snd_alias_type_t::SAT_STREAMED) // Streamed 
 			{
 				alias->soundFile->type = native::SAT_STREAMED;
 
 				std::string streamedFile = sound_file;
 				std::string directory = ""s;
-				int split = streamedFile.find_last_of('/');
+				int32_t split = streamedFile.find_last_of('/');
 
 				if (split >= 0)
 				{

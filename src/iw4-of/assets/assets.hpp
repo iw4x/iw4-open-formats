@@ -54,9 +54,9 @@ namespace iw4of
 
 		void* find_other_asset(int type, const std::string& name) const;
 
-		unsigned int write_in_stringtable(const std::string& text) const;
+		uint32_t write_in_stringtable(const std::string& text) const;
 
-		std::string read_from_stringtable(const unsigned int& index) const;
+		std::string read_from_stringtable(const uint32_t& index) const;
 		
 		assets(const params_t& params);
 		~assets();

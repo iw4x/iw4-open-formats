@@ -64,7 +64,7 @@ namespace iw4of::interfaces
 		{
 			buffer.save_array(asset->materialHandles, asset->numsurfs);
 
-			for (unsigned char i = 0; i < asset->numsurfs; ++i)
+			for (uint8_t i = 0; i < asset->numsurfs; ++i)
 			{
 				if (asset->materialHandles[i])
 				{
@@ -134,7 +134,7 @@ namespace iw4of::interfaces
 			{
 				buffer.save_array(collmap->geoms, collmap->count);
 
-				for (unsigned int i = 0; i < collmap->count; ++i)
+				for (uint32_t i = 0; i < collmap->count; ++i)
 				{
 					auto geom = &collmap->geoms[i];
 
@@ -148,7 +148,7 @@ namespace iw4of::interfaces
 								buffer.save_array_if_not_existing(brush->brush.sides, brush->brush.numsides);
 
 								// Save_cbrushside_tArray
-								for (unsigned short j = 0; j < brush->brush.numsides; ++j)
+								for (uint16_t j = 0; j < brush->brush.numsides; ++j)
 								{
 									native::cbrushside_t* side = &brush->brush.sides[j];
 
@@ -213,7 +213,7 @@ namespace iw4of::interfaces
 		{
 			buffer->save_array_if_not_existing(surf->vertList, surf->vertListCount);
 
-			for (unsigned int i = 0; i < surf->vertListCount; ++i)
+			for (uint32_t i = 0; i < surf->vertListCount; ++i)
 			{
 				native::XRigidVertList* rigidVertList = &surf->vertList[i];
 
@@ -268,7 +268,7 @@ namespace iw4of::interfaces
 	{
 		if (surf->vertInfo.vertsBlend)
 		{
-			surf->vertInfo.vertsBlend = reader->read_array_once<unsigned short>(surf->vertInfo.vertCount[0] + (surf->vertInfo.vertCount[1] * 3) + (surf->vertInfo.vertCount[2] * 5) + (surf->vertInfo.vertCount[3] * 7));
+			surf->vertInfo.vertsBlend = reader->read_array_once<uint16_t>(surf->vertInfo.vertCount[0] + (surf->vertInfo.vertCount[1] * 3) + (surf->vertInfo.vertCount[2] * 5) + (surf->vertInfo.vertCount[3] * 7));
 		}
 
 		// Access vertex block
@@ -282,7 +282,7 @@ namespace iw4of::interfaces
 		{
 			surf->vertList = reader->read_array_once<native::XRigidVertList>(surf->vertListCount);
 
-			for (unsigned int i = 0; i < surf->vertListCount; ++i)
+			for (uint32_t i = 0; i < surf->vertListCount; ++i)
 			{
 				native::XRigidVertList* rigidVertList = &surf->vertList[i];
 
@@ -297,7 +297,7 @@ namespace iw4of::interfaces
 		// Access index block
 		if (surf->triIndices)
 		{
-			surf->triIndices = reader->read_array_once<unsigned short>(surf->triCount * 3);
+			surf->triIndices = reader->read_array_once<uint16_t>(surf->triCount * 3);
 		}
 	}
 
@@ -329,14 +329,14 @@ namespace iw4of::interfaces
 
 			utils::stream::reader reader(&local_allocator, contents);
 
-			__int64 magic = reader.read<__int64>();
+			int64_t magic = reader.read<int64_t>();
 			if (std::memcmp(&magic, "IW4xModl", 8))
 			{
 				print_error("Reading model '{}' failed, header is invalid!", name);
 				return nullptr;
 			}
 
-			int version = reader.read<int>();
+			int32_t version = reader.read<int32_t>();
 			if (version != IW4X_MODEL_VERSION)
 			{
 				print_error("Reading model '{}' failed, expected version is {}, but it was {}!", name, IW4X_MODEL_VERSION, version);
@@ -352,7 +352,7 @@ namespace iw4of::interfaces
 
 			if (asset->boneNames)
 			{
-				asset->boneNames = local_allocator.allocate_array<unsigned short>(asset->numBones);
+				asset->boneNames = local_allocator.allocate_array<uint16_t>(asset->numBones);
 
 				for (char i = 0; i < asset->numBones; ++i)
 				{
@@ -362,12 +362,12 @@ namespace iw4of::interfaces
 
 			if (asset->parentList)
 			{
-				asset->parentList = reader.read_array_once<unsigned char>(asset->numBones - asset->numRootBones);
+				asset->parentList = reader.read_array_once<uint8_t>(asset->numBones - asset->numRootBones);
 			}
 
 			if (asset->quats)
 			{
-				asset->quats = reinterpret_cast<short(*)[4]>(reader.read_array_once<short>((asset->numBones - asset->numRootBones) * 4));
+				asset->quats = reinterpret_cast<short(*)[4]>(reader.read_array_once<int16_t>((asset->numBones - asset->numRootBones) * 4));
 			}
 
 			if (asset->trans)
@@ -377,7 +377,7 @@ namespace iw4of::interfaces
 
 			if (asset->partClassification)
 			{
-				asset->partClassification = reader.read_array_once<unsigned char>(asset->numBones);
+				asset->partClassification = reader.read_array_once<uint8_t>(asset->numBones);
 			}
 
 			if (asset->baseMat)
@@ -389,7 +389,7 @@ namespace iw4of::interfaces
 			{
 				asset->materialHandles = reader.read_array<native::Material*>(asset->numsurfs);
 
-				for (unsigned char i = 0; i < asset->numsurfs; ++i)
+				for (uint8_t i = 0; i < asset->numsurfs; ++i)
 				{
 					if (asset->materialHandles[i])
 					{
@@ -400,7 +400,7 @@ namespace iw4of::interfaces
 
 			// Save_XModelLodInfoArray
 			{
-				for (unsigned int i = 0; i < 4; ++i)
+				for (uint32_t i = 0; i < 4; ++i)
 				{
 					if (asset->lodInfo[i].modelSurfs)
 					{
@@ -469,7 +469,7 @@ namespace iw4of::interfaces
 				{
 					collmap->geoms = reader.read_array<native::PhysGeomInfo>(collmap->count);
 
-					for (unsigned int i = 0; i < collmap->count; ++i)
+					for (uint32_t i = 0; i < collmap->count; ++i)
 					{
 						native::PhysGeomInfo* geom = &collmap->geoms[i];
 
@@ -481,7 +481,7 @@ namespace iw4of::interfaces
 								if (brush->brush.sides)
 								{
 									brush->brush.sides = reader.read_array_once<native::cbrushside_t>(brush->brush.numsides);
-									for (unsigned short j = 0; j < brush->brush.numsides; ++j)
+									for (uint16_t j = 0; j < brush->brush.numsides; ++j)
 									{
 										native::cbrushside_t* side = &brush->brush.sides[j];
 
@@ -494,7 +494,7 @@ namespace iw4of::interfaces
 
 								if (brush->brush.baseAdjacentSide)
 								{
-									brush->brush.baseAdjacentSide = reader.read_array_once<unsigned char>(brush->totalEdgeCount);
+									brush->brush.baseAdjacentSide = reader.read_array_once<uint8_t>(brush->totalEdgeCount);
 								}
 							}
 

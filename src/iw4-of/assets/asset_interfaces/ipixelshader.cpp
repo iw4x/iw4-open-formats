@@ -38,8 +38,8 @@ namespace iw4of::interfaces
 
 
 			ps->prog.loadDef.loadForRenderer = GFX_RENDERER_SHADER_SM3;
-			ps->prog.loadDef.programSize = static_cast<unsigned short>(size);
-			ps->prog.loadDef.program = reinterpret_cast<unsigned int*>(local_allocator.allocate(size));
+			ps->prog.loadDef.programSize = static_cast<uint16_t>(size);
+			ps->prog.loadDef.program = reinterpret_cast<uint32_t*>(local_allocator.allocate(size));
 			memcpy_s(ps->prog.loadDef.program, size, buff.data(), buff.size());
 
 			return ps;
