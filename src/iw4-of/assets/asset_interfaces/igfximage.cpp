@@ -2,9 +2,9 @@
 
 #include "igfximage.hpp"
 
-#include "utils/io.hpp"
-#include "utils/stream.hpp"
-#include "utils/string.hpp"
+#include <utils/io.hpp>
+#include <utils/stream.hpp>
+#include <utils/string.hpp>
 
 #define IW4X_IMG_VERSION 1
 

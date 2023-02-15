@@ -8,7 +8,8 @@ namespace iw4of
 	class asset_interface
 	{
 #define RETURN_IF_NULL(x)\
-	if (x == nullptr){\
+	if (x == nullptr) \
+	{\
 		print_error("{} was unexpectedly null! could not find the asset for it", #x);\
 		assert(false);\
 		return 0;\

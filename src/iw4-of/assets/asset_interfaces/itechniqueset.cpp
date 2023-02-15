@@ -2,13 +2,14 @@
 
 #include "itechniqueset.hpp"
 
-#include "rapidjson/document.h"
-#include "rapidjson/prettywriter.h"
+#include <rapidjson/document.h>
+#include <rapidjson/prettywriter.h>
 
 #include <utils/memory.hpp>
 #include <utils/io.hpp>
 #include <utils/stream.hpp>
 #include <utils/json.hpp>
+
 #include <assets/assets.hpp>
 
 #define IW4X_TECHSET_VERSION 1

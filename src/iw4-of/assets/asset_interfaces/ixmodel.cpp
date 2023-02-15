@@ -3,8 +3,8 @@
 #include "assets/assets.hpp"
 #include "ixmodel.hpp"
 
-#include "utils/io.hpp"
-#include "utils/string.hpp"
+#include <utils/io.hpp>
+#include <utils/string.hpp>
 
 #define IW4X_MODEL_VERSION 9
 
@@ -15,7 +15,7 @@ namespace iw4of::interfaces
 		auto asset = header.model;
 		assert(asset);
 
-		utils::stream buffer{};
+		utils::stream buffer;
 
 		buffer.save_array("IW4xModl", 8);
 		buffer.save_object(IW4X_MODEL_VERSION);

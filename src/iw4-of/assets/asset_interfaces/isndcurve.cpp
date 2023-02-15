@@ -2,14 +2,15 @@
 
 #include "isndcurve.hpp"
 
-#include "utils/io.hpp"
-#include "utils/stream.hpp"
-#include "utils/string.hpp"
-#include "utils/json.hpp"
+#include <utils/io.hpp>
+#include <utils/stream.hpp>
+#include <utils/string.hpp>
+#include <utils/json.hpp>
 
-#include "rapidjson/document.h"
-#include "rapidjson/prettywriter.h"
-#include "assets/assets.hpp"
+#include <rapidjson/document.h>
+#include <rapidjson/prettywriter.h>
+
+#include <assets/assets.hpp>
 
 #define IW4X_SND_CURVE 1
 

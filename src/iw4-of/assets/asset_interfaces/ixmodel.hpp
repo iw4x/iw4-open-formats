@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/stream.hpp"
+#include <utils/stream.hpp>
 #include "assets/asset_interface.hpp"
 
 namespace iw4of::interfaces

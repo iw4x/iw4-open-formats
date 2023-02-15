@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils/stream.hpp"
+#include <utils/stream.hpp>
 
 namespace iw4of::interfaces
 {

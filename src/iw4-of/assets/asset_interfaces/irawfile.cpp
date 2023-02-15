@@ -3,10 +3,9 @@
 #include "irawfile.hpp"
 
 #include "utils/compression.hpp"
-#include "utils/io.hpp"
-#include "utils/stream.hpp"
-#include "utils/string.hpp"
-
+#include <utils/io.hpp>
+#include <utils/stream.hpp>
+#include <utils/string.hpp>
 
 namespace iw4of::interfaces
 {

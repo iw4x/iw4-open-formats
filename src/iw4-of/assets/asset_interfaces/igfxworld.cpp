@@ -1,11 +1,11 @@
 ﻿#include <std_include.hpp>
 
-#include "assets\assets.hpp"
+#include <assets\assets.hpp>
 
 #include "igfxworld.hpp"
 
-#include "utils/io.hpp"
-#include "utils/string.hpp"
+#include <utils/io.hpp>
+#include <utils/string.hpp>
 
 
 #define IW4X_GFXMAP_VERSION 1

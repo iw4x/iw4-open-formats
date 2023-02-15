@@ -2,11 +2,11 @@
 
 #include <filesystem>
 
-#include "game/structs.hpp"
+#include <game/structs.hpp>
 
 #include "../asset_interface.hpp"
 #include "../assets.hpp"
-#include "utils/stream.hpp"
+#include <utils/stream.hpp>
 
 namespace iw4of::interfaces
 {

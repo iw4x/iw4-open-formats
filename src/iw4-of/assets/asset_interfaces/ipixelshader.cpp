@@ -5,6 +5,7 @@
 #include <utils/memory.hpp>
 #include <utils/io.hpp>
 #include <utils/stream.hpp>
+
 #include <assets/assets.hpp>
 
 #define GFX_RENDERER_SHADER_SM3 0

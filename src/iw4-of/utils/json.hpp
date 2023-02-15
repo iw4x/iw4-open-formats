@@ -1,7 +1,7 @@
 #pragma once
 
-#include "rapidjson/document.h"
-#include "game/structs.hpp"
+#include <rapidjson/document.h>
+#include <game/structs.hpp>
 
 namespace iw4of::utils::json
 {

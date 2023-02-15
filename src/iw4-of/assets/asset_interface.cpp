@@ -1,4 +1,5 @@
 #include "std_include.hpp"
+
 #include "asset_interface.hpp"
 #include "assets.hpp"
 
@@ -19,7 +20,7 @@ void iw4of::asset_interface::print_error_internal(const std::string& message) co
 
 std::filesystem::path iw4of::asset_interface::get_work_path(const std::string& asset_name) const
 {
-	std::stringstream final_path{};
+	std::stringstream final_path;
 
 	final_path << assets->get_work_directory() << "/";
 
@@ -35,7 +36,7 @@ std::filesystem::path iw4of::asset_interface::get_work_path(const std::string& a
 
 std::filesystem::path iw4of::asset_interface::get_work_path(const native::XAssetHeader& header) const
 {
-	std::stringstream final_path{};
+	std::stringstream final_path;
 
 	final_path << assets->get_work_directory() << "/";
 

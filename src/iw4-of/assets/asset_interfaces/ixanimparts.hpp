@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "game/structs.hpp"
+#include <game/structs.hpp>
 
 #include "../asset_interface.hpp"
 #include "../assets.hpp"

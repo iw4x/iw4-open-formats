@@ -2,12 +2,12 @@
 
 #include "ilightdef.hpp"
 
-#include "utils/io.hpp"
-#include "utils/stream.hpp"
-#include "utils/string.hpp"
+#include <utils/io.hpp>
+#include <utils/stream.hpp>
+#include <utils/string.hpp>
 
-#include "rapidjson/document.h"
-#include "rapidjson/prettywriter.h"
+#include <rapidjson/document.h>
+#include <rapidjson/prettywriter.h>
 
 #define IW4X_LIGHT_VERSION "0"
 

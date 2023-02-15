@@ -2,8 +2,9 @@
 
 #include "ifx.hpp"
 #include "itechniqueset.hpp"
-#include "utils/io.hpp"
-#include "utils/string.hpp"
+
+#include <utils/io.hpp>
+#include <utils/string.hpp>
 
 #define IW4X_FX_VERSION 2
 

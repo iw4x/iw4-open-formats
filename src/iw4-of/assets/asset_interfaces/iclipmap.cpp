@@ -5,11 +5,11 @@
 #include <rapidjson/stringbuffer.h>
 
 
-#include "iclipmap.hpp"
-#include "utils/io.hpp"
+#include <iclipmap.hpp>
+#include <utils/io.hpp>
 #include <utils/json.hpp>
-#include "utils/stream.hpp"
-#include "utils/string.hpp"
+#include <utils/stream.hpp>
+#include <utils/string.hpp>
 
 namespace iw4of::interfaces
 {
