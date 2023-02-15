@@ -63,26 +63,4 @@ namespace iw4of::utils::compression
 		inflateEnd(&stream);
 		return buffer;
 	}
-
-	std::string zstd::compress(const std::string& data)
-	{
-		memory::allocator allocator;
-		const auto bound = ZSTD_compressBound(data.size());
-
-		auto* buffer = allocator.allocate_array<char>(bound);
-		const auto size = ZSTD_compress(buffer, bound, data.data(), data.size(), ZSTD_maxCLevel());
-
-		return std::string(buffer, size);
-	}
-
-	std::string zstd::decompress(const std::string& data)
-	{
-		memory::allocator allocator;
-		const auto bound = size_t(ZSTD_getFrameContentSize(data.data(), data.size()));
-
-		auto* buffer = allocator.allocate_array<char>(bound);
-		const auto size = ZSTD_decompress(buffer, bound, data.data(), data.size());
-
-		return std::string(buffer, size);
-	}
 }

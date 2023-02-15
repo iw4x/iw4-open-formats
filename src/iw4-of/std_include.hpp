@@ -51,12 +51,8 @@
 #include <vector>
 
 #include <zlib.h>
-#include <zstd.h>
 
 #include <tomcrypt.h>
-
-#pragma comment(lib, "gdiplus.lib")
-#pragma comment(lib, "ws2_32.lib")
 
 #pragma warning(pop)
 
