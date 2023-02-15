@@ -1,9 +1,11 @@
-dependencies = {
+iw4of = {}
+
+iw4of_dependencies = {
 	basePath = "./deps"
 }
 
-function dependencies.load()
-	dir = path.join(dependencies.basePath, "premake/*.lua")
+function iw4of_dependencies.load()
+	dir = path.join(iw4of_dependencies.basePath, "premake/*.lua")
 	deps = os.matchfiles(dir)
 
 	for i, dep in pairs(deps) do
@@ -12,19 +14,15 @@ function dependencies.load()
 	end
 end
 
-function dependencies.imports()
-	for i, proj in pairs(dependencies) do
-		if type(i) == 'number' then
-			proj.import()
-		end
+function iw4of_dependencies.imports()
+	for dep_name, dependency in pairs(iw4of) do
+		dependency.import()
 	end
 end
 
-function dependencies.projects()
-	for i, proj in pairs(dependencies) do
-		if type(i) == 'number' then
-			proj.project()
-		end
+function iw4of_dependencies.projects()
+	for dep_name, dependency in pairs(iw4of) do
+		dependency.project()
 	end
 end
 
@@ -34,7 +32,7 @@ newoption {
 	value = "PATH"
 }
 
-dependencies.load()
+iw4of_dependencies.load()
 
 workspace "iw4-of"
 	startproject "iw4-of-interactive"
@@ -113,7 +111,7 @@ workspace "iw4-of"
 			"./include"
 		}
 
-		dependencies.imports()
+		iw4of_dependencies.imports()
 
-	group "Dependencies"
-		dependencies.projects()
+	group "iw4of_dependencies"
+		iw4of_dependencies.projects()

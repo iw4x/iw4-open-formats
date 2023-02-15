@@ -31,16 +31,16 @@ namespace iw4of::interfaces
 		auto contents = utils::io::read_file(path);
 		utils::stream::reader reader(&local_allocator, contents);
 
-		unsigned int chunkIDBuffer = reader.read<unsigned int>();
+		uint32_t chunkIDBuffer = reader.read<uint32_t>();
 		if (chunkIDBuffer != 0x46464952) // RIFF
 		{
 			print_error("Reading sound '{}' failed, header is invalid!", name);
 			return nullptr;
 		}
 
-		unsigned int chunkSize = reader.read<unsigned int>();
+		uint32_t chunkSize = reader.read<uint32_t>();
 
-		unsigned int format = reader.read<unsigned int>();
+		uint32_t format = reader.read<uint32_t>();
 		if (format != 0x45564157) // WAVE
 		{
 			print_error("Reading sound '{}' failed, header is invalid!", name);
@@ -49,29 +49,29 @@ namespace iw4of::interfaces
 
 		while (!sound->sound.data && !reader.end())
 		{
-			chunkIDBuffer = reader.read<unsigned int>();
-			chunkSize = reader.read<unsigned int>();
+			chunkIDBuffer = reader.read<uint32_t>();
+			chunkSize = reader.read<uint32_t>();
 
 			switch (chunkIDBuffer)
 			{
 			case 0x20746D66: // fmt
 				if (chunkSize >= 16)
 				{
-					sound->sound.info.format = reader.read<short>();
+					sound->sound.info.format = reader.read<int16_t>();
 					if (sound->sound.info.format != 1 && sound->sound.info.format != 17)
 					{
 						print_error("Reading sound '{}' failed, invalid format!", name);
 						return nullptr;
 					}
 
-					sound->sound.info.channels = reader.read<short>();
-					sound->sound.info.rate = reader.read<int>();
+					sound->sound.info.channels = reader.read<int16_t>();
+					sound->sound.info.rate = reader.read<int32_t>();
 
 					// We read samples later, this is byterate we don't need it
-					reader.read<int>();
+					reader.read<int32_t>();
 
-					sound->sound.info.block_size = reader.read<short>();
-					sound->sound.info.bits = reader.read<short>();
+					sound->sound.info.block_size = reader.read<int16_t>();
+					sound->sound.info.bits = reader.read<int16_t>();
 
 					// skip any extra parameters
 					if (chunkSize > 16)
@@ -125,9 +125,9 @@ namespace iw4of::interfaces
 		buffer.save_array(chunk_id, 4);
 
 		// ChunkSize
-		int sub_chunk_1_size = 16;
-		int sub_chunk_2_size = loaded_sound->sound.info.data_len;
-		int chunk_size = 4 + (8 + sub_chunk_1_size) + (8 + sub_chunk_2_size);
+		int32_t sub_chunk_1_size = 16;
+		int32_t sub_chunk_2_size = loaded_sound->sound.info.data_len;
+		int32_t chunk_size = 4 + (8 + sub_chunk_1_size) + (8 + sub_chunk_2_size);
 		buffer.save(chunk_size);
 
 		// Format
@@ -143,15 +143,15 @@ namespace iw4of::interfaces
 		buffer.save(sub_chunk_1_size);
 
 		// AudioFormat
-		short audio_formt = static_cast<short>(loaded_sound->sound.info.format);
+		short audio_formt = static_cast<int16_t>(loaded_sound->sound.info.format);
 		buffer.save_object(audio_formt);
 
 		// NumChannels
-		short num_channels = static_cast<short>(loaded_sound->sound.info.channels);
+		short num_channels = static_cast<int16_t>(loaded_sound->sound.info.channels);
 		buffer.save_object(num_channels);
 
 		// SampleRate
-		int sampleRate = loaded_sound->sound.info.rate;
+		int32_t sampleRate = loaded_sound->sound.info.rate;
 		buffer.save(sampleRate);
 
 
@@ -159,15 +159,15 @@ namespace iw4of::interfaces
 		assert(data_length / (loaded_sound->sound.info.bits / 8) == loaded_sound->sound.info.samples);
 
 		// ByteRate
-		int byteRate = loaded_sound->sound.info.rate * loaded_sound->sound.info.channels * loaded_sound->sound.info.bits / 8;
+		int32_t byteRate = loaded_sound->sound.info.rate * loaded_sound->sound.info.channels * loaded_sound->sound.info.bits / 8;
 		buffer.save(byteRate);
 
 		// BlockAlign
-		short block_align = static_cast<short>(loaded_sound->sound.info.block_size);
+		short block_align = static_cast<int16_t>(loaded_sound->sound.info.block_size);
 		buffer.save_object(block_align);
 
 		// BitsPerSample
-		short bits_per_sample = static_cast<short>(loaded_sound->sound.info.bits);
+		short bits_per_sample = static_cast<int16_t>(loaded_sound->sound.info.bits);
 		buffer.save_object(bits_per_sample);
 
 

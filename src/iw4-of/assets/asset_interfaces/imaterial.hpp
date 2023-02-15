@@ -33,7 +33,7 @@ namespace iw4of::interfaces
 		}
 
 	private:
-		rapidjson::Value statebits_to_json_array(native::GfxStateBits* stateBits, unsigned char count, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const;
+		rapidjson::Value statebits_to_json_array(native::GfxStateBits* stateBits, uint8_t count, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const;
 
 	};
 

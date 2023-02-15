@@ -50,7 +50,7 @@ namespace iw4of::interfaces
 		RETURN_IF_NULL(asset);
 
 		asset->name = local_allocator.duplicate_string(name);
-		asset->len = static_cast<int>(contents.size());
+		asset->len = static_cast<int32_t>(contents.size());
 
 		const auto& compressedData = utils::compression::zlib::compress(contents);
 
@@ -59,7 +59,7 @@ namespace iw4of::interfaces
 		{
 			asset->buffer = local_allocator.allocate_array<char>(compressedData.size());
 			std::memcpy(const_cast<char*>(asset->buffer), compressedData.data(), compressedData.size());
-			asset->compressedLen = static_cast<int>(compressedData.size());
+			asset->compressedLen = static_cast<int32_t>(compressedData.size());
 		}
 		else
 		{

@@ -1,19 +1,17 @@
-rapidjson = {
-	source = path.join(dependencies.basePath, "rapidjson"),
+iw4of.rapidjson = {
+	source = path.join(iw4of_dependencies.basePath, "rapidjson"),
 }
 
-function rapidjson.import()
-	rapidjson.includes()
+function iw4of.rapidjson.import()
+	iw4of.rapidjson.includes()
 end
 
-function rapidjson.includes()
+function iw4of.rapidjson.includes()
 	includedirs {
-		path.join(rapidjson.source, "include"),
+		path.join(iw4of.rapidjson.source, "include"),
 	}
 end
 
-function rapidjson.project()
+function iw4of.rapidjson.project()
 
 end
-
-table.insert(dependencies, rapidjson)

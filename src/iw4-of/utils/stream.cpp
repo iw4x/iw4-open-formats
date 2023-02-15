@@ -54,7 +54,7 @@ namespace iw4of::utils
 		return (this->buffer_.size() == this->position_);
 	}
 
-	void stream::reader::seek(unsigned int position)
+	void stream::reader::seek(uint32_t position)
 	{
 		if (this->buffer_.size() >= position)
 		{
@@ -62,7 +62,7 @@ namespace iw4of::utils
 		}
 	}
 
-	void stream::reader::seek_relative(unsigned int position)
+	void stream::reader::seek_relative(uint32_t position)
 	{
 		return this->seek(position + this->position_);
 	}
@@ -153,7 +153,7 @@ namespace iw4of::utils
 		return this->save(string.data(), string.length());
 	}
 
-	char* stream::save_byte(unsigned char byte, size_t count)
+	char* stream::save_byte(uint8_t byte, size_t count)
 	{
 		auto ret = this->length();
 

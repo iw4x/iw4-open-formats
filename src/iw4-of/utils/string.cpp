@@ -29,7 +29,7 @@ namespace iw4of::utils::string
 
 	std::string to_lower(std::string text)
 	{
-		std::transform(text.begin(), text.end(), text.begin(), [](const unsigned char input)
+		std::transform(text.begin(), text.end(), text.begin(), [](const uint8_t input)
 		{
 			return static_cast<char>(std::tolower(input));
 		});
@@ -39,7 +39,7 @@ namespace iw4of::utils::string
 
 	std::string to_upper(std::string text)
 	{
-		std::transform(text.begin(), text.end(), text.begin(), [](const unsigned char input)
+		std::transform(text.begin(), text.end(), text.begin(), [](const uint8_t input)
 		{
 			return static_cast<char>(std::toupper(input));
 		});
@@ -77,7 +77,7 @@ namespace iw4of::utils::string
 	{
 		std::string result;
 
-		for (unsigned int i = 0; i < data.size(); ++i)
+		for (uint32_t i = 0; i < data.size(); ++i)
 		{
 			if (i > 0)
 			{

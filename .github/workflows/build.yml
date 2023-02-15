@@ -41,12 +41,5 @@ jobs:
         uses: ammaraskar/msvc-problem-matcher@master
 
       - name: Build ${{matrix.configuration}} binaries
-        run: msbuild /m /v:minimal /p:Configuration=${{matrix.configuration}} /p:Platform=Win32 build/open-iw5.sln
-
-      - name: Upload ${{matrix.configuration}} binaries
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          name: ${{matrix.configuration}} binaries
-          path: |
-            build/bin/Win32/${{matrix.configuration}}/open-iw5.exe
-            build/bin/Win32/${{matrix.configuration}}/open-iw5.pdb
+        run: msbuild /m /v:minimal /p:Configuration=${{matrix.configuration}} /p:Platform=Win32 build/iw4-of.sln
+        

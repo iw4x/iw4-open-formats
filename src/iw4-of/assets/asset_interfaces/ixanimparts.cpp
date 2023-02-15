@@ -137,14 +137,14 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
 		auto contents = utils::io::read_file(path);
 		utils::stream::reader reader(&local_allocator, contents);
 
-		__int64 magic = reader.read<__int64>();
+		int64_t magic = reader.read<int64_t>();
 		if (std::memcmp(&magic, "IW4xAnim", 8))
 		{
 			print_error("Reading animation '{}' failed, header is invalid!", name);
 			return nullptr;
 		}
 
-		int version = reader.read<int>();
+		int32_t version = reader.read<int32_t>();
 		if (version > IW4X_ANIM_VERSION)
 		{
 			print_error("Reading animation '{}' failed, expected version is {}, but it was {}!", name, IW4X_ANIM_VERSION, version);
@@ -162,7 +162,7 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
 
 			if (xanim->names)
 			{
-				xanim->names = local_allocator.allocate_array<unsigned short>(xanim->boneCount[native::PART_TYPE_ALL]);
+				xanim->names = local_allocator.allocate_array<uint16_t>(xanim->boneCount[native::PART_TYPE_ALL]);
 				for (int i = 0; i < xanim->boneCount[native::PART_TYPE_ALL]; ++i)
 				{
 					xanim->names[i] = static_cast<std::uint16_t>(assets->write_in_stringtable(reader.read_cstring()));
@@ -186,12 +186,12 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
 
 			if (xanim->dataShort)
 			{
-				xanim->dataShort = reader.read_array<unsigned short>(xanim->dataShortCount);
+				xanim->dataShort = reader.read_array<uint16_t>(xanim->dataShortCount);
 			}
 
 			if (xanim->dataInt)
 			{
-				xanim->dataInt = reader.read_array<int>(xanim->dataIntCount);
+				xanim->dataInt = reader.read_array<int32_t>(xanim->dataIntCount);
 			}
 
 			if (xanim->randomDataByte)
@@ -201,12 +201,12 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
 
 			if (xanim->randomDataShort)
 			{
-				xanim->randomDataShort = reader.read_array<unsigned short>(xanim->randomDataShortCount);
+				xanim->randomDataShort = reader.read_array<uint16_t>(xanim->randomDataShortCount);
 			}
 
 			if (xanim->randomDataInt)
 			{
-				xanim->randomDataInt = reader.read_array<int>(xanim->randomDataIntCount);
+				xanim->randomDataInt = reader.read_array<int32_t>(xanim->randomDataIntCount);
 			}
 
 			if (xanim->indices.data)
@@ -217,7 +217,7 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
 				}
 				else
 				{
-					xanim->indices._2 = reader.read_array<unsigned short>(xanim->indexCount);
+					xanim->indices._2 = reader.read_array<uint16_t>(xanim->indexCount);
 				}
 			}
 
@@ -236,7 +236,7 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
 
 							if (xanim->numframes > 0xFF)
 							{
-								auto indices2 = reader.read_array<unsigned short>(delta->trans->size + 1);
+								auto indices2 = reader.read_array<uint16_t>(delta->trans->size + 1);
 								memcpy(delta->trans->u.frames.indices._2, indices2, sizeof(short) * (delta->trans->size + 1));
 							}
 							else
@@ -253,7 +253,7 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
 								}
 								else
 								{
-									delta->trans->u.frames.frames._2 = reinterpret_cast<unsigned short(*)[3]>(6, (delta->trans->size + 1));
+									delta->trans->u.frames.frames._2 = reinterpret_cast<uint16_t(*)[3]>(6, (delta->trans->size + 1));
 								}
 							}
 						}

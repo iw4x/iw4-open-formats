@@ -247,7 +247,7 @@ namespace iw4of::interfaces
 			return nullptr;
 		}
 
-		if (materialJson["version"].Get<int>() != IW4X_MAT_VERSION)
+		if (materialJson["version"].Get<int32_t>() != IW4X_MAT_VERSION)
 		{
 			print_error("Invalid material json version for {}, expected {} and got {}\n", name, IW4X_MAT_VERSION, materialJson["version"].Get<std::string>());
 			return nullptr;
@@ -260,10 +260,10 @@ namespace iw4of::interfaces
 
 			asset->info.sortKey = materialJson["sortKey"].Get<char>();
 			// * We do techset later * //
-			asset->info.textureAtlasRowCount = materialJson["textureAtlasRowCount"].Get<unsigned char>();
-			asset->info.textureAtlasColumnCount = materialJson["textureAtlasColumnCount"].Get<unsigned char>();
-			asset->info.surfaceTypeBits = static_cast<unsigned int>(utils::json::read_flags(materialJson["surfaceTypeBits"].Get<std::string>(), sizeof(int)));
-			asset->info.hashIndex = materialJson["hashIndex"].Get<unsigned short>();
+			asset->info.textureAtlasRowCount = materialJson["textureAtlasRowCount"].Get<uint8_t>();
+			asset->info.textureAtlasColumnCount = materialJson["textureAtlasColumnCount"].Get<uint8_t>();
+			asset->info.surfaceTypeBits = static_cast<uint32_t>(utils::json::read_flags(materialJson["surfaceTypeBits"].Get<std::string>(), sizeof(int)));
+			asset->info.hashIndex = materialJson["hashIndex"].Get<uint16_t>();
 			asset->cameraRegion = materialJson["cameraRegion"].Get<char>();
 		}
 		catch (const std::exception& e)
@@ -274,17 +274,17 @@ namespace iw4of::interfaces
 
 		if (materialJson["gfxDrawSurface"].IsObject())
 		{
-			asset->info.drawSurf.fields.customIndex = materialJson["gfxDrawSurface"]["customIndex"].Get<long long>();
-			asset->info.drawSurf.fields.hasGfxEntIndex = materialJson["gfxDrawSurface"]["hasGfxEntIndex"].Get<long long>();
-			asset->info.drawSurf.fields.materialSortedIndex = materialJson["gfxDrawSurface"]["materialSortedIndex"].Get<long long>();
-			asset->info.drawSurf.fields.objectId = materialJson["gfxDrawSurface"]["objectId"].Get<long long>();
-			asset->info.drawSurf.fields.prepass = materialJson["gfxDrawSurface"]["prepass"].Get<long long>();
-			asset->info.drawSurf.fields.primarySortKey = materialJson["gfxDrawSurface"]["primarySortKey"].Get<long long>();
-			asset->info.drawSurf.fields.reflectionProbeIndex = materialJson["gfxDrawSurface"]["reflectionProbeIndex"].Get<long long>();
-			asset->info.drawSurf.fields.sceneLightIndex = materialJson["gfxDrawSurface"]["sceneLightIndex"].Get<long long>();
-			asset->info.drawSurf.fields.surfType = materialJson["gfxDrawSurface"]["surfType"].Get<long long>();
-			asset->info.drawSurf.fields.unused = materialJson["gfxDrawSurface"]["unused"].Get<long long>();
-			asset->info.drawSurf.fields.useHeroLighting = materialJson["gfxDrawSurface"]["useHeroLighting"].Get<long long>();
+			asset->info.drawSurf.fields.customIndex = materialJson["gfxDrawSurface"]["customIndex"].Get<int64_t>();
+			asset->info.drawSurf.fields.hasGfxEntIndex = materialJson["gfxDrawSurface"]["hasGfxEntIndex"].Get<int64_t>();
+			asset->info.drawSurf.fields.materialSortedIndex = materialJson["gfxDrawSurface"]["materialSortedIndex"].Get<int64_t>();
+			asset->info.drawSurf.fields.objectId = materialJson["gfxDrawSurface"]["objectId"].Get<int64_t>();
+			asset->info.drawSurf.fields.prepass = materialJson["gfxDrawSurface"]["prepass"].Get<int64_t>();
+			asset->info.drawSurf.fields.primarySortKey = materialJson["gfxDrawSurface"]["primarySortKey"].Get<int64_t>();
+			asset->info.drawSurf.fields.reflectionProbeIndex = materialJson["gfxDrawSurface"]["reflectionProbeIndex"].Get<int64_t>();
+			asset->info.drawSurf.fields.sceneLightIndex = materialJson["gfxDrawSurface"]["sceneLightIndex"].Get<int64_t>();
+			asset->info.drawSurf.fields.surfType = materialJson["gfxDrawSurface"]["surfType"].Get<int64_t>();
+			asset->info.drawSurf.fields.unused = materialJson["gfxDrawSurface"]["unused"].Get<int64_t>();
+			asset->info.drawSurf.fields.useHeroLighting = materialJson["gfxDrawSurface"]["useHeroLighting"].Get<int64_t>();
 		}
 
 		asset->stateFlags = static_cast<char>(utils::json::read_flags(materialJson["stateFlags"].Get<std::string>(), sizeof(char)));
@@ -292,7 +292,7 @@ namespace iw4of::interfaces
 		if (materialJson["textureTable"].IsArray())
 		{
 			const auto& textureTable = materialJson["textureTable"];
-			asset->textureCount = static_cast<unsigned char>(textureTable.Size());
+			asset->textureCount = static_cast<uint8_t>(textureTable.Size());
 			asset->textureTable = local_allocator.allocate_array<native::MaterialTextureDef>(asset->textureCount);
 
 			for (size_t i = 0; i < textureTable.Size(); i++)
@@ -301,11 +301,11 @@ namespace iw4of::interfaces
 				if (textureJson.IsObject())
 				{
 					native::MaterialTextureDef* textureDef = &asset->textureTable[i];
-					textureDef->semantic = textureJson["semantic"].Get<unsigned char>();
+					textureDef->semantic = textureJson["semantic"].Get<uint8_t>();
 					textureDef->samplerState = textureJson["samplerState"].Get<char>();
 					textureDef->nameStart = textureJson["nameStart"].Get<char>();
 					textureDef->nameEnd = textureJson["nameEnd"].Get<char>();
-					textureDef->nameHash = textureJson["nameHash"].Get<unsigned int>();
+					textureDef->nameHash = textureJson["nameHash"].Get<uint32_t>();
 
 					if (textureDef->semantic == native::TextureSemantic::TS_WATER_MAP)
 					{
@@ -323,8 +323,8 @@ namespace iw4of::interfaces
 							}
 
 							water->amplitude = waterJson["amplitude"].Get<float>();
-							water->M = waterJson["M"].Get<int>();
-							water->N = waterJson["N"].Get<int>();
+							water->M = waterJson["M"].Get<int32_t>();
+							water->N = waterJson["N"].Get<int32_t>();
 							water->Lx = waterJson["Lx"].Get<float>();
 							water->Lz = waterJson["Lz"].Get<float>();
 							water->gravity = waterJson["gravity"].Get<float>();
@@ -344,7 +344,7 @@ namespace iw4of::interfaces
 							[[maybe_unused]] auto h0Result = base64_decode(
 								h064.data(),
 								h064.size(),
-								reinterpret_cast<unsigned char*>(h0),
+								reinterpret_cast<uint8_t*>(h0),
 								&predictedSize
 							);
 
@@ -360,7 +360,7 @@ namespace iw4of::interfaces
 							[[maybe_unused]] auto wTermResult = base64_decode(
 								wTerm64.data(),
 								wTerm64.size(),
-								reinterpret_cast<unsigned char*>(wTerm),
+								reinterpret_cast<uint8_t*>(wTerm),
 								&predictedWTermSize
 							);
 
@@ -406,7 +406,7 @@ namespace iw4of::interfaces
 		if (materialJson["stateBitsTable"].IsArray())
 		{
 			const auto& array = materialJson["stateBitsTable"];
-			asset->stateBitsCount = static_cast<unsigned char>(array.Size());
+			asset->stateBitsCount = static_cast<uint8_t>(array.Size());
 
 			asset->stateBitsTable = local_allocator.allocate_array<native::GfxStateBits>(array.Size());
 
@@ -416,10 +416,10 @@ namespace iw4of::interfaces
 				const auto& jsonStateBitEntry = array[i];
 				auto stateBit = &asset->stateBitsTable[statebitTableIndex++];
 
-				unsigned int loadbits0 = 0;
-				unsigned int loadbits1 = 0;
+				uint32_t loadbits0 = 0;
+				uint32_t loadbits1 = 0;
 
-#define READ_INT_LB_FROM_JSON(x) unsigned int x = jsonStateBitEntry[#x].Get<unsigned int>()
+#define READ_INT_LB_FROM_JSON(x) uint32_t x = jsonStateBitEntry[#x].Get<uint32_t>()
 #define READ_BOOL_LB_FROM_JSON(x) bool x = jsonStateBitEntry[#x].Get<bool>()
 
 				READ_INT_LB_FROM_JSON(srcBlendRgb);
@@ -574,7 +574,7 @@ namespace iw4of::interfaces
 					auto constantName = constant["name"].Get<std::string>();
 					std::copy(constantName.begin(), constantName.end(), entry->name);
 
-					entry->nameHash = constant["nameHash"].Get<unsigned int>();
+					entry->nameHash = constant["nameHash"].Get<uint32_t>();
 				}
 
 				asset->constantTable = table;
@@ -607,7 +607,7 @@ namespace iw4of::interfaces
 
 	rapidjson::Value imaterial::statebits_to_json_array(
 		native::GfxStateBits* stateBits, 
-		unsigned char count,
+		uint8_t count,
 		rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator
 	) const
 	{

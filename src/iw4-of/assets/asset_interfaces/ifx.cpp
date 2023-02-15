@@ -150,14 +150,14 @@ namespace iw4of::interfaces
 			auto contents = utils::io::read_file(path);
 			utils::stream::reader buffer(&local_allocator, contents);
 
-			__int64 magic = buffer.read<__int64>();
+			int64_t magic = buffer.read<int64_t>();
 			if (std::memcmp(&magic, "IW4xFx  ", 8))
 			{
 				print_error("Reading fx '{}' failed, header is invalid!", name);
 				return nullptr;
 			}
 
-			int version = buffer.read<int>();
+			int32_t version = buffer.read<int32_t>();
 			if (version > IW4X_FX_VERSION)
 			{
 				print_error("Reading fx '{}' failed, expected version is {}, but it was {}!", name, IW4X_FX_VERSION, version);
@@ -263,7 +263,7 @@ namespace iw4of::interfaces
 
 									if (trailDef->inds)
 									{
-										trailDef->inds = buffer.read_array<unsigned short>(trailDef->indCount);
+										trailDef->inds = buffer.read_array<uint16_t>(trailDef->indCount);
 									}
 								}
 							}

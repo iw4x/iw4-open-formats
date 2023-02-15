@@ -1,18 +1,18 @@
-libtomcrypt = {
-	source = path.join(dependencies.basePath, "libtomcrypt"),
+iw4of.libtomcrypt = {
+	source = path.join(iw4of_dependencies.basePath, "libtomcrypt"),
 }
 
-function libtomcrypt.import()
+function iw4of.libtomcrypt.import()
 	links {
 		"libtomcrypt"
 	}
 
-	libtomcrypt.includes()
+	iw4of.libtomcrypt.includes()
 end
 
-function libtomcrypt.includes()
+function iw4of.libtomcrypt.includes()
 	includedirs {
-		path.join(libtomcrypt.source, "src/headers")
+		path.join(iw4of.libtomcrypt.source, "src/headers")
 	}
 
 	defines {
@@ -24,21 +24,21 @@ function libtomcrypt.includes()
 	}
 end
 
-function libtomcrypt.project()
+function iw4of.libtomcrypt.project()
 	project "libtomcrypt"
 		language "C"
 
-		libtomcrypt.includes()
-		libtommath.import()
+		iw4of.libtomcrypt.includes()
+		iw4of.libtommath.import()
 
 		files {
-			path.join(libtomcrypt.source, "src/**.c"),
+			path.join(iw4of.libtomcrypt.source, "src/**.c"),
 		}
 
 		removefiles {
-			path.join(libtomcrypt.source, "src/**/*_test.c"),
-			path.join(libtomcrypt.source, "src/**/*tab.c"),
-			path.join(libtomcrypt.source, "src/encauth/ocb3/**.c"),
+			path.join(iw4of.libtomcrypt.source, "src/**/*_test.c"),
+			path.join(iw4of.libtomcrypt.source, "src/**/*tab.c"),
+			path.join(iw4of.libtomcrypt.source, "src/encauth/ocb3/**.c"),
 		}
 
 		defines {
@@ -60,5 +60,3 @@ function libtomcrypt.project()
 		warnings "Off"
 		kind "StaticLib"
 end
-
-table.insert(dependencies, libtomcrypt)

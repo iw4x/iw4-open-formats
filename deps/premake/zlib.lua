@@ -1,15 +1,15 @@
-zlib = {
-	source = path.join(dependencies.basePath, "zlib"),
+iw4of.zlib = {
+	source = path.join(iw4of_dependencies.basePath, "zlib"),
 }
 
-function zlib.import()
+function iw4of.zlib.import()
 	links { "zlib" }
-	zlib.includes()
+	iw4of.zlib.includes()
 end
 
-function zlib.includes()
+function iw4of.zlib.includes()
 	includedirs {
-		zlib.source
+		iw4of.zlib.source
 	}
 
 	defines {
@@ -17,15 +17,15 @@ function zlib.includes()
 	}
 end
 
-function zlib.project()
+function iw4of.zlib.project()
 	project "zlib"
 		language "C"
 
-		zlib.includes()
+		iw4of.zlib.includes()
 
 		files {
-			path.join(zlib.source, "*.h"),
-			path.join(zlib.source, "*.c"),
+			path.join(iw4of.zlib.source, "*.h"),
+			path.join(iw4of.zlib.source, "*.c"),
 		}
 
 		defines {
@@ -35,5 +35,3 @@ function zlib.project()
 		warnings "Off"
 		kind "StaticLib"
 end
-
-table.insert(dependencies, zlib)

@@ -32,12 +32,12 @@ namespace iw4of::utils
 
 			template <typename T> T* read_array_once(std::size_t count = 1)
 			{
-				auto b = static_cast<unsigned char>(read_byte());
+				auto b = static_cast<uint8_t>(read_byte());
 				switch (b)
 				{
 				case POINTER:
 				{
-					auto ptr = read<int>();
+					auto ptr = read<int32_t>();
 					auto* voidPtr = reinterpret_cast<void*>(ptr);
 
 					if (this->allocator_->is_pointer_mapped(voidPtr))
@@ -68,7 +68,7 @@ namespace iw4of::utils
 			{
 				T obj;
 
-				for (unsigned int i = 0; i < sizeof(T); ++i)
+				for (uint32_t i = 0; i < sizeof(T); ++i)
 				{
 					reinterpret_cast<char*>(&obj)[i] = this->read_byte();
 				}
@@ -77,13 +77,13 @@ namespace iw4of::utils
 			}
 
 			bool end() const;
-			void seek(unsigned int position);
-			void seek_relative(unsigned int position);
+			void seek(uint32_t position);
+			void seek_relative(uint32_t position);
 			void map_pointer(void* oldPointer, void* newPointer);
 			bool has_pointer(void* pointer) const;
 
 		private:
-			unsigned int position_;
+			uint32_t position_;
 			std::string buffer_;
 			std::map<void*, void*> pointer_map;
 			utils::memory::allocator* allocator_;
@@ -142,7 +142,7 @@ namespace iw4of::utils
 		char* save_string(std::string string);
 		char* save_string(const char* string);
 		char* save_string(const char* string, size_t len);
-		char* save_byte(unsigned char byte, size_t count = 1);
+		char* save_byte(uint8_t byte, size_t count = 1);
 		char* save_null(size_t count = 1);
 
 		char* save_text(std::string string);

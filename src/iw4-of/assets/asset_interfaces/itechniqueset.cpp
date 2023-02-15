@@ -95,7 +95,7 @@ namespace iw4of::interfaces
 			return nullptr;
 		}
 
-		auto version = techset["version"].Get<int>();
+		auto version = techset["version"].Get<int32_t>();
 		if (version != IW4X_TECHSET_VERSION)
 		{
 			print_error("Reading techset '{}' failed, expected version is{}, but it was{}!",
@@ -175,29 +175,29 @@ namespace iw4of::interfaces
 			print_error("Reading techset '{}' failed, file is messed up! {}", name, e.what());
 		}
 
-		int version = technique["version"].Get<int>();
+		int32_t version = technique["version"].Get<int32_t>();
 
 		if (version != IW4X_TECHSET_VERSION)
 		{
 			print_error("Reading technique '{}' failed, expected version is {}, but it was {}!", name, IW4X_TECHSET_VERSION, version);
 		}
 
-		unsigned short flags = static_cast<unsigned short>(utils::json::read_flags(technique["flags"].Get<std::string>(), sizeof(short)));
+		uint16_t flags = static_cast<uint16_t>(utils::json::read_flags(technique["flags"].Get<std::string>(), sizeof(short)));
 
 		if (technique["passArray"].IsArray())
 		{
 			const auto& passArray = technique["passArray"];
 
-			native::MaterialTechnique* asset = reinterpret_cast<native::MaterialTechnique * >(local_allocator.allocate_array<unsigned char>(sizeof(native::MaterialTechnique) + (sizeof(native::MaterialPass) * (passArray.Size() - 1))));
+			native::MaterialTechnique* asset = reinterpret_cast<native::MaterialTechnique * >(local_allocator.allocate_array<uint8_t>(sizeof(native::MaterialTechnique) + (sizeof(native::MaterialPass) * (passArray.Size() - 1))));
 
 			asset->name = local_allocator.duplicate_string(name);
 			asset->flags = flags;
-			asset->passCount = static_cast<unsigned short>(passArray.Size());
+			asset->passCount = static_cast<uint16_t>(passArray.Size());
 
 			native::MaterialPass* passes = local_allocator.allocate_array<native::MaterialPass>(asset->passCount);
 			std::memcpy(asset->passArray, passes, sizeof(native::MaterialPass) * asset->passCount);
 
-			for (unsigned short i = 0; i < asset->passCount; i++)
+			for (uint16_t i = 0; i < asset->passCount; i++)
 			{
 				native::MaterialPass* pass = &asset->passArray[i];
 				const auto& jsonPass = passArray[i];
@@ -237,8 +237,8 @@ namespace iw4of::interfaces
 						const auto& jsonArgument = jsonAguments[j];
 						native::MaterialShaderArgument* argument = &pass->args[j];
 
-						argument->type = jsonArgument["type"].Get<unsigned short>();
-						argument->dest = jsonArgument["dest"].Get<unsigned short>();
+						argument->type = jsonArgument["type"].Get<uint16_t>();
+						argument->dest = jsonArgument["dest"].Get<uint16_t>();
 
 						if (argument->type == native::MaterialShaderArgumentType::MTL_ARG_LITERAL_VERTEX_CONST ||
 							argument->type == native::MaterialShaderArgumentType::MTL_ARG_LITERAL_PIXEL_CONST)
@@ -253,20 +253,20 @@ namespace iw4of::interfaces
 							{
 								const auto& codeConst = jsonArgument["codeConst"];
 
-								argument->u.codeConst.index = codeConst["index"].Get<unsigned short>();
-								argument->u.codeConst.firstRow = codeConst["firstRow"].Get<unsigned char>();
-								argument->u.codeConst.rowCount = codeConst["rowCount"].Get<unsigned char>();
+								argument->u.codeConst.index = codeConst["index"].Get<uint16_t>();
+								argument->u.codeConst.firstRow = codeConst["firstRow"].Get<uint8_t>();
+								argument->u.codeConst.rowCount = codeConst["rowCount"].Get<uint8_t>();
 							}
 						}
 						else if (argument->type == native::MaterialShaderArgumentType::MTL_ARG_MATERIAL_PIXEL_SAMPLER ||
 							argument->type == native::MaterialShaderArgumentType::MTL_ARG_MATERIAL_VERTEX_CONST ||
 							argument->type == native::MaterialShaderArgumentType::MTL_ARG_MATERIAL_PIXEL_CONST)
 						{
-							argument->u.nameHash = jsonArgument["nameHash"].Get<unsigned int>();
+							argument->u.nameHash = jsonArgument["nameHash"].Get<uint32_t>();
 						}
 						else if (argument->type == native::MaterialShaderArgumentType::MTL_ARG_CODE_PIXEL_SAMPLER)
 						{
-							argument->u.codeSampler = jsonArgument["codeSampler"].Get<unsigned int>();
+							argument->u.codeSampler = jsonArgument["codeSampler"].Get<uint32_t>();
 						}
 					}
 				}

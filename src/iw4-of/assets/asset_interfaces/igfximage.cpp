@@ -56,7 +56,7 @@ namespace iw4of::interfaces
 				return nullptr;
 			}
 
-			unsigned char version = reinterpret_cast<char*>(magic)[7];
+			uint8_t version = reinterpret_cast<char*>(magic)[7];
 			bool isLegacyZeroVersion = false;
 
 			if (version == '0')
@@ -74,7 +74,7 @@ namespace iw4of::interfaces
 			image->semantic = reader.read<native::GfxImageCategory>();
 			image->category = reader.read<char>();
 
-			int dataLength = reader.read<int>();
+			int32_t dataLength = reader.read<int32_t>();
 			image->cardMemory.platform[0] = dataLength;
 			image->cardMemory.platform[1] = dataLength;
 
@@ -86,9 +86,9 @@ namespace iw4of::interfaces
 				{
 					char levelCount;
 					char flags;
-					__int16 dimensions[3];
-					int format;
-					int resourceSize;
+					int16_t dimensions[3];
+					int32_t format;
+					int32_t resourceSize;
 					char data[1];
 				};
 
@@ -105,12 +105,12 @@ namespace iw4of::interfaces
 			}
 			else
 			{
-				image->texture.loadDef->flags = reader.read<int>();
-				image->width = reader.read<unsigned short>();
-				image->height = reader.read<unsigned short>();
-				image->depth = reader.read<unsigned short>();
+				image->texture.loadDef->flags = reader.read<int32_t>();
+				image->width = reader.read<uint16_t>();
+				image->height = reader.read<uint16_t>();
+				image->depth = reader.read<uint16_t>();
 
-				image->texture.loadDef->format = reader.read<int>();
+				image->texture.loadDef->format = reader.read<int32_t>();
 			}
 
 			ZeroMemory(image->texture.loadDef->pad, 3);
@@ -217,9 +217,9 @@ namespace iw4of::interfaces
 
 			utils::stream buffer;
 			buffer.save_array("IW4xImg", 7); // just stick version in the magic since we have an extra char
-			buffer.save_byte(static_cast<unsigned char>(IW4X_IMG_VERSION));
+			buffer.save_byte(static_cast<uint8_t>(IW4X_IMG_VERSION));
 
-			buffer.save_object(static_cast<unsigned char>(image->mapType));
+			buffer.save_object(static_cast<uint8_t>(image->mapType));
 			buffer.save_object(image->semantic);
 			buffer.save_object(image->category);
 

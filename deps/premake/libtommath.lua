@@ -1,18 +1,18 @@
-libtommath = {
-	source = path.join(dependencies.basePath, "libtommath"),
+iw4of.libtommath = {
+	source = path.join(iw4of_dependencies.basePath, "libtommath"),
 }
 
-function libtommath.import()
+function iw4of.libtommath.import()
 	links {
 		"libtommath"
 	}
 
-	libtommath.includes()
+	iw4of.libtommath.includes()
 end
 
-function libtommath.includes()
+function iw4of.libtommath.includes()
 	includedirs {
-		libtommath.source
+		iw4of.libtommath.source
 	}
 
 	defines {
@@ -22,14 +22,14 @@ function libtommath.includes()
 	}
 end
 
-function libtommath.project()
+function iw4of.libtommath.project()
 	project "libtommath"
 		language "C"
 
-		libtommath.includes()
+		iw4of.libtommath.includes()
 
 		files {
-			path.join(libtommath.source, "*.c"),
+			path.join(iw4of.libtommath.source, "*.c"),
 		}
 
 		defines {
@@ -49,4 +49,3 @@ function libtommath.project()
 		kind "StaticLib"
 end
 
-table.insert(dependencies, libtommath)

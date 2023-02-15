@@ -119,21 +119,21 @@ namespace iw4of::native
 #pragma warning(disable: 4201)
 		struct
 		{
-			unsigned int looping : 1;
-			unsigned int isMaster : 1;
-			unsigned int isSlave : 1;
-			unsigned int fullDryLevel : 1;
-			unsigned int noWetLevel : 1;
-			unsigned int unknown : 1;
-			unsigned int unk_is3D : 1;
-			unsigned int type : 2;
-			unsigned int channel : 6;
+			uint32_t looping : 1;
+			uint32_t isMaster : 1;
+			uint32_t isSlave : 1;
+			uint32_t fullDryLevel : 1;
+			uint32_t noWetLevel : 1;
+			uint32_t unknown : 1;
+			uint32_t unk_is3D : 1;
+			uint32_t type : 2;
+			uint32_t channel : 6;
 		}; 
 #pragma warning(pop)
-		unsigned int intValue;
+		uint32_t intValue;
 	};
 
-	static_assert(sizeof(SoundAliasFlags) == sizeof(unsigned int));
+	static_assert(sizeof(SoundAliasFlags) == sizeof(uint32_t));
 
 	enum SndChannel
 	{
@@ -213,10 +213,10 @@ namespace iw4of::native
 
 	struct ComPrimaryLight
 	{
-		unsigned char type;
-		unsigned char canUseShadowMap;
-		unsigned char exponent;
-		unsigned char unused;
+		uint8_t type;
+		uint8_t canUseShadowMap;
+		uint8_t exponent;
+		uint8_t unused;
 		float color[3];
 		float dir[3];
 		float origin[3];
@@ -232,8 +232,8 @@ namespace iw4of::native
 	struct ComWorld
 	{
 		const char* name;
-		int isInUse;
-		unsigned int primaryLightCount;
+		int32_t isInUse;
+		uint32_t primaryLightCount;
 		ComPrimaryLight* primaryLights;
 	};
 
@@ -241,17 +241,17 @@ namespace iw4of::native
 	{
 		char tag[3];
 		char version;
-		int flags;
+		int32_t flags;
 		char format;
 		short dimensions[3];
-		int fileSizeForPicmip[4];
+		int32_t fileSizeForPicmip[4];
 	};
 
 	struct TriggerModel
 	{
-		int contents;
-		unsigned __int16 hullCount;
-		unsigned __int16 firstHull;
+		int32_t contents;
+		uint16_t hullCount;
+		uint16_t firstHull;
 	};
 
 	struct Bounds
@@ -263,9 +263,9 @@ namespace iw4of::native
 	struct TriggerHull
 	{
 		Bounds bounds;
-		int contents;
-		unsigned __int16 slabCount;
-		unsigned __int16 firstSlab;
+		int32_t contents;
+		uint16_t slabCount;
+		uint16_t firstSlab;
 	};
 
 	struct TriggerSlab
@@ -277,11 +277,11 @@ namespace iw4of::native
 
 	struct MapTriggers
 	{
-		unsigned int count;
+		uint32_t count;
 		TriggerModel* models;
-		unsigned int hullCount;
+		uint32_t hullCount;
 		TriggerHull* hulls;
-		unsigned int slabCount;
+		uint32_t slabCount;
 		TriggerSlab* slabs;
 	};
 
@@ -294,25 +294,25 @@ namespace iw4of::native
 
 	struct srfTriangles_t
 	{
-		unsigned int vertexLayerData;
-		unsigned int firstVertex;
-		unsigned short vertexCount;
-		unsigned short triCount;
-		unsigned int baseIndex;
+		uint32_t vertexLayerData;
+		uint32_t firstVertex;
+		uint16_t vertexCount;
+		uint16_t triCount;
+		uint32_t baseIndex;
 	};
 
 	struct GfxSurfaceLightingAndFlagsFields
 	{
-		unsigned char lightmapIndex;
-		unsigned char reflectionProbeIndex;
-		unsigned char primaryLightIndex;
-		unsigned char flags;
+		uint8_t lightmapIndex;
+		uint8_t reflectionProbeIndex;
+		uint8_t primaryLightIndex;
+		uint8_t flags;
 	};
 
 	union GfxSurfaceLightingAndFlags
 	{
 		GfxSurfaceLightingAndFlagsFields fields;
-		unsigned int packed;
+		uint32_t packed;
 	};
 
 	struct GfxSurface
@@ -326,8 +326,8 @@ namespace iw4of::native
 	{
 		bool isQueued;
 		bool isAncestor;
-		unsigned char recursionDepth;
-		unsigned char hullPointCount;
+		uint8_t recursionDepth;
+		uint8_t hullPointCount;
 		float(*hullPoints)[2];
 		struct GfxPortal* queuedParent;
 	};
@@ -342,31 +342,31 @@ namespace iw4of::native
 		GfxPortalWritable writable;
 		DpvsPlane plane;
 		vec3_t* vertices;
-		unsigned short cellIndex;
-		unsigned char vertexCount;
+		uint16_t cellIndex;
+		uint8_t vertexCount;
 		float hullAxis[2][3];
 	};
 
 	struct GfxCell
 	{
 		Bounds bounds;
-		int portalCount;
+		int32_t portalCount;
 		GfxPortal* portals;
-		unsigned char reflectionProbeCount;
-		unsigned char* reflectionProbes;
+		uint8_t reflectionProbeCount;
+		uint8_t* reflectionProbes;
 	};
 
 
 	union PackedUnitVec
 	{
-		unsigned int packed;
+		uint32_t packed;
 		char array[4];
 	};
 
 	union GfxColor
 	{
-		unsigned int packed;
-		unsigned char array[4];
+		uint32_t packed;
+		uint8_t array[4];
 	};
 
 	struct GfxPackedPlacement
@@ -392,14 +392,14 @@ namespace iw4of::native
 	{
 		GfxPackedPlacement placement;
 		struct XModel* model;
-		unsigned __int16 cullDist;
-		unsigned __int16 lightingHandle;
-		unsigned char reflectionProbeIndex;
-		unsigned char primaryLightIndex;
-		unsigned char flags;
-		unsigned char firstMtlSkinIndex;
+		uint16_t cullDist;
+		uint16_t lightingHandle;
+		uint8_t reflectionProbeIndex;
+		uint8_t primaryLightIndex;
+		uint8_t flags;
+		uint8_t firstMtlSkinIndex;
 		GfxColor groundLighting;
-		unsigned __int16 cacheId[4];
+		uint16_t cacheId[4];
 	};
 
 
@@ -423,16 +423,16 @@ namespace iw4of::native
 
 	struct CardMemory
 	{
-		int platform[2];
+		int32_t platform[2];
 	};
 
 	struct GfxImageLoadDef
 	{
 		char levelCount;
 		char pad[3];
-		int flags;
-		int format;
-		int resourceSize;
+		int32_t flags;
+		int32_t format;
+		int32_t resourceSize;
 		char data[1];
 	};
 
@@ -445,7 +445,7 @@ namespace iw4of::native
 		GfxImageLoadDef* loadDef;
 	};
 
-	enum GfxImageCategory : unsigned char
+	enum GfxImageCategory : uint8_t
 	{
 		IMG_CATEGORY_UNKNOWN = 0x0,
 		IMG_CATEGORY_AUTO_GENERATED = 0x1,
@@ -460,17 +460,17 @@ namespace iw4of::native
 	struct GfxImage
 	{
 		GfxTexture texture;
-		unsigned char mapType;
+		uint8_t mapType;
 		GfxImageCategory semantic;
-		unsigned char category;
+		uint8_t category;
 		bool useSrgbReads;
 		Picmip picmip;
 		bool noPicmip;
 		char track;
 		CardMemory cardMemory;
-		unsigned short width;
-		unsigned short height;
-		unsigned short depth;
+		uint16_t width;
+		uint16_t height;
+		uint16_t depth;
 		bool delayLoadPixels;
 		const char* name;
 	};
@@ -484,14 +484,14 @@ namespace iw4of::native
 	struct GfxLightImage
 	{
 		GfxImage* image;
-		unsigned char samplerState;
+		uint8_t samplerState;
 	};
 
 	struct GfxLightDef
 	{
 		const char* name;
 		GfxLightImage attenuation;
-		int lmapLookupStart;
+		int32_t lmapLookupStart;
 	};
 
 	struct GfxReflectionProbe
@@ -506,7 +506,7 @@ namespace iw4of::native
 
 	struct GfxReflectionProbeReference
 	{
-		unsigned char index;
+		uint8_t index;
 	};
 
 	struct GfxWorldVertexData
@@ -517,37 +517,37 @@ namespace iw4of::native
 
 	struct GfxWorldVertexLayerData
 	{
-		unsigned char* data;
+		uint8_t* data;
 		void* layerVb;
 	};
 
 	struct GfxWorldDraw
 	{
-		unsigned int reflectionProbeCount;
+		uint32_t reflectionProbeCount;
 		GfxImage** reflectionProbes;
 		GfxReflectionProbe* reflectionProbeOrigins;
 		GfxTexture* reflectionProbeTextures;
-		int lightmapCount;
+		int32_t lightmapCount;
 		GfxLightmapArray* lightmaps;
 		GfxTexture* lightmapPrimaryTextures;
 		GfxTexture* lightmapSecondaryTextures;
 		GfxImage* lightmapOverridePrimary;
 		GfxImage* lightmapOverrideSecondary;
-		unsigned int vertexCount;
+		uint32_t vertexCount;
 		GfxWorldVertexData vd;
-		unsigned int vertexLayerDataSize;
+		uint32_t vertexLayerDataSize;
 		GfxWorldVertexLayerData vld;
-		unsigned int indexCount;
-		unsigned __int16* indices;
+		uint32_t indexCount;
+		uint16_t* indices;
 	};
 
 
 	struct GfxSky
 	{
-		int skySurfCount;
+		int32_t skySurfCount;
 		int* skyStartSurfs;
 		GfxImage* skyImage;
-		int skySamplerState;
+		int32_t skySamplerState;
 	};
 
 
@@ -561,7 +561,7 @@ namespace iw4of::native
 		float radius;
 		float cosHalfFovOuter;
 		float cosHalfFovInner;
-		int exponent;
+		int32_t exponent;
 	};
 
 	struct GfxStaticModelInst
@@ -577,86 +577,86 @@ namespace iw4of::native
 
 	struct GfxDrawSurfFields
 	{
-		unsigned long long unused : 1;
-		unsigned long long primarySortKey : 6;
-		unsigned long long surfType : 4;
-		unsigned long long viewModelRender : 1;
-		unsigned long long sceneLightIndex : 8;
-		unsigned long long useHeroLighting : 1;
-		unsigned long long prepass : 2;
-		unsigned long long materialSortedIndex : 12;
-		unsigned long long customIndex : 5;
-		unsigned long long hasGfxEntIndex : 1;
-		unsigned long long reflectionProbeIndex : 8;
-		unsigned long long objectId : 15;
+		uint64_t unused : 1;
+		uint64_t primarySortKey : 6;
+		uint64_t surfType : 4;
+		uint64_t viewModelRender : 1;
+		uint64_t sceneLightIndex : 8;
+		uint64_t useHeroLighting : 1;
+		uint64_t prepass : 2;
+		uint64_t materialSortedIndex : 12;
+		uint64_t customIndex : 5;
+		uint64_t hasGfxEntIndex : 1;
+		uint64_t reflectionProbeIndex : 8;
+		uint64_t objectId : 15;
 	};
 
 	union GfxDrawSurf
 	{
 		GfxDrawSurfFields fields;
-		unsigned long long packed;
+		uint64_t packed;
 	};
 
 	struct GfxWorldDpvsStatic
 	{
-		unsigned int smodelCount;
-		unsigned int staticSurfaceCount;
-		unsigned int staticSurfaceCountNoDecal;
-		unsigned int litOpaqueSurfsBegin;
-		unsigned int litOpaqueSurfsEnd;
-		unsigned int litTransSurfsBegin;
-		unsigned int litTransSurfsEnd;
-		unsigned int shadowCasterSurfsBegin;
-		unsigned int shadowCasterSurfsEnd;
-		unsigned int emissiveSurfsBegin;
-		unsigned int emissiveSurfsEnd;
-		unsigned int smodelVisDataCount;
-		unsigned int surfaceVisDataCount;
+		uint32_t smodelCount;
+		uint32_t staticSurfaceCount;
+		uint32_t staticSurfaceCountNoDecal;
+		uint32_t litOpaqueSurfsBegin;
+		uint32_t litOpaqueSurfsEnd;
+		uint32_t litTransSurfsBegin;
+		uint32_t litTransSurfsEnd;
+		uint32_t shadowCasterSurfsBegin;
+		uint32_t shadowCasterSurfsEnd;
+		uint32_t emissiveSurfsBegin;
+		uint32_t emissiveSurfsEnd;
+		uint32_t smodelVisDataCount;
+		uint32_t surfaceVisDataCount;
 		char* smodelVisData[3];
 		char* surfaceVisData[3];
-		unsigned __int16* sortedSurfIndex;
+		uint16_t* sortedSurfIndex;
 		GfxStaticModelInst* smodelInsts;
 		GfxSurface* surfaces;
 		GfxSurfaceBounds* surfacesBounds;
 		GfxStaticModelDrawInst* smodelDrawInsts;
 		GfxDrawSurf* surfaceMaterials;
-		unsigned int* surfaceCastsSunShadow;
+		uint32_t* surfaceCastsSunShadow;
 		volatile int usageCount;
 	};
 
 	struct GfxLightGridEntry
 	{
-		unsigned short colorsIndex;
-		unsigned char primaryLightIndex;
-		unsigned char needsTrace;
+		uint16_t colorsIndex;
+		uint8_t primaryLightIndex;
+		uint8_t needsTrace;
 	};
 
 	struct GfxLightGridColors
 	{
-		unsigned char rgb[56][3];
+		uint8_t rgb[56][3];
 	};
 
 	struct GfxLightGrid
 	{
 		bool hasLightRegions;
-		unsigned int lastSunPrimaryLightIndex;
-		unsigned short mins[3];
-		unsigned short maxs[3];
-		unsigned int rowAxis;
-		unsigned int colAxis;
-		unsigned short* rowDataStart;
-		unsigned int rawRowDataSize;
-		unsigned char* rawRowData;
-		unsigned int entryCount;
+		uint32_t lastSunPrimaryLightIndex;
+		uint16_t mins[3];
+		uint16_t maxs[3];
+		uint32_t rowAxis;
+		uint32_t colAxis;
+		uint16_t* rowDataStart;
+		uint32_t rawRowDataSize;
+		uint8_t* rawRowData;
+		uint32_t entryCount;
 		GfxLightGridEntry* entries;
-		unsigned int colorCount;
+		uint32_t colorCount;
 		GfxLightGridColors* colors;
 	};
 
 	struct MaterialMemory
 	{
 		Material* material;
-		int memory;
+		int32_t memory;
 	};
 
 	struct sunflare_t
@@ -670,18 +670,18 @@ namespace iw4of::native
 		float flareMaxSize;
 		float flareMaxDot;
 		float flareMaxAlpha;
-		int flareFadeInTime;
-		int flareFadeOutTime;
+		int32_t flareFadeInTime;
+		int32_t flareFadeOutTime;
 		float blindMinDot;
 		float blindMaxDot;
 		float blindMaxDarken;
-		int blindFadeInTime;
-		int blindFadeOutTime;
+		int32_t blindFadeInTime;
+		int32_t blindFadeOutTime;
 		float glareMinDot;
 		float glareMaxDot;
 		float glareMaxLighten;
-		int glareFadeInTime;
-		int glareFadeOutTime;
+		int32_t glareFadeInTime;
+		int32_t glareFadeOutTime;
 		float sunFxPosition[3];
 	};
 
@@ -689,34 +689,34 @@ namespace iw4of::native
 	{
 		float normal[3];
 		float dist;
-		unsigned char type;
-		unsigned char pad[3];
+		uint8_t type;
+		uint8_t pad[3];
 	};
 
 	struct cbrushside_t
 	{
 		cplane_s* plane;
-		unsigned short materialNum;
-		unsigned char firstAdjacentSideOffset;
-		unsigned char edgeCount;
+		uint16_t materialNum;
+		uint8_t firstAdjacentSideOffset;
+		uint8_t edgeCount;
 	};
 
 	struct cbrushWrapper_t
 	{
-		unsigned short numsides;
-		unsigned short glassPieceIndex;
+		uint16_t numsides;
+		uint16_t glassPieceIndex;
 		cbrushside_t* sides;
-		unsigned char* baseAdjacentSide;
+		uint8_t* baseAdjacentSide;
 		short axialMaterialNum[2][3];
-		unsigned char firstAdjacentSideOffsets[2][3];
-		unsigned char edgeCount[2][3];
+		uint8_t firstAdjacentSideOffsets[2][3];
+		uint8_t edgeCount[2][3];
 	};
 
 	struct BrushWrapper
 	{
 		Bounds bounds;
 		cbrushWrapper_t brush;
-		int totalEdgeCount;
+		int32_t totalEdgeCount;
 		cplane_s* planes;
 	};
 
@@ -751,7 +751,7 @@ namespace iw4of::native
 	struct PhysCollmap
 	{
 		const char* name;
-		unsigned int count;
+		uint32_t count;
 		PhysGeomInfo* geoms;
 		PhysMass mass;
 		Bounds bounds;
@@ -759,23 +759,23 @@ namespace iw4of::native
 
 	struct GfxWorldDpvsPlanes
 	{
-		int cellCount;
+		int32_t cellCount;
 		cplane_s* planes;
-		unsigned short* nodes;
-		unsigned int* sceneEntCellBits;
+		uint16_t* nodes;
+		uint32_t* sceneEntCellBits;
 	};
 
 	struct GfxAabbTree
 	{
 		Bounds bounds;
-		unsigned short childCount;
-		unsigned short surfaceCount;
-		unsigned short startSurfIndex;
-		unsigned short surfaceCountNoDecal;
-		unsigned short startSurfIndexNoDecal;
-		unsigned short smodelIndexCount;
-		unsigned short* smodelIndexes;
-		int childrenOffset;
+		uint16_t childCount;
+		uint16_t surfaceCount;
+		uint16_t startSurfIndex;
+		uint16_t surfaceCountNoDecal;
+		uint16_t startSurfIndexNoDecal;
+		uint16_t smodelIndexCount;
+		uint16_t* smodelIndexes;
+		int32_t childrenOffset;
 	};
 
 	struct GfxCellTree
@@ -785,7 +785,7 @@ namespace iw4of::native
 
 	struct GfxCellTreeCount
 	{
-		int aabbTreeCount;
+		int32_t aabbTreeCount;
 	};
 
 	struct GfxBrushModelWritable
@@ -798,41 +798,41 @@ namespace iw4of::native
 		GfxBrushModelWritable writable;
 		Bounds bounds;
 		float radius;
-		unsigned short surfaceCount;
-		unsigned short startSurfIndex;
-		unsigned short surfaceCountNoDecal;
+		uint16_t surfaceCount;
+		uint16_t startSurfIndex;
+		uint16_t surfaceCountNoDecal;
 	};
 
 	struct BModelDrawInfo
 	{
-		unsigned short surfId;
+		uint16_t surfId;
 	};
 
 	struct GfxSceneDynBrush
 	{
 		BModelDrawInfo info;
-		unsigned short dynEntId;
+		uint16_t dynEntId;
 	};
 
 	struct XModelDrawInfo
 	{
-		unsigned char hasGfxEntIndex;
-		unsigned char lod;
-		unsigned short surfId;
+		uint8_t hasGfxEntIndex;
+		uint8_t lod;
+		uint16_t surfId;
 	};
 
 	struct GfxSceneDynModel
 	{
 		XModelDrawInfo info;
-		unsigned short dynEntId;
+		uint16_t dynEntId;
 	};
 
 	struct GfxShadowGeometry
 	{
-		unsigned short  surfaceCount;
-		unsigned short  smodelCount;
-		unsigned short* sortedSurfIndex;
-		unsigned short* smodelIndex;
+		uint16_t  surfaceCount;
+		uint16_t  smodelCount;
+		uint16_t* sortedSurfIndex;
+		uint16_t* smodelIndex;
 	};
 
 	struct GfxLightRegionAxis
@@ -846,21 +846,21 @@ namespace iw4of::native
 	{
 		float kdopMidPoint[9];
 		float kdopHalfSize[9];
-		unsigned int axisCount;
+		uint32_t axisCount;
 		GfxLightRegionAxis* axis;
 	};
 
 	struct GfxLightRegion
 	{
-		unsigned int hullCount;
+		uint32_t hullCount;
 		GfxLightRegionHull* hulls;
 	};
 
 	struct GfxWorldDpvsDynamic
 	{
-		unsigned int dynEntClientWordCount[2];
-		unsigned int dynEntClientCount[2];
-		unsigned int* dynEntCellBits[2];
+		uint32_t dynEntClientWordCount[2];
+		uint32_t dynEntClientCount[2];
+		uint32_t* dynEntCellBits[2];
 		char* dynEntVisData[2][3];
 	};
 
@@ -868,45 +868,45 @@ namespace iw4of::native
 	{
 		const char* name;
 		const char* baseName;
-		unsigned int planeCount;
-		unsigned int nodeCount;
-		unsigned int surfaceCount;
-		int skyCount;
+		uint32_t planeCount;
+		uint32_t nodeCount;
+		uint32_t surfaceCount;
+		int32_t skyCount;
 		GfxSky* skies;
-		unsigned int lastSunPrimaryLightIndex;
-		unsigned int primaryLightCount;
-		unsigned int sortKeyLitDecal;
-		unsigned int sortKeyEffectDecal;
-		unsigned int sortKeyEffectAuto;
-		unsigned int sortKeyDistortion;
+		uint32_t lastSunPrimaryLightIndex;
+		uint32_t primaryLightCount;
+		uint32_t sortKeyLitDecal;
+		uint32_t sortKeyEffectDecal;
+		uint32_t sortKeyEffectAuto;
+		uint32_t sortKeyDistortion;
 		GfxWorldDpvsPlanes dpvsPlanes;
 		GfxCellTreeCount* aabbTreeCounts;
 		GfxCellTree* aabbTrees;
 		GfxCell* cells;
 		GfxWorldDraw draw;
 		GfxLightGrid lightGrid;
-		int modelCount;
+		int32_t modelCount;
 		GfxBrushModel* models;
 		Bounds bounds;
-		unsigned int checksum;
-		int materialMemoryCount;
+		uint32_t checksum;
+		int32_t materialMemoryCount;
 		MaterialMemory* materialMemory;
 		sunflare_t sun;
 		float outdoorLookupMatrix[4][4];
 		GfxImage* outdoorImage;
-		unsigned int* cellCasterBits;
-		unsigned int* cellHasSunLitSurfsBits;
+		uint32_t* cellCasterBits;
+		uint32_t* cellHasSunLitSurfsBits;
 		GfxSceneDynModel* sceneDynModel;
 		GfxSceneDynBrush* sceneDynBrush;
-		unsigned int* primaryLightEntityShadowVis;
-		unsigned int* primaryLightDynEntShadowVis[2];
-		unsigned char* nonSunPrimaryLightForModelDynEnt;
+		uint32_t* primaryLightEntityShadowVis;
+		uint32_t* primaryLightDynEntShadowVis[2];
+		uint8_t* nonSunPrimaryLightForModelDynEnt;
 		GfxShadowGeometry* shadowGeom;
 		GfxLightRegion* lightRegion;
 		GfxWorldDpvsStatic dpvs;
 		GfxWorldDpvsDynamic dpvsDyn;
-		unsigned int mapVtxChecksum;
-		unsigned int heroOnlyLightCount;
+		uint32_t mapVtxChecksum;
+		uint32_t heroOnlyLightCount;
 		GfxHeroOnlyLight* heroOnlyLights;
 		char fogTypesAllowed;
 	};
@@ -940,7 +940,7 @@ namespace iw4of::native
 	
 	union PackedTexCoords
 	{
-		unsigned int packed;
+		uint32_t packed;
 	};
 
 	struct GfxPackedVertex
@@ -956,79 +956,79 @@ namespace iw4of::native
 
 	struct XSurfaceCollisionAabb
 	{
-		unsigned short mins[3];
-		unsigned short maxs[3];
+		uint16_t mins[3];
+		uint16_t maxs[3];
 	};
 
 	struct XSurfaceCollisionNode
 	{
 		XSurfaceCollisionAabb aabb;
-		unsigned short childBeginIndex;
-		unsigned short childCount;
+		uint16_t childBeginIndex;
+		uint16_t childCount;
 	};
 
 	struct XSurfaceCollisionLeaf
 	{
-		unsigned short triangleBeginIndex;
+		uint16_t triangleBeginIndex;
 	};
 
 	struct XSurfaceCollisionTree
 	{
 		float trans[3];
 		float scale[3];
-		unsigned int nodeCount;
+		uint32_t nodeCount;
 		XSurfaceCollisionNode* nodes;
-		unsigned int leafCount;
+		uint32_t leafCount;
 		XSurfaceCollisionLeaf* leafs;
 	};
 
 	struct XRigidVertList
 	{
-		unsigned short boneOffset;
-		unsigned short vertCount;
-		unsigned short triOffset;
-		unsigned short triCount;
+		uint16_t boneOffset;
+		uint16_t vertCount;
+		uint16_t triOffset;
+		uint16_t triCount;
 		XSurfaceCollisionTree* collisionTree;
 	};
 
 	struct XSurfaceVertexInfo
 	{
 		short vertCount[4];
-		unsigned short* vertsBlend;
+		uint16_t* vertsBlend;
 	};
 
 	struct XSurface
 	{
-		unsigned char tileMode;
+		uint8_t tileMode;
 		bool deformed;
-		unsigned __int16 vertCount;
-		unsigned __int16 triCount;
+		uint16_t vertCount;
+		uint16_t triCount;
 		char zoneHandle;
-		unsigned __int16 baseTriIndex;
-		unsigned __int16 baseVertIndex;
-		unsigned __int16* triIndices;
+		uint16_t baseTriIndex;
+		uint16_t baseVertIndex;
+		uint16_t* triIndices;
 		XSurfaceVertexInfo vertInfo;
 		GfxPackedVertex* verts0;
-		unsigned int vertListCount;
+		uint32_t vertListCount;
 		XRigidVertList* vertList;
-		int partBits[6];
+		int32_t partBits[6];
 	};
 
 	struct XModelSurfs
 	{
 		const char* name;
 		XSurface* surfaces;
-		int numSurfaces;
-		int partBits[6];
+		int32_t numSurfaces;
+		int32_t partBits[6];
 	};
 
 	struct XModelLodInfo
 	{
 		float dist;
-		unsigned __int16 numsurfs;
-		unsigned __int16 surfIndex;
+		uint16_t numsurfs;
+		uint16_t surfIndex;
 		XModelSurfs* modelSurfs;
-		int partBits[6];
+		int32_t partBits[6];
 		XSurface* surfs;
 		char lod;
 		char smcBaseIndexPlusOne;
@@ -1039,7 +1039,7 @@ namespace iw4of::native
 	struct PhysPreset
 	{
 		const char* name;
-		int type;
+		int32_t type;
 		float mass;
 		float bounce;
 		float friction;
@@ -1063,11 +1063,11 @@ namespace iw4of::native
 	struct XModelCollSurf_s
 	{
 		XModelCollTri_s* collTris;
-		int numCollTris;
+		int32_t numCollTris;
 		Bounds bounds;
-		int boneIdx;
-		int contents;
-		int surfFlags;
+		int32_t boneIdx;
+		int32_t contents;
+		int32_t surfFlags;
 	};
 
 	struct XBoneInfo
@@ -1086,31 +1086,31 @@ namespace iw4of::native
 	struct XModel
 	{
 		const char* name;
-		unsigned char numBones;
-		unsigned char numRootBones;
-		unsigned char numsurfs;
+		uint8_t numBones;
+		uint8_t numRootBones;
+		uint8_t numsurfs;
 		char lodRampType;
 		float scale;
-		unsigned int noScalePartBits[6];
-		unsigned __int16* boneNames;
-		unsigned char* parentList;
+		uint32_t noScalePartBits[6];
+		uint16_t* boneNames;
+		uint8_t* parentList;
 		short(*quats)[4];
 		float(*trans)[3];
-		unsigned char* partClassification;
+		uint8_t* partClassification;
 		DObjAnimMat* baseMat;
 		Material** materialHandles;
 		XModelLodInfo lodInfo[4];
 		char maxLoadedLod;
 		char numLods;
 		char collLod;
-		unsigned char flags;
+		uint8_t flags;
 		XModelCollSurf_s* collSurfs;
-		int numCollSurfs;
-		int contents;
+		int32_t numCollSurfs;
+		int32_t contents;
 		XBoneInfo* boneInfo;
 		float radius;
 		Bounds bounds;
-		int memUsage;
+		int32_t memUsage;
 		bool bad;
 		PhysPreset* physPreset;
 		PhysCollmap* physCollmap;
@@ -1130,20 +1130,20 @@ namespace iw4of::native
 	struct dmaterial_t
 	{
 		char* material;
-		int surfaceFlags;
-		int contentFlags;
+		int32_t surfaceFlags;
+		int32_t contentFlags;
 	};
 
 	struct cLeafBrushNodeLeaf_t
 	{
-		unsigned short* brushes;
+		uint16_t* brushes;
 	};
 
 	struct cLeafBrushNode_t
 	{
 		char axis;
-		__int16 leafBrushCount;
-		int contents;
+		int16_t leafBrushCount;
+		int32_t contents;
 		cLeafBrushNodeLeaf_t data;
 		char pad[8];
 	};
@@ -1158,15 +1158,15 @@ namespace iw4of::native
 	{
 		const char* name;
 		float origin[3];
-		unsigned short triggerIndex;
-		unsigned char sunPrimaryLightIndex;
+		uint16_t triggerIndex;
+		uint8_t sunPrimaryLightIndex;
 	};
 
 	struct MapEnts
 	{
 		const char* name;
 		char* entityString;
-		int numEntityChars;
+		int32_t numEntityChars;
 		MapTriggers trigger;
 		Stage* stages;
 		char stageCount;
@@ -1185,21 +1185,21 @@ namespace iw4of::native
 		DynEntityType type;
 		GfxPlacement pose;
 		XModel* xModel;
-		unsigned short brushModel;
-		unsigned short physicsBrushModel;
+		uint16_t brushModel;
+		uint16_t physicsBrushModel;
 		struct FxEffectDef* destroyFx;
 		PhysPreset* physPreset;
-		int health;
+		int32_t health;
 		PhysMass mass;
-		int contents;
+		int32_t contents;
 	};
 
 	struct DynEntityClient
 	{
-		int physObjId;
-		unsigned short flags;
-		unsigned short lightingHandle;
-		int health;
+		int32_t physObjId;
+		uint16_t flags;
+		uint16_t lightingHandle;
+		int32_t health;
 	};
 
 	struct cStaticModel_s
@@ -1212,12 +1212,12 @@ namespace iw4of::native
 
 	struct cLeaf_t
 	{
-		unsigned short firstCollAabbIndex;
-		unsigned short collAabbCount;
-		int brushContents;
-		int terrainContents;
+		uint16_t firstCollAabbIndex;
+		uint16_t collAabbCount;
+		int32_t brushContents;
+		int32_t terrainContents;
 		Bounds bounds;
-		int leafBrushNode;
+		int32_t leafBrushNode;
 	};
 
 	struct cmodel_t
@@ -1230,8 +1230,8 @@ namespace iw4of::native
 	struct ClipMaterial
 	{
 		const char* name;
-		int surfaceFlags;
-		int contents;
+		int32_t surfaceFlags;
+		int32_t contents;
 	};
 
 	struct cNode_t
@@ -1244,7 +1244,7 @@ namespace iw4of::native
 	{
 		float dist;
 		float range;
-		unsigned short childOffset[2];
+		uint16_t childOffset[2];
 	};
 
 	union cLeafBrushNodeData_t
@@ -1255,9 +1255,9 @@ namespace iw4of::native
 
 	struct cLeafBrushNode_s
 	{
-		unsigned char axis;
+		uint8_t axis;
 		short leafBrushCount;
-		int contents;
+		int32_t contents;
 		cLeafBrushNodeData_t data;
 	};
 
@@ -1272,40 +1272,40 @@ namespace iw4of::native
 
 	struct CollisionPartition
 	{
-		unsigned char triCount;
-		unsigned char borderCount;
-		unsigned char firstVertSegment;
-		int firstTri;
+		uint8_t triCount;
+		uint8_t borderCount;
+		uint8_t firstVertSegment;
+		int32_t firstTri;
 		CollisionBorder* borders;
 	};
 
 	struct CollisionAabbTree
 	{
 		float midPoint[3];
-		unsigned short materialIndex;
-		unsigned short childCount;
+		uint16_t materialIndex;
+		uint16_t childCount;
 		float halfSize[3];
-		unsigned int u;
+		uint32_t u;
 	};
 
 
 	struct cbrush_t
 	{
-		unsigned short numsides;
-		unsigned short glassPieceIndex;
+		uint16_t numsides;
+		uint16_t glassPieceIndex;
 		cbrushside_t* sides;
-		unsigned char* baseAdjacentSide;
-		unsigned short axialMaterialNum[2][3];
-		unsigned char firstAdjacentSideOffsets[2][3];
-		unsigned char edgeCount[2][3];
+		uint8_t* baseAdjacentSide;
+		uint16_t axialMaterialNum[2][3];
+		uint8_t firstAdjacentSideOffsets[2][3];
+		uint8_t edgeCount[2][3];
 	};
 
 
 	struct SModelAabbNode
 	{
 		Bounds bounds;
-		unsigned short firstChild;
-		unsigned short childCount;
+		uint16_t firstChild;
+		uint16_t childCount;
 	};
 
 	struct DynEntityPose
@@ -1316,8 +1316,8 @@ namespace iw4of::native
 
 	struct DynEntityColl
 	{
-		unsigned short sector;
-		unsigned short nextEntInSector;
+		uint16_t sector;
+		uint16_t nextEntInSector;
 		float linkMins[2];
 		float linkMaxs[2];
 	};
@@ -1325,53 +1325,53 @@ namespace iw4of::native
 	struct clipMap_t
 	{
 		const char* name;
-		int isInUse;
-		unsigned int planeCount;
+		int32_t isInUse;
+		uint32_t planeCount;
 		cplane_s* planes;
-		unsigned int numStaticModels;
+		uint32_t numStaticModels;
 		cStaticModel_s* staticModelList;
-		unsigned int numMaterials;
+		uint32_t numMaterials;
 		ClipMaterial* materials;
-		unsigned int numBrushSides;
+		uint32_t numBrushSides;
 		cbrushside_t* brushsides;
-		unsigned int numBrushEdges;
-		unsigned char* brushEdges;
-		unsigned int numNodes;
+		uint32_t numBrushEdges;
+		uint8_t* brushEdges;
+		uint32_t numNodes;
 		cNode_t* nodes;
-		unsigned int numLeafs;
+		uint32_t numLeafs;
 		cLeaf_t* leafs;
-		unsigned int leafbrushNodesCount;
+		uint32_t leafbrushNodesCount;
 		cLeafBrushNode_s* leafbrushNodes;
-		unsigned int numLeafBrushes;
-		unsigned __int16* leafbrushes;
-		unsigned int numLeafSurfaces;
-		unsigned int* leafsurfaces;
-		unsigned int vertCount;
+		uint32_t numLeafBrushes;
+		uint16_t* leafbrushes;
+		uint32_t numLeafSurfaces;
+		uint32_t* leafsurfaces;
+		uint32_t vertCount;
 		float(*verts)[3];
-		unsigned int triCount;
-		unsigned __int16* triIndices;
-		unsigned char* triEdgeIsWalkable;
-		unsigned int borderCount;
+		uint32_t triCount;
+		uint16_t* triIndices;
+		uint8_t* triEdgeIsWalkable;
+		uint32_t borderCount;
 		CollisionBorder* borders;
-		unsigned int partitionCount;
+		uint32_t partitionCount;
 		CollisionPartition* partitions;
-		unsigned int aabbTreeCount;
+		uint32_t aabbTreeCount;
 		CollisionAabbTree* aabbTrees;
-		unsigned int numSubModels;
+		uint32_t numSubModels;
 		cmodel_t* cmodels;
-		unsigned __int16 numBrushes;
+		uint16_t numBrushes;
 		cbrush_t* brushes;
 		Bounds* brushBounds;
 		int* brushContents;
 		MapEnts* mapEnts;
-		unsigned __int16 smodelNodeCount;
+		uint16_t smodelNodeCount;
 		SModelAabbNode* smodelNodes;
-		unsigned __int16 dynEntCount[2];
+		uint16_t dynEntCount[2];
 		DynEntityDef* dynEntDefList[2];
 		DynEntityPose* dynEntPoseList[2];
 		DynEntityClient* dynEntClientList[2];
 		DynEntityColl* dynEntCollList[2];
-		unsigned int checksum;
+		uint32_t checksum;
 	};
 
 	enum MaterialTechniqueType
@@ -1432,7 +1432,7 @@ namespace iw4of::native
 	};
 
 #define NAMEOF(s) #s
-	enum MaterialTextureSource : unsigned int
+	enum MaterialTextureSource : uint32_t
 	{
 		TEXTURE_SRC_CODE_BLACK = 0x0,
 		TEXTURE_SRC_CODE_WHITE = 0x1,
@@ -1497,7 +1497,7 @@ namespace iw4of::native
 
 	static_assert(ARRAYSIZE(Debug_MaterialTextureSourceNames) == MaterialTextureSource::TEXTURE_SRC_CODE_COUNT);
 
-	enum StateFlags : unsigned char {
+	enum StateFlags : uint8_t {
 		STATE_FLAG_CULL_BACK = 0x1,
 		STATE_FLAG_AMBIENT = 0x2,
 		STATE_FLAG_DECAL = 0x4,
@@ -1524,20 +1524,20 @@ namespace iw4of::native
 
 	struct MaterialGameFlagsFields
 	{
-		unsigned char unk1 : 1; // 0x1
-		unsigned char addShadowToPrimaryLight : 1; // 0x2
-		unsigned char isFoliageRequiresGroundLighting : 1; // 0x4
-		unsigned char unk4 : 1; // 0x8
-		unsigned char unk5 : 1; // 0x10
-		unsigned char unk6 : 1; // 0x20
-		unsigned char unk7 : 1; // 0x40
-		unsigned char unkCastShadowMaybe : 1; // 0x80
+		uint8_t unk1 : 1; // 0x1
+		uint8_t addShadowToPrimaryLight : 1; // 0x2
+		uint8_t isFoliageRequiresGroundLighting : 1; // 0x4
+		uint8_t unk4 : 1; // 0x8
+		uint8_t unk5 : 1; // 0x10
+		uint8_t unk6 : 1; // 0x20
+		uint8_t unk7 : 1; // 0x40
+		uint8_t unkCastShadowMaybe : 1; // 0x80
 	};
 
 	union MaterialGameFlags
 	{
 		MaterialGameFlagsFields fields;
-		unsigned char packed;
+		uint8_t packed;
 	};
 
 	enum GfxCameraRegionType
@@ -1583,8 +1583,8 @@ namespace iw4of::native
 		WaterWritable writable;
 		complex_s* H0;
 		float* wTerm;
-		int M;
-		int N;
+		int32_t M;
+		int32_t N;
 		float Lx;
 		float Lz;
 		float gravity;
@@ -1603,22 +1603,22 @@ namespace iw4of::native
 
 	struct MaterialTextureDef
 	{
-		unsigned int nameHash;
+		uint32_t nameHash;
 		char nameStart;
 		char nameEnd;
-		unsigned char samplerState;
-		unsigned char semantic;
+		uint8_t samplerState;
+		uint8_t semantic;
 		MaterialTextureDefInfo u;
 	};
 
 	struct MaterialConstantDef
 	{
-		unsigned int nameHash;
+		uint32_t nameHash;
 		char name[12];
 		float literal[4];
 	};
 
-	enum GfxSurfaceStatebitOp0 : unsigned int
+	enum GfxSurfaceStatebitOp0 : uint32_t
 	{
 		GFXS0_SRCBLEND_RGB_SHIFT = 0x0,
 		GFXS0_SRCBLEND_RGB_MASK = 0xF,
@@ -1651,7 +1651,7 @@ namespace iw4of::native
 		GFXS0_POLYMODE_LINE = 0x80000000
 	};
 
-	enum GfxSurfaceStatebitOp1 : unsigned int
+	enum GfxSurfaceStatebitOp1 : uint32_t
 	{
 		GFXS1_DEPTHWRITE = 0x1,
 		GFXS1_DEPTHTEST_DISABLE = 0x2,
@@ -1707,7 +1707,7 @@ namespace iw4of::native
 	union GfxStateBits
 	{
 		GfxStatebitsFlags flags;
-		unsigned int loadBits[2];
+		uint32_t loadBits[2];
 	};
 
 	enum MaterialShaderArgumentType
@@ -1789,31 +1789,31 @@ namespace iw4of::native
 	struct MaterialInfo
 	{
 		char* name;
-		unsigned char gameFlags;
-		unsigned char sortKey;
-		unsigned char textureAtlasRowCount;
-		unsigned char textureAtlasColumnCount;
+		uint8_t gameFlags;
+		uint8_t sortKey;
+		uint8_t textureAtlasRowCount;
+		uint8_t textureAtlasColumnCount;
 		GfxDrawSurf drawSurf;
-		unsigned int surfaceTypeBits;
-		unsigned __int16 hashIndex;
+		uint32_t surfaceTypeBits;
+		uint16_t hashIndex;
 	};
 
 	struct Material
 	{
 		MaterialInfo info;
-		unsigned char stateBitsEntry[48];
-		unsigned char textureCount;
-		unsigned char constantCount;
-		unsigned char stateBitsCount;
-		unsigned char stateFlags;
-		unsigned char cameraRegion; // GfxCameraRegionType
+		uint8_t stateBitsEntry[48];
+		uint8_t textureCount;
+		uint8_t constantCount;
+		uint8_t stateBitsCount;
+		uint8_t stateFlags;
+		uint8_t cameraRegion; // GfxCameraRegionType
 		struct MaterialTechniqueSet* techniqueSet;
 		struct MaterialTextureDef* textureTable;
 		MaterialConstantDef* constantTable;
 		GfxStateBits* stateBitsTable;
 	};
 
-	enum MaterialStreamRoutingSource : unsigned char
+	enum MaterialStreamRoutingSource : uint8_t
 	{
 		STREAM_SRC_POSITION = 0x0,
 		STREAM_SRC_COLOR = 0x1,
@@ -1829,7 +1829,7 @@ namespace iw4of::native
 		STREAM_SRC_COUNT = 0x9,
 	};
 
-	enum MaterialStreamRoutingDestination : unsigned char
+	enum MaterialStreamRoutingDestination : uint8_t
 	{
 		STREAM_DST_POSITION = 0x0,
 		STREAM_DST_NORMAL = 0x1,
@@ -1868,7 +1868,7 @@ namespace iw4of::native
 		MaterialVertexStreamRouting routing;
 	};
 
-	enum ShaderCodeConstants : unsigned short
+	enum ShaderCodeConstants : uint16_t
 	{
 		CONST_SRC_CODE_LIGHT_POSITION = 0x0,
 		CONST_SRC_CODE_LIGHT_DIFFUSE = 0x1,
@@ -2285,9 +2285,9 @@ namespace iw4of::native
 
 	struct GfxPixelShaderLoadDef
 	{
-		unsigned int* program;
-		unsigned short programSize;
-		unsigned short loadForRenderer;
+		uint32_t* program;
+		uint16_t programSize;
+		uint16_t loadForRenderer;
 	};
 
 	struct MaterialPixelShaderProgram
@@ -2305,9 +2305,9 @@ namespace iw4of::native
 
 	struct GfxVertexShaderLoadDef
 	{
-		unsigned int* program;
-		unsigned short programSize;
-		unsigned short loadForRenderer;
+		uint32_t* program;
+		uint16_t programSize;
+		uint16_t loadForRenderer;
 	};
 
 	struct MaterialVertexShaderProgram
@@ -2324,23 +2324,23 @@ namespace iw4of::native
 
 	struct MaterialArgumentCodeConst
 	{
-		unsigned short index;
-		unsigned char firstRow;
-		unsigned char rowCount;
+		uint16_t index;
+		uint8_t firstRow;
+		uint8_t rowCount;
 	};
 
 	union MaterialArgumentDef
 	{
 		float(*literalConst)[4];
 		MaterialArgumentCodeConst codeConst;
-		unsigned int codeSampler;
-		unsigned int nameHash;
+		uint32_t codeSampler;
+		uint32_t nameHash;
 	};
 
 	struct MaterialShaderArgument
 	{
-		unsigned short type;
-		unsigned short dest;
+		uint16_t type;
+		uint16_t dest;
 		MaterialArgumentDef u;
 	};
 
@@ -2349,18 +2349,18 @@ namespace iw4of::native
 		MaterialVertexDeclaration* vertexDecl;
 		MaterialVertexShader* vertexShader;
 		MaterialPixelShader* pixelShader;
-		unsigned char perPrimArgCount;
-		unsigned char perObjArgCount;
-		unsigned char stableArgCount;
-		unsigned char customSamplerFlags;
+		uint8_t perPrimArgCount;
+		uint8_t perObjArgCount;
+		uint8_t stableArgCount;
+		uint8_t customSamplerFlags;
 		MaterialShaderArgument* args;
 	};
 
 	struct MaterialTechnique
 	{
 		const char* name;
-		unsigned short flags;
-		unsigned short passCount;
+		uint16_t flags;
+		uint16_t passCount;
 		MaterialPass passArray[1];
 	};
 
@@ -2411,15 +2411,15 @@ namespace iw4of::native
 
 	struct FxTrailDef
 	{
-		int scrollTimeMsec;
-		int repeatDist;
+		int32_t scrollTimeMsec;
+		int32_t repeatDist;
 		float invSplitDist;
 		float invSplitArcDist;
 		float invSplitTime;
-		int vertCount;
+		int32_t vertCount;
 		FxTrailVertex* verts;
-		int indCount;
-		unsigned short* inds;
+		int32_t indCount;
+		uint16_t* inds;
 	};
 
 	struct FxSparkFountainDef
@@ -2429,7 +2429,7 @@ namespace iw4of::native
 		float bounceRand;
 		float sparkSpacing;
 		float sparkLength;
-		int sparkCount;
+		int32_t sparkCount;
 		float loopTime;
 		float velMin;
 		float velMax;
@@ -2448,14 +2448,14 @@ namespace iw4of::native
 
 	struct FxIntRange
 	{
-		int base;
-		int amplitude;
+		int32_t base;
+		int32_t amplitude;
 	};
 
 	struct FxSpawnDefLooping
 	{
-		int intervalMsec;
-		int count;
+		int32_t intervalMsec;
+		int32_t count;
 	};
 
 	struct FxSpawnDefOneShot
@@ -2478,12 +2478,12 @@ namespace iw4of::native
 
 	struct FxElemAtlas
 	{
-		unsigned char behavior;
-		unsigned char index;
-		unsigned char fps;
-		unsigned char loopCount;
-		unsigned char colIndexBits;
-		unsigned char rowIndexBits;
+		uint8_t behavior;
+		uint8_t index;
+		uint8_t fps;
+		uint8_t loopCount;
+		uint8_t colIndexBits;
+		uint8_t rowIndexBits;
 		short entryCount;
 	};
 
@@ -2508,7 +2508,7 @@ namespace iw4of::native
 
 	struct FxElemVisualState
 	{
-		unsigned char color[4];
+		uint8_t color[4];
 		float rotationDelta;
 		float rotationTotal;
 		float size[2];
@@ -2523,7 +2523,7 @@ namespace iw4of::native
 	
 	struct FxElemDef
 	{
-		int flags;
+		int32_t flags;
 		FxSpawnDef spawn;
 		FxFloatRange spawnRange;
 		FxFloatRange fadeInRange;
@@ -2540,10 +2540,10 @@ namespace iw4of::native
 		FxFloatRange gravity;
 		FxFloatRange reflectionFactor;
 		FxElemAtlas atlas;
-		unsigned char elemType;
-		unsigned char visualCount;
-		unsigned char velIntervalCount;
-		unsigned char visStateIntervalCount;
+		uint8_t elemType;
+		uint8_t visualCount;
+		uint8_t velIntervalCount;
+		uint8_t visStateIntervalCount;
 		FxElemVelStateSample* velSamples;
 		FxElemVisStateSample* visSamples;
 		FxElemDefVisuals visuals;
@@ -2554,21 +2554,21 @@ namespace iw4of::native
 		FxFloatRange emitDist;
 		FxFloatRange emitDistVariance;
 		FxElemExtendedDefPtr extended;
-		unsigned char sortOrder;
-		unsigned char lightingFrac;
-		unsigned char useItemClip;
-		unsigned char fadeInfo;
+		uint8_t sortOrder;
+		uint8_t lightingFrac;
+		uint8_t useItemClip;
+		uint8_t fadeInfo;
 	};
 
 	struct FxEffectDef
 	{
 		const char* name;
-		int flags;
-		int totalSize;
-		int msecLoopingLife;
-		int elemDefCountLooping;
-		int elemDefCountOneShot;
-		int elemDefCountEmission;
+		int32_t flags;
+		int32_t totalSize;
+		int32_t msecLoopingLife;
+		int32_t elemDefCountLooping;
+		int32_t elemDefCountOneShot;
+		int32_t elemDefCountEmission;
 		FxElemDef* elemDefs;
 	};
 
@@ -2598,30 +2598,30 @@ namespace iw4of::native
 			float radius;
 		};
 #pragma warning(pop)
-		unsigned int nextFree;
+		uint32_t nextFree;
 	};
 
 	struct FxGlassPieceState
 	{
 		float texCoordOrigin[2];
-		unsigned int supportMask;
-		unsigned short initIndex;
-		unsigned short geoDataStart;
-		unsigned char defIndex;
-		unsigned char pad[5];
-		unsigned char vertCount;
-		unsigned char holeDataCount;
-		unsigned char crackDataCount;
-		unsigned char fanDataCount;
-		unsigned short flags;
+		uint32_t supportMask;
+		uint16_t initIndex;
+		uint16_t geoDataStart;
+		uint8_t defIndex;
+		uint8_t pad[5];
+		uint8_t vertCount;
+		uint8_t holeDataCount;
+		uint8_t crackDataCount;
+		uint8_t fanDataCount;
+		uint16_t flags;
 		float areaX2;
 	};
 
 	struct FxGlassPieceDynamics
 	{
-		int fallTime;
-		int physObjId;
-		int physJointId;
+		int32_t fallTime;
+		int32_t physObjId;
+		int32_t physJointId;
 		float vel[3];
 		float avel[3];
 	};
@@ -2635,16 +2635,16 @@ namespace iw4of::native
 
 	struct FxGlassHoleHeader
 	{
-		unsigned short uniqueVertCount;
-		unsigned char touchVert;
-		unsigned char pad[1];
+		uint16_t uniqueVertCount;
+		uint8_t touchVert;
+		uint8_t pad[1];
 	};
 
 	struct FxGlassCrackHeader
 	{
-		unsigned short uniqueVertCount;
-		unsigned char beginVertIndex;
-		unsigned char endVertIndex;
+		uint16_t uniqueVertCount;
+		uint8_t beginVertIndex;
+		uint8_t endVertIndex;
 	};
 
 	union FxGlassGeometryData
@@ -2652,7 +2652,7 @@ namespace iw4of::native
 		FxGlassVertex vert;
 		FxGlassHoleHeader hole;
 		FxGlassCrackHeader crack;
-		unsigned char asBytes[4];
+		uint8_t asBytes[4];
 		short anonymous[2];
 	};
 
@@ -2661,45 +2661,45 @@ namespace iw4of::native
 		FxSpatialFrame frame;
 		float radius;
 		float texCoordOrigin[2];
-		unsigned int supportMask;
+		uint32_t supportMask;
 		float areaX2;
-		unsigned char defIndex;
-		unsigned char vertCount;
-		unsigned char fanDataCount;
-		unsigned char pad[1];
+		uint8_t defIndex;
+		uint8_t vertCount;
+		uint8_t fanDataCount;
+		uint8_t pad[1];
 	};
 
 	struct FxGlassSystem
 	{
-		int time;
-		int prevTime;
-		unsigned int defCount;
-		unsigned int pieceLimit;
-		unsigned int pieceWordCount;
-		unsigned int initPieceCount;
-		unsigned int cellCount;
-		unsigned int activePieceCount;
-		unsigned int firstFreePiece;
-		unsigned int geoDataLimit;
-		unsigned int geoDataCount;
-		unsigned int initGeoDataCount;
+		int32_t time;
+		int32_t prevTime;
+		uint32_t defCount;
+		uint32_t pieceLimit;
+		uint32_t pieceWordCount;
+		uint32_t initPieceCount;
+		uint32_t cellCount;
+		uint32_t activePieceCount;
+		uint32_t firstFreePiece;
+		uint32_t geoDataLimit;
+		uint32_t geoDataCount;
+		uint32_t initGeoDataCount;
 		FxGlassDef* defs;
 		FxGlassPiecePlace* piecePlaces;
 		FxGlassPieceState* pieceStates;
 		FxGlassPieceDynamics* pieceDynamics;
 		FxGlassGeometryData* geoData;
-		unsigned int* isInUse;
-		unsigned int* cellBits;
-		unsigned char* visData;
+		uint32_t* isInUse;
+		uint32_t* cellBits;
+		uint8_t* visData;
 		float(*linkOrg)[3];
 		float* halfThickness;
-		unsigned __int16* lightingHandles;
+		uint16_t* lightingHandles;
 		FxGlassInitPieceState* initPieceStates;
 		FxGlassGeometryData* initGeoData;
 		bool needToCompactData;
 		char initCount;
 		float effectChanceAccum;
-		int lastPieceDeletionTime;
+		int32_t lastPieceDeletionTime;
 	};
 
 	struct FxWorld
@@ -2712,21 +2712,21 @@ namespace iw4of::native
 
 	struct _AILSOUNDINFO
 	{
-		int format;
+		int32_t format;
 		const void* data_ptr;
-		unsigned int data_len;
-		unsigned int rate;
-		int bits;
-		int channels;
-		unsigned int samples;
-		unsigned int block_size;
+		uint32_t data_len;
+		uint32_t rate;
+		int32_t bits;
+		int32_t channels;
+		uint32_t samples;
+		uint32_t block_size;
 		const void* initial_ptr;
 	};
 
 	struct SndCurve
 	{
 		const char* filename;
-		unsigned __int16 knotCount;
+		uint16_t knotCount;
 		float knots[16][2];
 	};
 
@@ -2738,14 +2738,14 @@ namespace iw4of::native
 
 	struct AILSOUNDINFO
 	{
-		int format;
+		int32_t format;
 		const void* data_ptr;
-		unsigned int data_len;
-		unsigned int rate;
-		int bits;
-		int channels;
-		unsigned int samples;
-		unsigned int block_size;
+		uint32_t data_len;
+		uint32_t rate;
+		int32_t bits;
+		int32_t channels;
+		uint32_t samples;
+		uint32_t block_size;
 		const void* initial_ptr;
 	};
 
@@ -2769,22 +2769,22 @@ namespace iw4of::native
 
 	struct SoundFile
 	{
-		unsigned char type;
-		unsigned char exists;
+		uint8_t type;
+		uint8_t exists;
 		SoundFileRef u;
 	};
 
 
 	struct MSSSpeakerLevels
 	{
-		int speaker;
-		int numLevels;
+		int32_t speaker;
+		int32_t numLevels;
 		float levels[2];
 	};
 
 	struct MSSChannelMap
 	{
-		int speakerCount;
+		int32_t speakerCount;
 		MSSSpeakerLevels speakers[6];
 	};
 
@@ -2802,7 +2802,7 @@ namespace iw4of::native
 		const char* secondaryAliasName;
 		const char* chainAliasName;
 		SoundFile* soundFile;
-		int sequence;
+		int32_t sequence;
 		float volMin;
 		float volMax;
 		float pitchMin;
@@ -2814,7 +2814,7 @@ namespace iw4of::native
 		float probability;
 		float lfePercentage;
 		float centerPercentage;
-		int startDelay;
+		int32_t startDelay;
 		SndCurve* volumeFalloffCurve;
 		float envelopMin;
 		float envelopMax;
@@ -2826,15 +2826,15 @@ namespace iw4of::native
 	{
 		const char* aliasName;
 		snd_alias_t* head;
-		unsigned int count;
+		uint32_t count;
 	};
 
 
 	struct G_GlassPiece
 	{
-		unsigned __int16 damageTaken;
-		unsigned __int16 collapseTime;
-		int lastStateChangeTime;
+		uint16_t damageTaken;
+		uint16_t collapseTime;
+		int32_t lastStateChangeTime;
 		char impactDir;
 		char impactPos[2];
 	};
@@ -2842,18 +2842,18 @@ namespace iw4of::native
 	struct G_GlassName
 	{
 		char* nameStr;
-		unsigned __int16 name;
-		unsigned __int16 pieceCount;
-		unsigned __int16* pieceIndices;
+		uint16_t name;
+		uint16_t pieceCount;
+		uint16_t* pieceIndices;
 	};
 
 	struct G_GlassData
 	{
 		G_GlassPiece* glassPieces;
-		unsigned int pieceCount;
-		unsigned __int16 damageToWeaken;
-		unsigned __int16 damageToDestroy;
-		unsigned int glassNameCount;
+		uint32_t pieceCount;
+		uint16_t damageToWeaken;
+		uint16_t damageToDestroy;
+		uint32_t glassNameCount;
 		G_GlassName* glassNames;
 		char pad[108];
 	};
@@ -2868,8 +2868,8 @@ namespace iw4of::native
 	struct RawFile
 	{
 		const char* name;
-		unsigned int compressedLen;
-		unsigned int len;
+		uint32_t compressedLen;
+		uint32_t len;
 		char* buffer;
 	};
 
@@ -2892,26 +2892,26 @@ namespace iw4of::native
 	union XAnimIndices
 	{
 		char* _1;
-		unsigned short* _2;
+		uint16_t* _2;
 		void* data;
 	};
 
 	struct XAnimNotifyInfo
 	{
-		unsigned short name;
+		uint16_t name;
 		float time;
 	};
 
 	union XAnimDynamicFrames
 	{
 		char(*_1)[3];
-		unsigned __int16(*_2)[3];
+		uint16_t(*_2)[3];
 	};
 
 	union XAnimDynamicIndicesTrans
 	{
 		char _1[1];
-		unsigned short _2[1];
+		uint16_t _2[1];
 	};
 
 	struct XAnimPartTransFrames
@@ -2930,7 +2930,7 @@ namespace iw4of::native
 
 	struct XAnimPartTrans
 	{
-		unsigned short size;
+		uint16_t size;
 		char smallTrans;
 		XAnimPartTransData u;
 	};
@@ -2938,36 +2938,36 @@ namespace iw4of::native
 	union XAnimDynamicIndicesQuat2
 	{
 		char _1[1];
-		unsigned short _2[1];
+		uint16_t _2[1];
 	};
 
 	struct XAnimDeltaPartQuatDataFrames2
 	{
-		__int16(*frames)[2];
+		int16_t(*frames)[2];
 		XAnimDynamicIndicesQuat2 indices;
 	};
 
 	union XAnimDeltaPartQuatData2
 	{
 		XAnimDeltaPartQuatDataFrames2 frames;
-		unsigned short frame0[2];
+		uint16_t frame0[2];
 	};
 
 	struct XAnimDeltaPartQuat2
 	{
-		unsigned short size;
+		uint16_t size;
 		XAnimDeltaPartQuatData2 u;
 	};
 
 	union XAnimDynamicIndicesQuat
 	{
 		char _1[1];
-		unsigned short _2[1];
+		uint16_t _2[1];
 	};
 
 	struct XAnimDeltaPartQuatDataFrames
 	{
-		__int16(*frames)[4];
+		int16_t(*frames)[4];
 		XAnimDynamicIndicesQuat indices;
 	};
 
@@ -2979,7 +2979,7 @@ namespace iw4of::native
 
 	struct XAnimDeltaPartQuat
 	{
-		unsigned short size;
+		uint16_t size;
 		XAnimDeltaPartQuatData u;
 	};
 
@@ -2993,26 +2993,26 @@ namespace iw4of::native
 	struct XAnimParts
 	{
 		const char* name;
-		unsigned short dataByteCount;
-		unsigned short dataShortCount;
-		unsigned short dataIntCount;
-		unsigned short randomDataByteCount;
-		unsigned short randomDataIntCount;
-		unsigned short numframes;
+		uint16_t dataByteCount;
+		uint16_t dataShortCount;
+		uint16_t dataIntCount;
+		uint16_t randomDataByteCount;
+		uint16_t randomDataIntCount;
+		uint16_t numframes;
 		char flags;
-		unsigned char boneCount[10];
+		uint8_t boneCount[10];
 		char notifyCount;
 		char assetType;
 		bool isDefault;
-		unsigned int randomDataShortCount;
-		unsigned int indexCount;
+		uint32_t randomDataShortCount;
+		uint32_t indexCount;
 		float framerate;
 		float frequency;
-		unsigned short* names;
+		uint16_t* names;
 		char* dataByte;
-		unsigned short* dataShort;
+		uint16_t* dataShort;
 		int* dataInt;
-		unsigned short* randomDataShort;
+		uint16_t* randomDataShort;
 		char* randomDataByte;
 		int* randomDataInt;
 		XAnimIndices indices;
