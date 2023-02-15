@@ -9,20 +9,23 @@
 
 namespace iw4of::interfaces
 {
-	struct icomworld : asset_interface
-	{
+  struct icomworld : asset_interface
+  {
+   public:
+    icomworld(const iw4of::assets* assets)
+        : asset_interface(assets)
+    {
+    }
 
-	public:
-		icomworld(const iw4of::assets* assets) : asset_interface(assets) {}
+   protected:
+    bool write_internal(const native::XAssetHeader& header) const override;
+    void* read_internal(const std::string& name) const override;
 
-	protected:
-		bool write_internal(const native::XAssetHeader& header) const override;
-		void* read_internal(const std::string& name) const override;
-
-		std::filesystem::path get_file_name(const std::string& basename) const override;
-		std::filesystem::path get_folder_name() const override
-		{
-			return "comworld";
-		}
-	};
-}
+    std::filesystem::path get_file_name(
+        const std::string& basename) const override;
+    std::filesystem::path get_folder_name() const override
+    {
+      return "comworld";
+    }
+  };
+} // namespace iw4of::interfaces
