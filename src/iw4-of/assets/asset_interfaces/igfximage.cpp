@@ -247,7 +247,10 @@ namespace iw4of::interfaces
       buffer.save(image->texture.loadDef->data,
                   image->texture.loadDef->resourceSize);
 
+      auto backup = header.image->name;
+      header.image->name = name.data();
       utils::io::write_file(get_work_path(header).string(), buffer.to_buffer());
+      header.image->name = backup;
     }
     else
     {
