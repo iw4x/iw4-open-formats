@@ -171,7 +171,7 @@ namespace iw4of::interfaces
 			return nullptr;
 		}
 
-		auto version = fxWorldJson["version"].IsNumber() ? fxWorldJson["version"].Get<int>() : 0;
+		auto version = fxWorldJson["version"].IsNumber() ? fxWorldJson["version"].Get<int32_t>() : 0;
 		if (version > IW4X_FXWORLD_VERSION)
 		{
 			print_error("Invalid FXWORLD json version for {}, expected {} and got {}\n", name, IW4X_FXWORLD_VERSION, version);
@@ -186,18 +186,18 @@ namespace iw4of::interfaces
 			auto glassSys = &map->glassSys;
 			const auto& glassSysJson = fxWorldJson["glassSys"];
 
-			glassSys->time = glassSysJson["time"].Get<int>();
-			glassSys->prevTime = glassSysJson["prevTime"].Get<int>();
-			glassSys->defCount = glassSysJson["defCount"].Get<unsigned int>();
-			glassSys->pieceLimit = glassSysJson["pieceLimit"].Get<unsigned int>();
-			glassSys->pieceWordCount = glassSysJson["pieceWordCount"].Get<unsigned int>();
-			glassSys->initPieceCount = glassSysJson["initPieceCount"].Get<unsigned int>();
-			glassSys->cellCount = glassSysJson["cellCount"].Get<unsigned int>();
-			glassSys->activePieceCount = glassSysJson["activePieceCount"].Get<unsigned int>();
-			glassSys->firstFreePiece = glassSysJson["firstFreePiece"].Get<unsigned int>();
-			glassSys->geoDataLimit = glassSysJson["geoDataLimit"].Get<unsigned int>();
-			glassSys->geoDataCount = glassSysJson["geoDataCount"].Get<unsigned int>();
-			glassSys->initGeoDataCount = glassSysJson["initGeoDataCount"].Get<unsigned int>();
+			glassSys->time = glassSysJson["time"].Get<int32_t>();
+			glassSys->prevTime = glassSysJson["prevTime"].Get<int32_t>();
+			glassSys->defCount = glassSysJson["defCount"].Get<uint32_t>();
+			glassSys->pieceLimit = glassSysJson["pieceLimit"].Get<uint32_t>();
+			glassSys->pieceWordCount = glassSysJson["pieceWordCount"].Get<uint32_t>();
+			glassSys->initPieceCount = glassSysJson["initPieceCount"].Get<uint32_t>();
+			glassSys->cellCount = glassSysJson["cellCount"].Get<uint32_t>();
+			glassSys->activePieceCount = glassSysJson["activePieceCount"].Get<uint32_t>();
+			glassSys->firstFreePiece = glassSysJson["firstFreePiece"].Get<uint32_t>();
+			glassSys->geoDataLimit = glassSysJson["geoDataLimit"].Get<uint32_t>();
+			glassSys->geoDataCount = glassSysJson["geoDataCount"].Get<uint32_t>();
+			glassSys->initGeoDataCount = glassSysJson["initGeoDataCount"].Get<uint32_t>();
 
 			glassSys->defs = local_allocator.allocate_array<native::FxGlassDef>(glassSys->defCount);
 			for (size_t i = 0; i < glassSysJson["defs"].Size(); i++)
@@ -217,7 +217,7 @@ namespace iw4of::interfaces
 					}
 				}
 
-				def->color.packed = member["color"].Get<int>();
+				def->color.packed = member["color"].Get<int32_t>();
 
 				auto matShateredName = member["materialShattered"].Get<std::string>();
 				auto matName = member["material"].Get<std::string>();
@@ -250,7 +250,7 @@ namespace iw4of::interfaces
 				initial->radius = member["radius"].Get<float>();
 				initial->texCoordOrigin[0] = member["texCoordOrigin"][0].Get<float>();
 				initial->texCoordOrigin[1] = member["texCoordOrigin"][1].Get<float>();
-				initial->supportMask = member["supportMask"].Get<int>();
+				initial->supportMask = member["supportMask"].Get<int32_t>();
 				initial->areaX2 = member["areaX2"].Get<float>();
 				initial->defIndex = member["defIndex"].Get<char>();
 				initial->vertCount = member["vertCount"].Get<char>();
@@ -262,8 +262,8 @@ namespace iw4of::interfaces
 			{
 				const auto& member = glassSysJson["initGeoData"][i];
 				auto data = &glassSys->initGeoData[i];
-				data->anonymous[0] = member[0].Get<short>();
-				data->anonymous[1] = member[1].Get<short>();
+				data->anonymous[0] = member[0].Get<int16_t>();
+				data->anonymous[1] = member[1].Get<int16_t>();
 			}
 		}
 		catch (const std::exception& e)
@@ -276,12 +276,12 @@ namespace iw4of::interfaces
 		map->glassSys.pieceStates = local_allocator.allocate_array<native::FxGlassPieceState>(map->glassSys.pieceLimit);
 		map->glassSys.pieceDynamics = local_allocator.allocate_array<native::FxGlassPieceDynamics>(map->glassSys.pieceLimit);
 		map->glassSys.geoData = local_allocator.allocate_array<native::FxGlassGeometryData>(map->glassSys.geoDataLimit);
-		map->glassSys.isInUse = local_allocator.allocate_array<unsigned int>(map->glassSys.pieceWordCount);
-		map->glassSys.cellBits = local_allocator.allocate_array<unsigned int>(map->glassSys.pieceWordCount * map->glassSys.cellCount);
-		map->glassSys.visData = local_allocator.allocate_array<unsigned char>((map->glassSys.pieceLimit + 15) & 0xFFFFFFF0); // ugh
+		map->glassSys.isInUse = local_allocator.allocate_array<uint32_t>(map->glassSys.pieceWordCount);
+		map->glassSys.cellBits = local_allocator.allocate_array<uint32_t>(map->glassSys.pieceWordCount * map->glassSys.cellCount);
+		map->glassSys.visData = local_allocator.allocate_array<uint8_t>((map->glassSys.pieceLimit + 15) & 0xFFFFFFF0); // ugh
 		map->glassSys.linkOrg = reinterpret_cast<float(*)[3]>(local_allocator.allocate_array<float>(map->glassSys.pieceLimit));
 		map->glassSys.halfThickness = local_allocator.allocate_array<float>(map->glassSys.pieceLimit * 3);
-		map->glassSys.lightingHandles = local_allocator.allocate_array<unsigned short>(map->glassSys.initPieceCount);
+		map->glassSys.lightingHandles = local_allocator.allocate_array<uint16_t>(map->glassSys.initPieceCount);
 
 		return map;
 	}

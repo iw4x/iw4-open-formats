@@ -54,7 +54,7 @@ namespace iw4of::interfaces
 
 		igfxworld::write(asset, &asset->dpvsPlanes, &buffer);
 
-		int cellCount = asset->dpvsPlanes.cellCount;
+		int32_t cellCount = asset->dpvsPlanes.cellCount;
 
 		if (asset->aabbTreeCounts)
 		{
@@ -80,7 +80,7 @@ namespace iw4of::interfaces
 
 						if (aabbTree->smodelIndexes)
 						{
-							for (unsigned short k = 0; k < aabbTree->smodelIndexCount; ++k)
+							for (uint16_t k = 0; k < aabbTree->smodelIndexCount; ++k)
 							{
 								buffer.save_object(aabbTree->smodelIndexes[k]);
 							}
@@ -169,7 +169,7 @@ namespace iw4of::interfaces
 			AssertSize(native::GfxShadowGeometry, 12);
 			buffer.save_array(asset->shadowGeom, asset->primaryLightCount);
 
-			for (unsigned int i = 0; i < asset->primaryLightCount; ++i)
+			for (uint32_t i = 0; i < asset->primaryLightCount; ++i)
 			{
 				native::GfxShadowGeometry* shadowGeometry = &asset->shadowGeom[i];
 
@@ -190,7 +190,7 @@ namespace iw4of::interfaces
 			AssertSize(native::GfxLightRegion, 8);
 			buffer.save_array(asset->lightRegion, asset->primaryLightCount);
 
-			for (unsigned int i = 0; i < asset->primaryLightCount; ++i)
+			for (uint32_t i = 0; i < asset->primaryLightCount; ++i)
 			{
 				native::GfxLightRegion* lightRegion = &asset->lightRegion[i];
 
@@ -199,7 +199,7 @@ namespace iw4of::interfaces
 					AssertSize(native::GfxLightRegionHull, 80);
 					buffer.save_array(lightRegion->hulls, lightRegion->hullCount);
 
-					for (unsigned int j = 0; j < lightRegion->hullCount; ++j)
+					for (uint32_t j = 0; j < lightRegion->hullCount; ++j)
 					{
 						native::GfxLightRegionHull* lightRegionHull = &lightRegion->hulls[j];
 
@@ -246,7 +246,7 @@ namespace iw4of::interfaces
 			AssertSize(native::GfxSurface, 24);
 			buffer->save_array(asset->surfaces, world->surfaceCount);
 
-			for (unsigned int i = 0; i < world->surfaceCount; ++i)
+			for (uint32_t i = 0; i < world->surfaceCount; ++i)
 			{
 				native::GfxSurface* surface = &asset->surfaces[i];
 
@@ -269,7 +269,7 @@ namespace iw4of::interfaces
 
 			buffer->save_array(asset->smodelDrawInsts, asset->smodelCount);
 
-			for (unsigned int i = 0; i < asset->smodelCount; ++i)
+			for (uint32_t i = 0; i < asset->smodelCount; ++i)
 			{
 				native::GfxStaticModelDrawInst* model = &asset->smodelDrawInsts[i];
 
@@ -313,7 +313,7 @@ namespace iw4of::interfaces
 	{
 		if (asset->sortedSurfIndex)
 		{
-			asset->sortedSurfIndex = reader->read_array<unsigned short>(asset->staticSurfaceCount + asset->staticSurfaceCountNoDecal);
+			asset->sortedSurfIndex = reader->read_array<uint16_t>(asset->staticSurfaceCount + asset->staticSurfaceCountNoDecal);
 		}
 
 		if (asset->smodelInsts)
@@ -325,7 +325,7 @@ namespace iw4of::interfaces
 		{
 			asset->surfaces = reader->read_array<native::GfxSurface>(world->surfaceCount);
 
-			for (unsigned int i = 0; i < world->surfaceCount; ++i)
+			for (uint32_t i = 0; i < world->surfaceCount; ++i)
 			{
 				native::GfxSurface* surface = &asset->surfaces[i];
 
@@ -347,7 +347,7 @@ namespace iw4of::interfaces
 		{
 			asset->smodelDrawInsts = reader->read_array<native::GfxStaticModelDrawInst>(asset->smodelCount);
 
-			for (unsigned int i = 0; i < asset->smodelCount; ++i)
+			for (uint32_t i = 0; i < asset->smodelCount; ++i)
 			{
 				native::GfxStaticModelDrawInst* model = &asset->smodelDrawInsts[i];
 
@@ -381,7 +381,7 @@ namespace iw4of::interfaces
 		{
 			asset->reflectionProbes = reader->read_array<native::GfxImage*>(asset->reflectionProbeCount);
 
-			for (unsigned int i = 0; i < asset->reflectionProbeCount; ++i)
+			for (uint32_t i = 0; i < asset->reflectionProbeCount; ++i)
 			{
 				asset->reflectionProbes[i] = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, reader->read_string().data());
 			}
@@ -437,13 +437,13 @@ namespace iw4of::interfaces
 			if (asset->vld.data)
 			{
 				// no align for char
-				asset->vld.data = reader->read_array<unsigned char>(asset->vertexLayerDataSize);
+				asset->vld.data = reader->read_array<uint8_t>(asset->vertexLayerDataSize);
 			}
 		}
 
 		if (asset->indices)
 		{
-			asset->indices = reader->read_array<unsigned short>(asset->indexCount);
+			asset->indices = reader->read_array<uint16_t>(asset->indexCount);
 		}
 
 		return true;
@@ -463,13 +463,13 @@ namespace iw4of::interfaces
 			auto contents = utils::io::read_file(path);
 			utils::stream::reader reader(&local_allocator, contents);
 
-			__int64 magic = reader.read<__int64>();
+			int64_t magic = reader.read<int64_t>();
 			if (std::memcmp(&magic, "IW4xGfxW", 8))
 			{
 				print_error("Reading gfxworld '{}' failed, header is invalid!", name);
 			}
 
-			int version = reader.read<int>();
+			int32_t version = reader.read<int32_t>();
 			if (version > IW4X_GFXMAP_VERSION)
 			{
 				print_error("Reading gfxworld '{}' failed, expected version is {}, but it was {}!", name, IW4X_GFXMAP_VERSION, version);
@@ -497,7 +497,7 @@ namespace iw4of::interfaces
 
 					if (sky->skyStartSurfs)
 					{
-						sky->skyStartSurfs = reader.read_array<int>(sky->skySurfCount);
+						sky->skyStartSurfs = reader.read_array<int32_t>(sky->skySurfCount);
 					}
 
 					if (sky->skyImage)
@@ -533,12 +533,12 @@ namespace iw4of::interfaces
 
 				if (asset->dpvsPlanes.nodes)
 				{
-					asset->dpvsPlanes.nodes = reader.read_array<unsigned short>(asset->nodeCount);
+					asset->dpvsPlanes.nodes = reader.read_array<uint16_t>(asset->nodeCount);
 				}
 			}
 
 
-			int cell_count = asset->dpvsPlanes.cellCount;
+			int32_t cell_count = asset->dpvsPlanes.cellCount;
 
 			if (asset->aabbTreeCounts)
 			{
@@ -563,19 +563,19 @@ namespace iw4of::interfaces
 
 							if (aabbTree->smodelIndexes)
 							{
-								unsigned short* oldPointer = aabbTree->smodelIndexes;
+								uint16_t* oldPointer = aabbTree->smodelIndexes;
 								if (local_allocator.is_pointer_mapped(oldPointer))
 								{
 									// We still have to read it
-									reader.read_array<unsigned short>(aabbTree->smodelIndexCount);
+									reader.read_array<uint16_t>(aabbTree->smodelIndexCount);
 
-									aabbTree->smodelIndexes = local_allocator.get_pointer<unsigned short>(oldPointer);
+									aabbTree->smodelIndexes = local_allocator.get_pointer<uint16_t>(oldPointer);
 								}
 								else
 								{
-									aabbTree->smodelIndexes = reader.read_array<unsigned short>(aabbTree->smodelIndexCount);
+									aabbTree->smodelIndexes = reader.read_array<uint16_t>(aabbTree->smodelIndexCount);
 
-									for (unsigned short k = 0; k < aabbTree->smodelIndexCount; ++k)
+									for (uint16_t k = 0; k < aabbTree->smodelIndexCount; ++k)
 									{
 										local_allocator.map_pointer(&oldPointer[k], &aabbTree->smodelIndexes[k]);
 									}
@@ -611,7 +611,7 @@ namespace iw4of::interfaces
 
 					if (cell->reflectionProbes)
 					{
-						cell->reflectionProbes = reader.read_array<unsigned char>(cell->reflectionProbeCount);
+						cell->reflectionProbes = reader.read_array<uint8_t>(cell->reflectionProbeCount);
 					}
 				}
 			}
@@ -626,12 +626,12 @@ namespace iw4of::interfaces
 			{
 				if (asset->lightGrid.rowDataStart)
 				{
-					asset->lightGrid.rowDataStart = reader.read_array<unsigned short>((asset->lightGrid.maxs[asset->lightGrid.rowAxis] - asset->lightGrid.mins[asset->lightGrid.rowAxis]) + 1);
+					asset->lightGrid.rowDataStart = reader.read_array<uint16_t>((asset->lightGrid.maxs[asset->lightGrid.rowAxis] - asset->lightGrid.mins[asset->lightGrid.rowAxis]) + 1);
 				}
 
 				if (asset->lightGrid.rawRowData)
 				{
-					asset->lightGrid.rawRowData = reader.read_array<unsigned char>(asset->lightGrid.rawRowDataSize);
+					asset->lightGrid.rawRowData = reader.read_array<uint8_t>(asset->lightGrid.rawRowDataSize);
 				}
 
 				if (asset->lightGrid.entries)
@@ -690,21 +690,21 @@ namespace iw4of::interfaces
 
 			if (asset->primaryLightCount > 0)
 			{
-				asset->primaryLightEntityShadowVis = reinterpret_cast<unsigned int*>(-1);
+				asset->primaryLightEntityShadowVis = reinterpret_cast<uint32_t*>(-1);
 			}
 
 			// Not sure why this is here - todo investigate
 			if (asset->dpvsDyn.dynEntClientCount[0] > 0)
 			{
 				asset->sceneDynModel = reinterpret_cast<native::GfxSceneDynModel*>(-1);
-				asset->primaryLightDynEntShadowVis[0] = reinterpret_cast<unsigned int*>(-1);
-				asset->nonSunPrimaryLightForModelDynEnt = reinterpret_cast<unsigned char*>(-1);
+				asset->primaryLightDynEntShadowVis[0] = reinterpret_cast<uint32_t*>(-1);
+				asset->nonSunPrimaryLightForModelDynEnt = reinterpret_cast<uint8_t*>(-1);
 			}
 
 			if (asset->dpvsDyn.dynEntClientCount[1] > 0)
 			{
 				asset->sceneDynBrush = reinterpret_cast<native::GfxSceneDynBrush*>(-1);
-				asset->primaryLightDynEntShadowVis[1] = reinterpret_cast<unsigned int*>(-1);
+				asset->primaryLightDynEntShadowVis[1] = reinterpret_cast<uint32_t*>(-1);
 			}
 			//
 
@@ -712,18 +712,18 @@ namespace iw4of::interfaces
 			{
 				asset->shadowGeom = reader.read_array<native::GfxShadowGeometry>(asset->primaryLightCount);
 
-				for (unsigned int i = 0; i < asset->primaryLightCount; ++i)
+				for (uint32_t i = 0; i < asset->primaryLightCount; ++i)
 				{
 					native::GfxShadowGeometry* shadow_geometry = &asset->shadowGeom[i];
 
 					if (shadow_geometry->sortedSurfIndex)
 					{
-						shadow_geometry->sortedSurfIndex = reader.read_array<unsigned short>(shadow_geometry->surfaceCount);
+						shadow_geometry->sortedSurfIndex = reader.read_array<uint16_t>(shadow_geometry->surfaceCount);
 					}
 
 					if (shadow_geometry->smodelIndex)
 					{
-						shadow_geometry->smodelIndex = reader.read_array<unsigned short>(shadow_geometry->smodelCount);
+						shadow_geometry->smodelIndex = reader.read_array<uint16_t>(shadow_geometry->smodelCount);
 					}
 				}
 			}
@@ -732,7 +732,7 @@ namespace iw4of::interfaces
 			{
 				asset->lightRegion = reader.read_array<native::GfxLightRegion>(asset->primaryLightCount);
 
-				for (unsigned int i = 0; i < asset->primaryLightCount; ++i)
+				for (uint32_t i = 0; i < asset->primaryLightCount; ++i)
 				{
 					native::GfxLightRegion* light_region = &asset->lightRegion[i];
 
@@ -740,7 +740,7 @@ namespace iw4of::interfaces
 					{
 						light_region->hulls = reader.read_array<native::GfxLightRegionHull>(light_region->hullCount);
 
-						for (unsigned int j = 0; j < light_region->hullCount; ++j)
+						for (uint32_t j = 0; j < light_region->hullCount; ++j)
 						{
 							native::GfxLightRegionHull* lightRegionHull = &light_region->hulls[j];
 
@@ -788,7 +788,7 @@ namespace iw4of::interfaces
 		{
 			buffer->save_array(asset->reflectionProbes, asset->reflectionProbeCount);
 
-			for (unsigned int i = 0; i < asset->reflectionProbeCount; ++i)
+			for (uint32_t i = 0; i < asset->reflectionProbeCount; ++i)
 			{
 				if (asset->reflectionProbes[i])
 				{

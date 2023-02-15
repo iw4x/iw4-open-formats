@@ -86,7 +86,7 @@ namespace iw4of::utils::cryptography
 	class jenkins_one_at_a_time final
 	{
 	public:
-		static unsigned int compute(const std::string& data);
-		static unsigned int compute(const char* key, size_t len);
+		static uint32_t compute(const std::string& data);
+		static uint32_t compute(const char* key, size_t len);
 	};
 }
