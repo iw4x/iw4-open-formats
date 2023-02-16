@@ -133,6 +133,8 @@ namespace iw4of::interfaces
       {
         asset->remappedTechniqueSet = find<native::MaterialTechniqueSet>(
             native::XAssetType::ASSET_TYPE_TECHNIQUE_SET, remapped);
+
+        assert(asset->remappedTechniqueSet);
       }
     }
 

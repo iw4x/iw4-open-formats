@@ -42,8 +42,7 @@ namespace iw4of::interfaces
     alias_list->count = aliases.Size();
 
     // Allocate
-    alias_list->head =
-        local_allocator.allocate_array<native::snd_alias_t>(alias_list->count);
+    alias_list->head = local_allocator.allocate_array<native::snd_alias_t>(alias_list->count);
     if (!alias_list->head)
     {
       print_error("Error allocating memory for sound alias structure!\n");
@@ -62,8 +61,7 @@ namespace iw4of::interfaces
         return nullptr;
       }
 
-      alias_list->head->soundFile =
-          local_allocator.allocate<native::SoundFile>();
+      alias_list->head->soundFile = local_allocator.allocate<native::SoundFile>();
       if (!alias_list->head->soundFile)
       {
         print_error("Error allocating memory for sound alias structure!\n");
@@ -112,9 +110,7 @@ namespace iw4of::interfaces
 
       if (type.IsNull())
       {
-        print_error(
-            "Failed to parse sound {}! Each alias must have at least a type and a soundFile\n",
-            name);
+        print_error("Failed to parse sound {}! Each alias must have at least a type and a soundFile\n", name);
         return nullptr;
       }
 
@@ -126,18 +122,15 @@ namespace iw4of::interfaces
 
       if (subtitle.IsString())
       {
-        alias->subtitle =
-            local_allocator.duplicate_string(subtitle.GetString());
+        alias->subtitle = local_allocator.duplicate_string(subtitle.GetString());
       }
       if (secondaryAliasName.IsString())
       {
-        alias->secondaryAliasName =
-            local_allocator.duplicate_string(secondaryAliasName.GetString());
+        alias->secondaryAliasName = local_allocator.duplicate_string(secondaryAliasName.GetString());
       }
       if (chainAliasName.IsString())
       {
-        alias->chainAliasName =
-            local_allocator.duplicate_string(chainAliasName.GetString());
+        alias->chainAliasName = local_allocator.duplicate_string(chainAliasName.GetString());
       }
 
       alias->sequence = sequence.Get<int32_t>();
@@ -163,14 +156,11 @@ namespace iw4of::interfaces
         alias->speakerMap = local_allocator.allocate<native::SpeakerMap>();
         if (!alias->speakerMap)
         {
-          print_error(
-              "Error allocating memory for speakermap in sound alias{}!\n",
-              alias->aliasName);
+          print_error("Error allocating memory for speakermap in sound alias{}!\n", alias->aliasName);
           return nullptr;
         }
 
-        alias->speakerMap->name =
-            local_allocator.duplicate_string(speakerMap["name"].GetString());
+        alias->speakerMap->name = local_allocator.duplicate_string(speakerMap["name"].GetString());
         alias->speakerMap->isDefault = speakerMap["isDefault"].Get<bool>();
 
         if (speakerMap["channelMaps"].IsArray())
@@ -180,41 +170,26 @@ namespace iw4of::interfaces
           assert(channelMaps.Size() <= 4);
 
           // channelMapIndex should never exceed 1
-          for (size_t channelMapIndex = 0; channelMapIndex < 2;
-               channelMapIndex++)
+          for (size_t channelMapIndex = 0; channelMapIndex < 2; channelMapIndex++)
           {
             // subChannelIndex should never exceed 1
-            for (size_t subChannelIndex = 0; subChannelIndex < 2;
-                 subChannelIndex++)
+            for (size_t subChannelIndex = 0; subChannelIndex < 2; subChannelIndex++)
             {
-              const auto& channelMap =
-                  channelMaps[channelMapIndex * 2 + subChannelIndex]; // 0-3
+              const auto& channelMap = channelMaps[channelMapIndex * 2 + subChannelIndex]; // 0-3
 
               const auto& speakers = channelMap["speakers"];
 
-              alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex]
-                  .speakerCount = speakers.Size();
+              alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakerCount = speakers.Size();
 
-              for (auto speakerIndex = 0;
-                   speakerIndex <
-                   alias->speakerMap
-                       ->channelMaps[channelMapIndex][subChannelIndex]
-                       .speakerCount;
+              for (auto speakerIndex = 0; speakerIndex < alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakerCount;
                    speakerIndex++)
               {
                 const auto& speaker = speakers[speakerIndex];
-                alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex]
-                    .speakers[speakerIndex]
-                    .levels[0] = speaker["levels0"].Get<float>();
-                alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex]
-                    .speakers[speakerIndex]
-                    .levels[1] = speaker["levels1"].Get<float>();
-                alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex]
-                    .speakers[speakerIndex]
-                    .numLevels = speaker["numLevels"].Get<int32_t>();
-                alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex]
-                    .speakers[speakerIndex]
-                    .speaker = speaker["speaker"].Get<int32_t>();
+                alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].levels[0] = speaker["levels0"].Get<float>();
+                alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].levels[1] = speaker["levels1"].Get<float>();
+                alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].numLevels =
+                    speaker["numLevels"].Get<int32_t>();
+                alias->speakerMap->channelMaps[channelMapIndex][subChannelIndex].speakers[speakerIndex].speaker = speaker["speaker"].Get<int32_t>();
               }
             }
           }
@@ -230,22 +205,18 @@ namespace iw4of::interfaces
           fallOffCurve = "$default";
         }
 
-        auto curve = find<native::SndCurve>(
-            native::XAssetType::ASSET_TYPE_SOUND_CURVE, fallOffCurve);
+        auto curve = find<native::SndCurve>(native::XAssetType::ASSET_TYPE_SOUND_CURVE, fallOffCurve);
 
         assert(curve);
         alias->volumeFalloffCurve = curve;
       }
 
-      if (static_cast<native::snd_alias_type_t>(type.Get<int32_t>()) ==
-          native::snd_alias_type_t::SAT_LOADED) // Loaded
+      if (static_cast<native::snd_alias_type_t>(type.Get<int32_t>()) == native::snd_alias_type_t::SAT_LOADED) // Loaded
       {
         alias->soundFile->type = native::SAT_LOADED;
-        alias->soundFile->u.loadSnd = find<native::LoadedSound>(
-            native::XAssetType::ASSET_TYPE_LOADED_SOUND, sound_file);
+        alias->soundFile->u.loadSnd = find<native::LoadedSound>(native::XAssetType::ASSET_TYPE_LOADED_SOUND, sound_file);
       }
-      else if (static_cast<native::snd_alias_type_t>(type.Get<int32_t>()) ==
-               native::snd_alias_type_t::SAT_STREAMED) // Streamed
+      else if (static_cast<native::snd_alias_type_t>(type.Get<int32_t>()) == native::snd_alias_type_t::SAT_STREAMED) // Streamed
       {
         alias->soundFile->type = native::SAT_STREAMED;
 
@@ -259,16 +230,12 @@ namespace iw4of::interfaces
           streamedFile = streamedFile.substr(split + 1);
         }
 
-        alias->soundFile->u.streamSnd.name =
-            local_allocator.duplicate_string(directory.c_str());
-        alias->soundFile->u.streamSnd.dir =
-            local_allocator.duplicate_string(streamedFile.c_str());
+        alias->soundFile->u.streamSnd.name = local_allocator.duplicate_string(streamedFile.c_str());
+        alias->soundFile->u.streamSnd.dir = local_allocator.duplicate_string(directory.c_str());
       }
       else
       {
-        print_error("Failed to parse sound {}! Invalid sound type {}",
-                    name,
-                    type.GetString());
+        print_error("Failed to parse sound {}! Invalid sound type {}", name, type.GetString());
         return nullptr;
       }
 
@@ -311,28 +278,20 @@ namespace iw4of::interfaces
           auto channel_map = alias.speakerMap->channelMaps[j][k];
           rapidjson::Value speakers(rapidjson::kArrayType);
 
-          for (auto speaker_index = 0; speaker_index < channel_map.speakerCount;
-               speaker_index++)
+          for (auto speaker_index = 0; speaker_index < channel_map.speakerCount; speaker_index++)
           {
             auto game_speaker = channel_map.speakers[speaker_index];
 
             rapidjson::Value speaker(rapidjson::kObjectType);
-            speaker.AddMember(
-                "levels0",
-                game_speaker.numLevels > 0 ? game_speaker.levels[0] : 0,
-                allocator);
-            speaker.AddMember(
-                "levels1",
-                game_speaker.numLevels > 1 ? game_speaker.levels[1] : 0,
-                allocator);
+            speaker.AddMember("levels0", game_speaker.numLevels > 0 ? game_speaker.levels[0] : 0, allocator);
+            speaker.AddMember("levels1", game_speaker.numLevels > 1 ? game_speaker.levels[1] : 0, allocator);
             speaker.AddMember("numLevels", game_speaker.numLevels, allocator);
             speaker.AddMember("speaker", game_speaker.speaker, allocator);
             speakers.PushBack(speaker, allocator);
           }
 
           rapidjson::Value channelMap(rapidjson::kObjectType);
-          channelMap.AddMember(
-              "entryCount", channel_map.speakerCount, allocator);
+          channelMap.AddMember("entryCount", channel_map.speakerCount, allocator);
           channelMap.AddMember("speakers", speakers, allocator);
           channel_maps.PushBack(channelMap, allocator);
         }
@@ -341,8 +300,7 @@ namespace iw4of::interfaces
       rapidjson::Value speakerMap(rapidjson::kObjectType);
       speakerMap.AddMember("channelMaps", channel_maps, allocator);
       speakerMap.AddMember("isDefault", alias.speakerMap->isDefault, allocator);
-      speakerMap.AddMember(
-          "name", RAPIDJSON_STR(alias.speakerMap->name), allocator);
+      speakerMap.AddMember("name", RAPIDJSON_STR(alias.speakerMap->name), allocator);
 
       std::string file_name{};
       if (alias.soundFile)
@@ -363,8 +321,7 @@ namespace iw4of::interfaces
 
             if (alias.soundFile->u.streamSnd.dir)
             {
-              file_name = std::format(
-                  "{}/{}", alias.soundFile->u.streamSnd.dir, file_name);
+              file_name = std::format("{}/{}", alias.soundFile->u.streamSnd.dir, file_name);
             }
           }
           break;
@@ -372,44 +329,31 @@ namespace iw4of::interfaces
       }
 
       rapidjson::Value json_alias(rapidjson::kObjectType);
-      json_alias.AddMember(
-          "aliasName", RAPIDJSON_STR(alias.aliasName), allocator);
-      json_alias.AddMember(
-          "centerPercentage", alias.centerPercentage, allocator);
-      json_alias.AddMember(
-          "chainAliasName", RAPIDJSON_STR(alias.chainAliasName), allocator);
+      json_alias.AddMember("aliasName", RAPIDJSON_STR(alias.aliasName), allocator);
+      json_alias.AddMember("centerPercentage", alias.centerPercentage, allocator);
+      json_alias.AddMember("chainAliasName", RAPIDJSON_STR(alias.chainAliasName), allocator);
       json_alias.AddMember("distMax", alias.distMax, allocator);
       json_alias.AddMember("distMin", alias.distMin, allocator);
       json_alias.AddMember("envelopMax", alias.envelopMax, allocator);
       json_alias.AddMember("envelopMin", alias.envelopMin, allocator);
-      json_alias.AddMember(
-          "envelopPercentage", alias.envelopPercentage, allocator);
+      json_alias.AddMember("envelopPercentage", alias.envelopPercentage, allocator);
       json_alias.AddMember("flags", alias.flags.intValue, allocator);
       json_alias.AddMember("lfePercentage", alias.lfePercentage, allocator);
-      json_alias.AddMember(
-          "mixerGroup", rapidjson::Value(rapidjson::kNullType), allocator);
+      json_alias.AddMember("mixerGroup", rapidjson::Value(rapidjson::kNullType), allocator);
       json_alias.AddMember("pitchMax", alias.pitchMax, allocator);
       json_alias.AddMember("pitchMin", alias.pitchMin, allocator);
       json_alias.AddMember("probability", alias.probability, allocator);
-      json_alias.AddMember("secondaryAliasName",
-                           RAPIDJSON_STR(alias.secondaryAliasName),
-                           allocator);
+      json_alias.AddMember("secondaryAliasName", RAPIDJSON_STR(alias.secondaryAliasName), allocator);
       json_alias.AddMember("sequence", alias.sequence, allocator);
       json_alias.AddMember("slavePercentage", alias.slavePercentage, allocator);
       json_alias.AddMember("speakerMap", speakerMap, allocator);
-      json_alias.AddMember(
-          "soundFile",
-          RAPIDJSON_STR(str_duplicator.duplicate_string(file_name)),
-          allocator);
+      json_alias.AddMember("soundFile", RAPIDJSON_STR(str_duplicator.duplicate_string(file_name)), allocator);
       json_alias.AddMember("startDelay", alias.startDelay, allocator);
-      json_alias.AddMember(
-          "subtitle", RAPIDJSON_STR(alias.subtitle), allocator);
+      json_alias.AddMember("subtitle", RAPIDJSON_STR(alias.subtitle), allocator);
       json_alias.AddMember("type", alias.soundFile->type, allocator);
       json_alias.AddMember("volMax", alias.volMax, allocator);
       json_alias.AddMember("volMin", alias.volMin, allocator);
-      json_alias.AddMember("volumeFalloffCurve",
-                           RAPIDJSON_STR(alias.volumeFalloffCurve->filename),
-                           allocator);
+      json_alias.AddMember("volumeFalloffCurve", RAPIDJSON_STR(alias.volumeFalloffCurve->filename), allocator);
 
       head.PushBack(json_alias, allocator);
     }
@@ -428,8 +372,7 @@ namespace iw4of::interfaces
     return true;
   }
 
-  std::filesystem::path interfaces::isndalias::get_file_name(
-      const std::string& asset_name) const
+  std::filesystem::path interfaces::isndalias::get_file_name(const std::string& asset_name) const
   {
     return std::format("{}.json", asset_name);
   }
