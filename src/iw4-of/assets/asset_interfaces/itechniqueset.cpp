@@ -32,9 +32,7 @@ namespace iw4of::interfaces
 
     if (techset->remappedTechniqueSet)
     {
-      output.AddMember("remappedTechniqueSet",
-                       RAPIDJSON_STR(techset->remappedTechniqueSet->name),
-                       allocator);
+      output.AddMember("remappedTechniqueSet", RAPIDJSON_STR(techset->remappedTechniqueSet->name), allocator);
     }
 
     output.AddMember("hasBeenUploaded", techset->hasBeenUploaded, allocator);
@@ -56,15 +54,11 @@ namespace iw4of::interfaces
         }
         else
         {
-          print_error("Could not export technique {}",
-                      techset->techniques[i]->name);
+          print_error("Could not export technique {}", techset->techniques[i]->name);
         }
       }
 
-      technique_map.AddMember(
-          rapidjson::Value(std::to_string(i).c_str(), allocator),
-          value,
-          allocator);
+      technique_map.AddMember(rapidjson::Value(std::to_string(i).c_str(), allocator), value, allocator);
     }
 
     output.AddMember("techniques", technique_map, allocator);
@@ -91,24 +85,18 @@ namespace iw4of::interfaces
     }
     catch (std::exception& e)
     {
-      print_error(
-          "Reading techset '{}' failed, file is messed up! {}", name, e.what());
+      print_error("Reading techset '{}' failed, file is messed up! {}", name, e.what());
       return nullptr;
     }
 
     auto version = techset["version"].Get<int32_t>();
     if (version != IW4X_TECHSET_VERSION)
     {
-      print_error(
-          "Reading techset '{}' failed, expected version is{}, but it was{}!",
-          name,
-          IW4X_TECHSET_VERSION,
-          version);
+      print_error("Reading techset '{}' failed, expected version is{}, but it was{}!", name, IW4X_TECHSET_VERSION, version);
       return nullptr;
     }
 
-    native::MaterialTechniqueSet* asset =
-        local_allocator.allocate<native::MaterialTechniqueSet>();
+    native::MaterialTechniqueSet* asset = local_allocator.allocate<native::MaterialTechniqueSet>();
 
     if (asset == nullptr)
     {
@@ -118,8 +106,7 @@ namespace iw4of::interfaces
 
     if (techset["name"].IsString())
     {
-      asset->name =
-          local_allocator.duplicate_string(techset["name"].Get<std::string>());
+      asset->name = local_allocator.duplicate_string(techset["name"].Get<std::string>());
     }
 
     asset->hasBeenUploaded = techset["hasBeenUploaded"].Get<bool>();
@@ -131,8 +118,7 @@ namespace iw4of::interfaces
 
       if (remapped != asset->name)
       {
-        asset->remappedTechniqueSet = find<native::MaterialTechniqueSet>(
-            native::XAssetType::ASSET_TYPE_TECHNIQUE_SET, remapped);
+        asset->remappedTechniqueSet = find<native::MaterialTechniqueSet>(native::XAssetType::ASSET_TYPE_TECHNIQUE_SET, remapped);
 
         assert(asset->remappedTechniqueSet);
       }
@@ -147,8 +133,7 @@ namespace iw4of::interfaces
 
         if (technique.IsString())
         {
-          this->read_technique(&asset->techniques[i],
-                               technique.Get<std::string>());
+          this->read_technique(&asset->techniques[i], technique.Get<std::string>());
         }
       }
     }
@@ -156,8 +141,7 @@ namespace iw4of::interfaces
     return asset;
   }
 
-  void interfaces::itechniqueset::read_technique(
-      native::MaterialTechnique** tech, const std::string& name) const
+  void interfaces::itechniqueset::read_technique(native::MaterialTechnique** tech, const std::string& name) const
   {
     AssertSize(native::MaterialPass, 20);
 
@@ -181,44 +165,31 @@ namespace iw4of::interfaces
     }
     catch (std::exception& e)
     {
-      print_error(
-          "Reading techset '{}' failed, file is messed up! {}", name, e.what());
+      print_error("Reading techset '{}' failed, file is messed up! {}", name, e.what());
     }
 
     int32_t version = technique["version"].Get<int32_t>();
 
     if (version != IW4X_TECHSET_VERSION)
     {
-      print_error(
-          "Reading technique '{}' failed, expected version is {}, but it was {}!",
-          name,
-          IW4X_TECHSET_VERSION,
-          version);
+      print_error("Reading technique '{}' failed, expected version is {}, but it was {}!", name, IW4X_TECHSET_VERSION, version);
     }
 
-    uint16_t flags = static_cast<uint16_t>(utils::json::read_flags(
-        technique["flags"].Get<std::string>(), sizeof(short)));
+    uint16_t flags = static_cast<uint16_t>(utils::json::read_flags(technique["flags"].Get<std::string>(), sizeof(short)));
 
     if (technique["passArray"].IsArray())
     {
       const auto& passArray = technique["passArray"];
 
-      native::MaterialTechnique* asset =
-          reinterpret_cast<native::MaterialTechnique*>(
-              local_allocator.allocate_array<uint8_t>(
-                  sizeof(native::MaterialTechnique) +
-                  (sizeof(native::MaterialPass) * (passArray.Size() - 1))));
+      native::MaterialTechnique* asset = reinterpret_cast<native::MaterialTechnique*>(
+          local_allocator.allocate_array<uint8_t>(sizeof(native::MaterialTechnique) + (sizeof(native::MaterialPass) * (passArray.Size() - 1))));
 
       asset->name = local_allocator.duplicate_string(name);
       asset->flags = flags;
       asset->passCount = static_cast<uint16_t>(passArray.Size());
 
-      native::MaterialPass* passes =
-          local_allocator.allocate_array<native::MaterialPass>(
-              asset->passCount);
-      std::memcpy(asset->passArray,
-                  passes,
-                  sizeof(native::MaterialPass) * asset->passCount);
+      native::MaterialPass* passes = local_allocator.allocate_array<native::MaterialPass>(asset->passCount);
+      std::memcpy(asset->passArray, passes, sizeof(native::MaterialPass) * asset->passCount);
 
       for (uint16_t i = 0; i < asset->passCount; i++)
       {
@@ -228,22 +199,19 @@ namespace iw4of::interfaces
         if (jsonPass["vertexDeclaration"].IsString())
         {
           auto declName = jsonPass["vertexDeclaration"].Get<std::string>();
-          pass->vertexDecl = find<native::MaterialVertexDeclaration>(
-              native::XAssetType::ASSET_TYPE_VERTEXDECL, declName);
+          pass->vertexDecl = find<native::MaterialVertexDeclaration>(native::XAssetType::ASSET_TYPE_VERTEXDECL, declName);
         }
 
         if (jsonPass["vertexShader"].IsString())
         {
           auto vsName = jsonPass["vertexShader"].Get<std::string>();
-          pass->vertexShader = find<native::MaterialVertexShader>(
-              native::XAssetType::ASSET_TYPE_VERTEXSHADER, vsName);
+          pass->vertexShader = find<native::MaterialVertexShader>(native::XAssetType::ASSET_TYPE_VERTEXSHADER, vsName);
         }
 
         if (jsonPass["pixelShader"].IsString())
         {
           auto psName = jsonPass["pixelShader"].Get<std::string>();
-          pass->pixelShader = find<native::MaterialPixelShader>(
-              native::XAssetType::ASSET_TYPE_PIXELSHADER, psName);
+          pass->pixelShader = find<native::MaterialPixelShader>(native::XAssetType::ASSET_TYPE_PIXELSHADER, psName);
         }
 
         pass->perPrimArgCount = jsonPass["perPrimArgCount"].Get<char>();
@@ -255,9 +223,7 @@ namespace iw4of::interfaces
         {
           const auto& jsonAguments = jsonPass["arguments"];
 
-          pass->args =
-              local_allocator.allocate_array<native::MaterialShaderArgument>(
-                  jsonAguments.Size());
+          pass->args = local_allocator.allocate_array<native::MaterialShaderArgument>(jsonAguments.Size());
 
           for (size_t j = 0; j < jsonAguments.Size(); j++)
           {
@@ -267,49 +233,33 @@ namespace iw4of::interfaces
             argument->type = jsonArgument["type"].Get<uint16_t>();
             argument->dest = jsonArgument["dest"].Get<uint16_t>();
 
-            if (argument->type == native::MaterialShaderArgumentType::
-                                      MTL_ARG_LITERAL_VERTEX_CONST ||
-                argument->type == native::MaterialShaderArgumentType::
-                                      MTL_ARG_LITERAL_PIXEL_CONST)
+            if (argument->type == native::MaterialShaderArgumentType::MTL_ARG_LITERAL_VERTEX_CONST ||
+                argument->type == native::MaterialShaderArgumentType::MTL_ARG_LITERAL_PIXEL_CONST)
             {
-              argument->u.literalConst = reinterpret_cast<float(*)[4]>(
-                  local_allocator.allocate_array<float>(4));
-              utils::json::copy_array(
-                  reinterpret_cast<float*>(argument->u.literalConst),
-                  jsonArgument["literals"],
-                  4);
+              argument->u.literalConst = reinterpret_cast<float(*)[4]>(local_allocator.allocate_array<float>(4));
+              utils::json::copy_array(reinterpret_cast<float*>(argument->u.literalConst), jsonArgument["literals"], 4);
             }
-            else if (argument->type == native::MaterialShaderArgumentType::
-                                           MTL_ARG_CODE_VERTEX_CONST ||
-                     argument->type == native::MaterialShaderArgumentType::
-                                           MTL_ARG_CODE_PIXEL_CONST)
+            else if (argument->type == native::MaterialShaderArgumentType::MTL_ARG_CODE_VERTEX_CONST ||
+                     argument->type == native::MaterialShaderArgumentType::MTL_ARG_CODE_PIXEL_CONST)
             {
               if (jsonArgument["codeConst"].IsObject())
               {
                 const auto& codeConst = jsonArgument["codeConst"];
 
-                argument->u.codeConst.index =
-                    codeConst["index"].Get<uint16_t>();
-                argument->u.codeConst.firstRow =
-                    codeConst["firstRow"].Get<uint8_t>();
-                argument->u.codeConst.rowCount =
-                    codeConst["rowCount"].Get<uint8_t>();
+                argument->u.codeConst.index = codeConst["index"].Get<uint16_t>();
+                argument->u.codeConst.firstRow = codeConst["firstRow"].Get<uint8_t>();
+                argument->u.codeConst.rowCount = codeConst["rowCount"].Get<uint8_t>();
               }
             }
-            else if (argument->type == native::MaterialShaderArgumentType::
-                                           MTL_ARG_MATERIAL_PIXEL_SAMPLER ||
-                     argument->type == native::MaterialShaderArgumentType::
-                                           MTL_ARG_MATERIAL_VERTEX_CONST ||
-                     argument->type == native::MaterialShaderArgumentType::
-                                           MTL_ARG_MATERIAL_PIXEL_CONST)
+            else if (argument->type == native::MaterialShaderArgumentType::MTL_ARG_MATERIAL_PIXEL_SAMPLER ||
+                     argument->type == native::MaterialShaderArgumentType::MTL_ARG_MATERIAL_VERTEX_CONST ||
+                     argument->type == native::MaterialShaderArgumentType::MTL_ARG_MATERIAL_PIXEL_CONST)
             {
               argument->u.nameHash = jsonArgument["nameHash"].Get<uint32_t>();
             }
-            else if (argument->type == native::MaterialShaderArgumentType::
-                                           MTL_ARG_CODE_PIXEL_SAMPLER)
+            else if (argument->type == native::MaterialShaderArgumentType::MTL_ARG_CODE_PIXEL_SAMPLER)
             {
-              argument->u.codeSampler =
-                  jsonArgument["codeSampler"].Get<uint32_t>();
+              argument->u.codeSampler = jsonArgument["codeSampler"].Get<uint32_t>();
             }
           }
         }
@@ -319,21 +269,17 @@ namespace iw4of::interfaces
     }
   }
 
-  std::filesystem::path interfaces::itechniqueset::get_technique_work_path(
-      const std::string& name) const
+  std::filesystem::path interfaces::itechniqueset::get_technique_work_path(const std::string& name) const
   {
-    return std::format(
-        "{}/techniques/{}.iw4x.json", assets->get_work_directory(), name);
+    return std::format("{}/techniques/{}.iw4x.json", assets->get_work_directory(), name);
   }
 
-  std::filesystem::path interfaces::itechniqueset::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path interfaces::itechniqueset::get_file_name(const std::string& basename) const
   {
     return std::format("{}.iw4x.json", basename);
   }
 
-  bool itechniqueset::write(
-      const native::MaterialTechnique* iw4_technique) const
+  bool itechniqueset::write(const native::MaterialTechnique* iw4_technique) const
   {
     if (!iw4_technique) return false;
 
@@ -342,8 +288,7 @@ namespace iw4of::interfaces
     auto& allocator = output.GetAllocator();
 
     output.AddMember("version", IW4X_TECHSET_VERSION, allocator);
-    output.AddMember(
-        "name", rapidjson::Value(iw4_technique->name, allocator), allocator);
+    output.AddMember("name", rapidjson::Value(iw4_technique->name, allocator), allocator);
 
     // We complete these later
     rapidjson::Value pass_array(rapidjson::kArrayType);
@@ -356,42 +301,27 @@ namespace iw4of::interfaces
 
       if (iw4_pass->vertexDecl)
       {
-        json_pass.AddMember(
-            "vertexDeclaration",
-            rapidjson::Value(iw4_pass->vertexDecl->name, allocator),
-            allocator);
+        json_pass.AddMember("vertexDeclaration", rapidjson::Value(iw4_pass->vertexDecl->name, allocator), allocator);
       }
 
       if (iw4_pass->vertexShader)
       {
-        json_pass.AddMember(
-            "vertexShader",
-            rapidjson::Value(iw4_pass->vertexShader->name, allocator),
-            allocator);
+        json_pass.AddMember("vertexShader", rapidjson::Value(iw4_pass->vertexShader->name, allocator), allocator);
       }
 
       if (iw4_pass->pixelShader)
       {
-        json_pass.AddMember(
-            "pixelShader",
-            rapidjson::Value(iw4_pass->pixelShader->name, allocator),
-            allocator);
+        json_pass.AddMember("pixelShader", rapidjson::Value(iw4_pass->pixelShader->name, allocator), allocator);
       }
 
-      json_pass.AddMember(
-          "perPrimArgCount", iw4_pass->perPrimArgCount, allocator);
-      json_pass.AddMember(
-          "perObjArgCount", iw4_pass->perObjArgCount, allocator);
-      json_pass.AddMember(
-          "stableArgCount", iw4_pass->stableArgCount, allocator);
-      json_pass.AddMember(
-          "customSamplerFlags", iw4_pass->customSamplerFlags, allocator);
+      json_pass.AddMember("perPrimArgCount", iw4_pass->perPrimArgCount, allocator);
+      json_pass.AddMember("perObjArgCount", iw4_pass->perObjArgCount, allocator);
+      json_pass.AddMember("stableArgCount", iw4_pass->stableArgCount, allocator);
+      json_pass.AddMember("customSamplerFlags", iw4_pass->customSamplerFlags, allocator);
 
       rapidjson::Value arguments_array(rapidjson::kArrayType);
 
-      for (int k = 0; k < iw4_pass->perPrimArgCount + iw4_pass->perObjArgCount +
-                              iw4_pass->stableArgCount;
-           ++k)
+      for (int k = 0; k < iw4_pass->perPrimArgCount + iw4_pass->perObjArgCount + iw4_pass->stableArgCount; ++k)
       {
         const native::MaterialShaderArgument* iw4_arg = &iw4_pass->args[k];
 
@@ -400,20 +330,13 @@ namespace iw4of::interfaces
         arg_json.AddMember("type", iw4_arg->type, allocator);
 
 #if DEBUG
-        arg_json.AddMember(
-            "type_debug",
-            RAPIDJSON_STR(
-                native::Debug_MaterialShaderArgumentTypeName[iw4_arg->type]),
-            allocator);
+        arg_json.AddMember("type_debug", RAPIDJSON_STR(native::Debug_MaterialShaderArgumentTypeName[iw4_arg->type]), allocator);
 #endif
 
-        arg_json.AddMember(
-            "dest", iw4_arg->dest, allocator); // Does not need conversion
+        arg_json.AddMember("dest", iw4_arg->dest, allocator); // Does not need conversion
 
-        if (iw4_arg->type == native::MaterialShaderArgumentType::
-                                 MTL_ARG_LITERAL_VERTEX_CONST ||
-            iw4_arg->type ==
-                native::MaterialShaderArgumentType::MTL_ARG_LITERAL_PIXEL_CONST)
+        if (iw4_arg->type == native::MaterialShaderArgumentType::MTL_ARG_LITERAL_VERTEX_CONST ||
+            iw4_arg->type == native::MaterialShaderArgumentType::MTL_ARG_LITERAL_PIXEL_CONST)
         {
           rapidjson::Value literalsArray(rapidjson::kArrayType);
 
@@ -426,58 +349,38 @@ namespace iw4of::interfaces
 
           arg_json.AddMember("literals", literalsArray, allocator);
         }
-        else if (iw4_arg->type == native::MaterialShaderArgumentType::
-                                      MTL_ARG_CODE_VERTEX_CONST ||
-                 iw4_arg->type == native::MaterialShaderArgumentType::
-                                      MTL_ARG_CODE_PIXEL_CONST)
+        else if (iw4_arg->type == native::MaterialShaderArgumentType::MTL_ARG_CODE_VERTEX_CONST ||
+                 iw4_arg->type == native::MaterialShaderArgumentType::MTL_ARG_CODE_PIXEL_CONST)
         {
           rapidjson::Value code_const(rapidjson::kObjectType);
 #if DEBUG
-          assert(iw4_arg->u.codeConst.index <
-                 ARRAYSIZE(native::Debug_ShaderCodeConstantsNames));
-          code_const.AddMember(
-              "index_debug",
-              RAPIDJSON_STR(
-                  native::Debug_ShaderCodeConstantsNames[iw4_arg->u.codeConst
-                                                             .index]),
-              allocator);
+          assert(iw4_arg->u.codeConst.index < ARRAYSIZE(native::Debug_ShaderCodeConstantsNames));
+          code_const.AddMember("index_debug", RAPIDJSON_STR(native::Debug_ShaderCodeConstantsNames[iw4_arg->u.codeConst.index]), allocator);
 #endif
 
           code_const.AddMember("index", iw4_arg->u.codeConst.index, allocator);
-          code_const.AddMember(
-              "firstRow", iw4_arg->u.codeConst.firstRow, allocator);
-          code_const.AddMember(
-              "rowCount", iw4_arg->u.codeConst.rowCount, allocator);
+          code_const.AddMember("firstRow", iw4_arg->u.codeConst.firstRow, allocator);
+          code_const.AddMember("rowCount", iw4_arg->u.codeConst.rowCount, allocator);
 
           arg_json.AddMember("codeConst", code_const, allocator);
         }
-        else if (iw4_arg->type == native::MaterialShaderArgumentType::
-                                      MTL_ARG_MATERIAL_PIXEL_SAMPLER ||
-                 iw4_arg->type == native::MaterialShaderArgumentType::
-                                      MTL_ARG_MATERIAL_VERTEX_CONST ||
-                 iw4_arg->type == native::MaterialShaderArgumentType::
-                                      MTL_ARG_MATERIAL_PIXEL_CONST)
+        else if (iw4_arg->type == native::MaterialShaderArgumentType::MTL_ARG_MATERIAL_PIXEL_SAMPLER ||
+                 iw4_arg->type == native::MaterialShaderArgumentType::MTL_ARG_MATERIAL_VERTEX_CONST ||
+                 iw4_arg->type == native::MaterialShaderArgumentType::MTL_ARG_MATERIAL_PIXEL_CONST)
         {
           arg_json.AddMember("nameHash", iw4_arg->u.nameHash, allocator);
         }
-        else if (iw4_arg->type ==
-                 native::MaterialShaderArgumentType::MTL_ARG_CODE_PIXEL_SAMPLER)
+        else if (iw4_arg->type == native::MaterialShaderArgumentType::MTL_ARG_CODE_PIXEL_SAMPLER)
         {
 #if DEBUG
-          arg_json.AddMember(
-              "codeSampler_debug",
-              RAPIDJSON_STR(
-                  native::Debug_MaterialTextureSourceNames[iw4_arg->u
-                                                               .codeSampler]),
-              allocator);
+          arg_json.AddMember("codeSampler_debug", RAPIDJSON_STR(native::Debug_MaterialTextureSourceNames[iw4_arg->u.codeSampler]), allocator);
 #endif
 
           arg_json.AddMember("codeSampler", iw4_arg->u.codeSampler, allocator);
         }
         else
         {
-          print_error(
-              "Unknown arg type {} in {}!", iw4_arg->type, iw4_technique->name);
+          print_error("Unknown arg type {} in {}!", iw4_arg->type, iw4_technique->name);
           return false;
         }
 
@@ -489,8 +392,7 @@ namespace iw4of::interfaces
       pass_array.PushBack(json_pass, allocator);
     }
 
-    const auto flags =
-        std::format("{:016b}", iw4_technique->flags); // no conversion?
+    const auto flags = std::format("{:016b}", iw4_technique->flags); // no conversion?
     output.AddMember("flags", RAPIDJSON_STR(flags.c_str()), allocator);
 
     output.AddMember("passArray", pass_array, allocator);
@@ -499,8 +401,7 @@ namespace iw4of::interfaces
     rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buff);
     output.Accept(writer);
 
-    utils::io::write_file(get_technique_work_path(iw4_technique->name).string(),
-                          buff.GetString());
+    utils::io::write_file(get_technique_work_path(iw4_technique->name).string(), buff.GetString());
 
     return true;
   }
