@@ -22,8 +22,7 @@ namespace iw4of::interfaces
     void* read_internal(const std::string& name) const override;
     bool write_plaintext(const native::XAssetHeader& header) const;
 
-    std::filesystem::path get_file_name(
-        const std::string& basename) const override;
+    std::filesystem::path get_file_name(const std::string& basename) const override;
     std::filesystem::path get_folder_name() const override
     {
       return "clipmap";

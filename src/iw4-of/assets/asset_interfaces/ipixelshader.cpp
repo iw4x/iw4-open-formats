@@ -38,7 +38,7 @@ namespace iw4of::interfaces
       const auto& buff = utils::io::read_file(path);
 
       ps->prog.loadDef.loadForRenderer = GFX_RENDERER_SHADER_SM3;
-      ps->prog.loadDef.programSize = static_cast<uint16_t>(size/sizeof(uint32_t));
+      ps->prog.loadDef.programSize = static_cast<uint16_t>(size / sizeof(uint32_t));
       ps->prog.loadDef.program = local_allocator.allocate_array<uint32_t>(ps->prog.loadDef.programSize);
       memcpy_s(ps->prog.loadDef.program, size, buff.data(), buff.size());
 
@@ -48,8 +48,7 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path ipixelshader::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path ipixelshader::get_file_name(const std::string& basename) const
   {
     return std::format("{}.cso", basename);
   }

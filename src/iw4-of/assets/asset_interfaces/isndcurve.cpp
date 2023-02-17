@@ -43,16 +43,14 @@ namespace iw4of::interfaces
 
     try
     {
-      snd_curve->filename = local_allocator.duplicate_string(
-          snd_curve_json["filename"].GetString());
+      snd_curve->filename = local_allocator.duplicate_string(snd_curve_json["filename"].GetString());
       snd_curve->knotCount = snd_curve_json["knotCount"].Get<uint16_t>();
 
       for (auto side = 0; side < 2; side++)
       {
         for (auto knot = 0; knot < 16; knot++)
         {
-          snd_curve->knots[knot][side] =
-              snd_curve_json["knots"][knot][side].Get<float>();
+          snd_curve->knots[knot][side] = snd_curve_json["knots"][knot][side].Get<float>();
         }
       }
     }
@@ -95,8 +93,7 @@ namespace iw4of::interfaces
 
     rapidjson::StringBuffer buff;
     rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buff);
-    writer.SetFormatOptions(
-        rapidjson::PrettyFormatOptions::kFormatSingleLineArray);
+    writer.SetFormatOptions(rapidjson::PrettyFormatOptions::kFormatSingleLineArray);
 
     output.Accept(writer);
 
@@ -104,8 +101,7 @@ namespace iw4of::interfaces
     return true;
   }
 
-  std::filesystem::path interfaces::isndcurve::get_file_name(
-      const std::string& asset_name) const
+  std::filesystem::path interfaces::isndcurve::get_file_name(const std::string& asset_name) const
   {
     return std::format("{}.iw4x.json", asset_name);
   }

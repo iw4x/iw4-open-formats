@@ -28,30 +28,22 @@ namespace iw4of::interfaces
 
     if (asset->elemDefs)
     {
-      buffer.save_array(asset->elemDefs,
-                        asset->elemDefCountEmission +
-                            asset->elemDefCountLooping +
-                            asset->elemDefCountOneShot);
+      buffer.save_array(asset->elemDefs, asset->elemDefCountEmission + asset->elemDefCountLooping + asset->elemDefCountOneShot);
 
-      for (int i = 0;
-           i < (asset->elemDefCountEmission + asset->elemDefCountLooping +
-                asset->elemDefCountOneShot);
-           ++i)
+      for (int i = 0; i < (asset->elemDefCountEmission + asset->elemDefCountLooping + asset->elemDefCountOneShot); ++i)
       {
         native::FxElemDef* elem_def = &asset->elemDefs[i];
 
         if (elem_def->velSamples)
         {
           AssertSize(native::FxElemVelStateSample, 96);
-          buffer.save_array(elem_def->velSamples,
-                            elem_def->velIntervalCount + 1);
+          buffer.save_array(elem_def->velSamples, elem_def->velIntervalCount + 1);
         }
 
         if (elem_def->visSamples)
         {
           AssertSize(native::FxElemVisStateSample, 48);
-          buffer.save_array(elem_def->visSamples,
-                            elem_def->visStateIntervalCount + 1);
+          buffer.save_array(elem_def->visSamples, elem_def->visStateIntervalCount + 1);
         }
 
         // Save_FxElemDefVisuals
@@ -60,21 +52,18 @@ namespace iw4of::interfaces
           {
             if (elem_def->visuals.markArray)
             {
-              buffer.save_array(elem_def->visuals.markArray,
-                                elem_def->visualCount);
+              buffer.save_array(elem_def->visuals.markArray, elem_def->visualCount);
 
               for (char j = 0; j < elem_def->visualCount; ++j)
               {
                 if (elem_def->visuals.markArray[j].materials[0])
                 {
-                  buffer.save_string(
-                      elem_def->visuals.markArray[j].materials[0]->info.name);
+                  buffer.save_string(elem_def->visuals.markArray[j].materials[0]->info.name);
                 }
 
                 if (elem_def->visuals.markArray[j].materials[1])
                 {
-                  buffer.save_string(
-                      elem_def->visuals.markArray[j].materials[1]->info.name);
+                  buffer.save_string(elem_def->visuals.markArray[j].materials[1]->info.name);
                 }
               }
             }
@@ -150,8 +139,7 @@ namespace iw4of::interfaces
       }
     }
 
-    return utils::io::write_file(get_work_path(header).string(),
-                                 buffer.to_buffer());
+    return utils::io::write_file(get_work_path(header).string(), buffer.to_buffer());
   }
 
   void* ifx::read_internal(const std::string& name) const
@@ -173,11 +161,7 @@ namespace iw4of::interfaces
       int32_t version = buffer.read<int32_t>();
       if (version > IW4X_FX_VERSION)
       {
-        print_error(
-            "Reading fx '{}' failed, expected version is {}, but it was {}!",
-            name,
-            IW4X_FX_VERSION,
-            version);
+        print_error("Reading fx '{}' failed, expected version is {}, but it was {}!", name, IW4X_FX_VERSION, version);
         return nullptr;
       }
 
@@ -190,29 +174,20 @@ namespace iw4of::interfaces
 
       if (asset->elemDefs)
       {
-        asset->elemDefs = buffer.read_array<native::FxElemDef>(
-            asset->elemDefCountEmission + asset->elemDefCountLooping +
-            asset->elemDefCountOneShot);
+        asset->elemDefs = buffer.read_array<native::FxElemDef>(asset->elemDefCountEmission + asset->elemDefCountLooping + asset->elemDefCountOneShot);
 
-        for (int i = 0;
-             i < (asset->elemDefCountEmission + asset->elemDefCountLooping +
-                  asset->elemDefCountOneShot);
-             ++i)
+        for (int i = 0; i < (asset->elemDefCountEmission + asset->elemDefCountLooping + asset->elemDefCountOneShot); ++i)
         {
           native::FxElemDef* elemDef = &asset->elemDefs[i];
 
           if (elemDef->velSamples)
           {
-            elemDef->velSamples =
-                buffer.read_array<native::FxElemVelStateSample>(
-                    elemDef->velIntervalCount + 1);
+            elemDef->velSamples = buffer.read_array<native::FxElemVelStateSample>(elemDef->velIntervalCount + 1);
           }
 
           if (elemDef->visSamples)
           {
-            elemDef->visSamples =
-                buffer.read_array<native::FxElemVisStateSample>(
-                    elemDef->visStateIntervalCount + 1);
+            elemDef->visSamples = buffer.read_array<native::FxElemVisStateSample>(elemDef->visStateIntervalCount + 1);
           }
 
           // Save_FxElemDefVisuals
@@ -221,26 +196,20 @@ namespace iw4of::interfaces
             {
               if (elemDef->visuals.markArray)
               {
-                elemDef->visuals.markArray =
-                    buffer.read_array<native::FxElemMarkVisuals>(
-                        elemDef->visualCount);
+                elemDef->visuals.markArray = buffer.read_array<native::FxElemMarkVisuals>(elemDef->visualCount);
 
                 for (char j = 0; j < elemDef->visualCount; ++j)
                 {
                   if (elemDef->visuals.markArray[j].materials[0])
                   {
                     elemDef->visuals.markArray[j].materials[0] =
-                        find<native::Material>(
-                            native::XAssetType::ASSET_TYPE_MATERIAL,
-                            buffer.read_string().data());
+                        find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, buffer.read_string().data());
                   }
 
                   if (elemDef->visuals.markArray[j].materials[1])
                   {
                     elemDef->visuals.markArray[j].materials[1] =
-                        find<native::Material>(
-                            native::XAssetType::ASSET_TYPE_MATERIAL,
-                            buffer.read_string().data());
+                        find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, buffer.read_string().data());
                   }
                 }
               }
@@ -249,9 +218,7 @@ namespace iw4of::interfaces
             {
               if (elemDef->visuals.array)
               {
-                elemDef->visuals.array =
-                    buffer.read_array<native::FxElemVisuals>(
-                        elemDef->visualCount);
+                elemDef->visuals.array = buffer.read_array<native::FxElemVisuals>(elemDef->visualCount);
 
                 for (char j = 0; j < elemDef->visualCount; ++j)
                 {
@@ -267,20 +234,17 @@ namespace iw4of::interfaces
 
           if (elemDef->effectOnImpact.handle)
           {
-            elemDef->effectOnImpact.handle = find<native::FxEffectDef>(
-                native::XAssetType::ASSET_TYPE_FX, buffer.read_string().data());
+            elemDef->effectOnImpact.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, buffer.read_string().data());
           }
 
           if (elemDef->effectOnDeath.handle)
           {
-            elemDef->effectOnDeath.handle = find<native::FxEffectDef>(
-                native::XAssetType::ASSET_TYPE_FX, buffer.read_string().data());
+            elemDef->effectOnDeath.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, buffer.read_string().data());
           }
 
           if (elemDef->effectEmitted.handle)
           {
-            elemDef->effectEmitted.handle = find<native::FxEffectDef>(
-                native::XAssetType::ASSET_TYPE_FX, buffer.read_string().data());
+            elemDef->effectEmitted.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, buffer.read_string().data());
           }
 
           // Save_FxElemExtendedDefPtr
@@ -291,20 +255,17 @@ namespace iw4of::interfaces
               {
                 if (elemDef->extended.trailDef)
                 {
-                  native::FxTrailDef* trailDef =
-                      buffer.read_object<native::FxTrailDef>();
+                  native::FxTrailDef* trailDef = buffer.read_object<native::FxTrailDef>();
                   elemDef->extended.trailDef = trailDef;
 
                   if (trailDef->verts)
                   {
-                    trailDef->verts = buffer.read_array<native::FxTrailVertex>(
-                        trailDef->vertCount);
+                    trailDef->verts = buffer.read_array<native::FxTrailVertex>(trailDef->vertCount);
                   }
 
                   if (trailDef->inds)
                   {
-                    trailDef->inds =
-                        buffer.read_array<uint16_t>(trailDef->indCount);
+                    trailDef->inds = buffer.read_array<uint16_t>(trailDef->indCount);
                   }
                 }
               }
@@ -315,8 +276,7 @@ namespace iw4of::interfaces
               {
                 if (elemDef->extended.sparkFountainDef)
                 {
-                  elemDef->extended.sparkFountainDef =
-                      buffer.read_object<native::FxSparkFountainDef>();
+                  elemDef->extended.sparkFountainDef = buffer.read_object<native::FxSparkFountainDef>();
                 }
               }
             }
@@ -330,14 +290,12 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path iw4of::interfaces::ifx::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path iw4of::interfaces::ifx::get_file_name(const std::string& basename) const
   {
     return std::format("{}.iw4xFx", basename);
   }
 
-  void ifx::write(const native::FxElemVisuals* visuals, char elemType,
-                  utils::stream* buffer) const
+  void ifx::write(const native::FxElemVisuals* visuals, char elemType, utils::stream* buffer) const
   {
     switch (elemType)
     {
@@ -378,8 +336,7 @@ namespace iw4of::interfaces
     }
   }
 
-  void interfaces::ifx::read(native::FxElemVisuals* visuals, char elemType,
-                             utils::stream::reader* reader) const
+  void interfaces::ifx::read(native::FxElemVisuals* visuals, char elemType, utils::stream::reader* reader) const
   {
     switch (elemType)
     {
@@ -387,9 +344,7 @@ namespace iw4of::interfaces
       {
         if (visuals->model)
         {
-          visuals->model =
-              find<native::XModel>(native::XAssetType::ASSET_TYPE_XMODEL,
-                                   reader->read_string().data());
+          visuals->model = find<native::XModel>(native::XAssetType::ASSET_TYPE_XMODEL, reader->read_string().data());
         }
 
         break;
@@ -411,8 +366,7 @@ namespace iw4of::interfaces
       {
         if (visuals->effectDef.handle)
         {
-          visuals->effectDef.handle = find<native::FxEffectDef>(
-              native::XAssetType::ASSET_TYPE_FX, reader->read_string().data());
+          visuals->effectDef.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, reader->read_string().data());
         }
 
         break;
@@ -422,9 +376,7 @@ namespace iw4of::interfaces
       {
         if (visuals->material)
         {
-          visuals->material =
-              find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL,
-                                     reader->read_string().data());
+          visuals->material = find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, reader->read_string().data());
         }
 
         break;

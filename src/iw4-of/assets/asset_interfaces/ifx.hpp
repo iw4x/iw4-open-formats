@@ -22,17 +22,14 @@ namespace iw4of::interfaces
     bool write_internal(const native::XAssetHeader& header) const override;
     void* read_internal(const std::string& name) const override;
 
-    std::filesystem::path get_file_name(
-        const std::string& basename) const override;
+    std::filesystem::path get_file_name(const std::string& basename) const override;
     std::filesystem::path get_folder_name() const override
     {
       return "fx";
     }
 
    private:
-    void write(const native::FxElemVisuals* from, char elemType,
-               utils::stream* buffer) const;
-    void read(native::FxElemVisuals* into, char elemType,
-              utils::stream::reader* reader) const;
+    void write(const native::FxElemVisuals* from, char elemType, utils::stream* buffer) const;
+    void read(native::FxElemVisuals* into, char elemType, utils::stream::reader* reader) const;
   };
 } // namespace iw4of::interfaces

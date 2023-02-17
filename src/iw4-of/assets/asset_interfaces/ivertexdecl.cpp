@@ -18,10 +18,8 @@ namespace iw4of::interfaces
 
     for (int i = 0; i < iw4_decl->streamCount; i++)
     {
-      if (iw4_decl->routing.data[i].dest >=
-              native::MaterialStreamRoutingDestination::STREAM_DST_COUNT ||
-          iw4_decl->routing.data[i].source >=
-              native::MaterialStreamRoutingSource::STREAM_SRC_COUNT)
+      if (iw4_decl->routing.data[i].dest >= native::MaterialStreamRoutingDestination::STREAM_DST_COUNT ||
+          iw4_decl->routing.data[i].source >= native::MaterialStreamRoutingSource::STREAM_SRC_COUNT)
       {
         assert(false);
       }
@@ -57,24 +55,18 @@ namespace iw4of::interfaces
       char* magic = reader.read_array<char>(8);
       if (std::memcmp(magic, "IW4xDECL", 8))
       {
-        print_error(
-            "Reading vertex declaration '{}' failed, header is invalid!", name);
+        print_error("Reading vertex declaration '{}' failed, header is invalid!", name);
         return nullptr;
       }
 
       auto version = reader.read<char>();
       if (version > IW4X_TECHSET_VERSION)
       {
-        print_error(
-            "Reading vertex declaration '{}' failed, expected version is {}, but it was {:d}!",
-            name,
-            IW4X_TECHSET_VERSION,
-            version);
+        print_error("Reading vertex declaration '{}' failed, expected version is {}, but it was {:d}!", name, IW4X_TECHSET_VERSION, version);
         return nullptr;
       }
 
-      native::MaterialVertexDeclaration* asset =
-          reader.read_object<native::MaterialVertexDeclaration>();
+      native::MaterialVertexDeclaration* asset = reader.read_object<native::MaterialVertexDeclaration>();
 
       if (asset->name)
       {
@@ -87,8 +79,7 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path ivertexdecl::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path ivertexdecl::get_file_name(const std::string& basename) const
   {
     return std::format("{}.iw4xDECL", basename);
   }

@@ -30,13 +30,10 @@ namespace iw4of::interfaces
     output.AddMember("name", RAPIDJSON_STR(asset->info.name), allocator);
 
     const auto gameFlagsStr = std::format("{:08b}", asset->info.gameFlags);
-    output.AddMember(
-        "gameFlags", RAPIDJSON_STR(gameFlagsStr.c_str()), allocator);
+    output.AddMember("gameFlags", RAPIDJSON_STR(gameFlagsStr.c_str()), allocator);
 
-    const auto stateFlags =
-        std::format("{:08b}", static_cast<char>(asset->stateFlags));
-    output.AddMember(
-        "stateFlags", RAPIDJSON_STR(stateFlags.c_str()), allocator);
+    const auto stateFlags = std::format("{:08b}", static_cast<char>(asset->stateFlags));
+    output.AddMember("stateFlags", RAPIDJSON_STR(stateFlags.c_str()), allocator);
 
 #define SAME_NAME_JSON_MEMBER(x) output.AddMember(#x, asset->info.x, allocator)
 
@@ -45,17 +42,14 @@ namespace iw4of::interfaces
     std::string techsetName;
     if (asset->techniqueSet)
     {
-      output.AddMember(
-          "techniqueSet", RAPIDJSON_STR(asset->techniqueSet->name), allocator);
+      output.AddMember("techniqueSet", RAPIDJSON_STR(asset->techniqueSet->name), allocator);
     }
 
     SAME_NAME_JSON_MEMBER(textureAtlasRowCount);
     SAME_NAME_JSON_MEMBER(textureAtlasColumnCount);
 
-    const auto surfaceTypeBits =
-        std::format("{:032b}", asset->info.surfaceTypeBits);
-    output.AddMember(
-        "surfaceTypeBits", RAPIDJSON_STR(surfaceTypeBits.c_str()), allocator);
+    const auto surfaceTypeBits = std::format("{:032b}", asset->info.surfaceTypeBits);
+    output.AddMember("surfaceTypeBits", RAPIDJSON_STR(surfaceTypeBits.c_str()), allocator);
 
     rapidjson::Value textureTable(rapidjson::kArrayType);
 
@@ -69,8 +63,7 @@ namespace iw4of::interfaces
         textureJson.AddMember("nameStart", textureDef->nameStart, allocator);
         textureJson.AddMember("nameEnd", textureDef->nameEnd, allocator);
         textureJson.AddMember("nameHash", textureDef->nameHash, allocator);
-        textureJson.AddMember("samplerState",
-                              textureDef->samplerState,
+        textureJson.AddMember("samplerState", textureDef->samplerState,
                               allocator); // $6961E030A9677F7C86FC6FF9B5901495
         textureJson.AddMember("semantic", textureDef->semantic, allocator);
 
@@ -84,10 +77,8 @@ namespace iw4of::interfaces
 
             if (water->image)
             {
-              waterJson.AddMember(
-                  "image", RAPIDJSON_STR(water->image->name), allocator);
-              assets->write<native::GfxImage>(
-                  native::XAssetType::ASSET_TYPE_IMAGE, water->image);
+              waterJson.AddMember("image", RAPIDJSON_STR(water->image->name), allocator);
+              assets->write<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, water->image);
             }
 
             constexpr unsigned long BUFF_SIZE = 0xFFFF; // 65KB
@@ -96,39 +87,29 @@ namespace iw4of::interfaces
             if (water->H0)
             {
               auto ptr = reinterpret_cast<uint8_t*>(water->H0);
-              auto buffer = std::vector<uint8_t>(
-                  ptr, ptr + water->M * water->N * sizeof(native::complex_s));
+              auto buffer = std::vector<uint8_t>(ptr, ptr + water->M * water->N * sizeof(native::complex_s));
 
               auto b64 = local_allocator.allocate_array<char>(BUFF_SIZE);
               unsigned long buffLength = BUFF_SIZE;
 
-              [[maybe_unused]] auto result = base64_encode(
-                  &buffer.front(), buffer.size(), b64, &buffLength);
+              [[maybe_unused]] auto result = base64_encode(&buffer.front(), buffer.size(), b64, &buffLength);
               assert(result == CRYPT_OK);
 
-              waterJson.AddMember(
-                  "H0",
-                  RAPIDJSON_STR(str_duplicator.duplicate_string(b64)),
-                  allocator);
+              waterJson.AddMember("H0", RAPIDJSON_STR(str_duplicator.duplicate_string(b64)), allocator);
             }
 
             if (water->wTerm)
             {
               auto ptr = reinterpret_cast<uint8_t*>(water->wTerm);
-              auto buffer = std::vector<uint8_t>(
-                  ptr, ptr + water->M * water->N * sizeof(float));
+              auto buffer = std::vector<uint8_t>(ptr, ptr + water->M * water->N * sizeof(float));
 
               auto b64 = local_allocator.allocate_array<char>(BUFF_SIZE);
               unsigned long buffLength = BUFF_SIZE;
 
-              [[maybe_unused]] auto result = base64_encode(
-                  &buffer.front(), buffer.size(), b64, &buffLength);
+              [[maybe_unused]] auto result = base64_encode(&buffer.front(), buffer.size(), b64, &buffLength);
               assert(result == CRYPT_OK);
 
-              waterJson.AddMember(
-                  "wTerm",
-                  RAPIDJSON_STR(str_duplicator.duplicate_string(b64)),
-                  allocator);
+              waterJson.AddMember("wTerm", RAPIDJSON_STR(str_duplicator.duplicate_string(b64)), allocator);
             }
 
 #define SAME_NAME_WATER_MEMBER(x) waterJson.AddMember(#x, water->x, allocator)
@@ -139,16 +120,10 @@ namespace iw4of::interfaces
             SAME_NAME_WATER_MEMBER(Lz);
             SAME_NAME_WATER_MEMBER(gravity);
             SAME_NAME_WATER_MEMBER(windvel);
-            waterJson.AddMember(
-                "winddir",
-                utils::json::make_json_array(water->winddir, 2, allocator),
-                allocator);
+            waterJson.AddMember("winddir", utils::json::make_json_array(water->winddir, 2, allocator), allocator);
 
             SAME_NAME_WATER_MEMBER(amplitude);
-            waterJson.AddMember(
-                "codeConstant",
-                utils::json::make_json_array(water->codeConstant, 4, allocator),
-                allocator);
+            waterJson.AddMember("codeConstant", utils::json::make_json_array(water->codeConstant, 4, allocator), allocator);
 
             textureJson.AddMember("water", waterJson, allocator);
           }
@@ -157,17 +132,14 @@ namespace iw4of::interfaces
         {
           if (textureDef->u.image)
           {
-            textureJson.AddMember(
-                "image", RAPIDJSON_STR(textureDef->u.image->name), allocator);
-            assets->write<native::GfxImage>(
-                native::XAssetType::ASSET_TYPE_IMAGE, textureDef->u.image);
+            textureJson.AddMember("image", RAPIDJSON_STR(textureDef->u.image->name), allocator);
+            assets->write<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, textureDef->u.image);
           }
           else
           {
             // This can't happen! It will crash the game
             assert(false);
-            print_error("Null/missing image for material {}",
-                        header.material->info.name);
+            print_error("Null/missing image for material {}", header.material->info.name);
             return false;
           }
         }
@@ -179,8 +151,7 @@ namespace iw4of::interfaces
     output.AddMember("textureTable", textureTable, allocator);
     rapidjson::Value gfxDrawSurface(rapidjson::kObjectType);
 
-#define SAME_NAME_GFXDRAWSURF_MEMBER(x) \
-  gfxDrawSurface.AddMember(#x, asset->info.drawSurf.fields.##x##, allocator)
+#define SAME_NAME_GFXDRAWSURF_MEMBER(x) gfxDrawSurface.AddMember(#x, asset->info.drawSurf.fields.##x##, allocator)
 
     SAME_NAME_GFXDRAWSURF_MEMBER(objectId);
     SAME_NAME_GFXDRAWSURF_MEMBER(reflectionProbeIndex);
@@ -214,25 +185,17 @@ namespace iw4of::interfaces
       for (char i = 0; i < asset->constantCount; ++i)
       {
         native::MaterialConstantDef constantDef;
-        std::memcpy(&constantDef,
-                    &asset->constantTable[i],
-                    sizeof native::MaterialConstantDef);
+        std::memcpy(&constantDef, &asset->constantTable[i], sizeof native::MaterialConstantDef);
 
         rapidjson::Value constantDefJson(rapidjson::kObjectType);
 
         constantDefJson.AddMember("nameHash", constantDef.nameHash, allocator);
-        constantDefJson.AddMember(
-            "literal",
-            utils::json::make_json_array(constantDef.literal, 4, allocator),
-            allocator);
+        constantDefJson.AddMember("literal", utils::json::make_json_array(constantDef.literal, 4, allocator), allocator);
 
         std::string constantDefName = constantDef.name;
         constantDefName = constantDefName.substr(0, 12);
 
-        constantDefJson.AddMember("name",
-                                  RAPIDJSON_STR(str_duplicator.duplicate_string(
-                                      constantDefName.c_str())),
-                                  allocator);
+        constantDefJson.AddMember("name", RAPIDJSON_STR(str_duplicator.duplicate_string(constantDefName.c_str())), allocator);
 
         constantTable.PushBack(constantDefJson, allocator);
       }
@@ -242,11 +205,7 @@ namespace iw4of::interfaces
 
     if (asset->stateBitsTable)
     {
-      output.AddMember(
-          "stateBitsTable",
-          statebits_to_json_array(
-              asset->stateBitsTable, asset->stateBitsCount, allocator),
-          allocator);
+      output.AddMember("stateBitsTable", statebits_to_json_array(asset->stateBitsTable, asset->stateBitsCount, allocator), allocator);
     }
 
     rapidjson::StringBuffer buff;
@@ -273,89 +232,63 @@ namespace iw4of::interfaces
     }
     catch (const std::exception& e)
     {
-      print_error(
-          "Invalid material json for {} (broken json {})\n", name, e.what());
+      print_error("Invalid material json for {} (broken json {})\n", name, e.what());
     }
 
     if (!materialJson.IsObject())
     {
-      print_error("Invalid material json for {} (Is it zonebuilder format?)\n",
-                  name);
+      print_error("Invalid material json for {} (Is it zonebuilder format?)\n", name);
       return nullptr;
     }
 
     if (materialJson["version"].Get<int32_t>() != IW4X_MAT_VERSION)
     {
       print_error(
-          "Invalid material json version for {}, expected {} and got {}\n",
-          name,
-          IW4X_MAT_VERSION,
-          materialJson["version"].Get<std::string>());
+          "Invalid material json version for {}, expected {} and got {}\n", name, IW4X_MAT_VERSION, materialJson["version"].Get<std::string>());
       return nullptr;
     }
 
     try
     {
-      asset->info.name = local_allocator.duplicate_string(
-          materialJson["name"].Get<std::string>());
-      asset->info.gameFlags = static_cast<char>(utils::json::read_flags(
-          materialJson["gameFlags"].Get<std::string>(), sizeof(char)));
+      asset->info.name = local_allocator.duplicate_string(materialJson["name"].Get<std::string>());
+      asset->info.gameFlags = static_cast<char>(utils::json::read_flags(materialJson["gameFlags"].Get<std::string>(), sizeof(char)));
 
       asset->info.sortKey = materialJson["sortKey"].Get<char>();
       // * We do techset later * //
-      asset->info.textureAtlasRowCount =
-          materialJson["textureAtlasRowCount"].Get<uint8_t>();
-      asset->info.textureAtlasColumnCount =
-          materialJson["textureAtlasColumnCount"].Get<uint8_t>();
-      asset->info.surfaceTypeBits =
-          static_cast<uint32_t>(utils::json::read_flags(
-              materialJson["surfaceTypeBits"].Get<std::string>(), sizeof(int)));
+      asset->info.textureAtlasRowCount = materialJson["textureAtlasRowCount"].Get<uint8_t>();
+      asset->info.textureAtlasColumnCount = materialJson["textureAtlasColumnCount"].Get<uint8_t>();
+      asset->info.surfaceTypeBits = static_cast<uint32_t>(utils::json::read_flags(materialJson["surfaceTypeBits"].Get<std::string>(), sizeof(int)));
       asset->info.hashIndex = materialJson["hashIndex"].Get<uint16_t>();
       asset->cameraRegion = materialJson["cameraRegion"].Get<char>();
     }
     catch (const std::exception& e)
     {
-      print_error(
-          "Invalid material json for {} (broken json {})\n", name, e.what());
+      print_error("Invalid material json for {} (broken json {})\n", name, e.what());
       return nullptr;
     }
 
     if (materialJson.HasMember("gfxDrawSurface") && materialJson["gfxDrawSurface"].IsObject())
     {
-      asset->info.drawSurf.fields.customIndex =
-          materialJson["gfxDrawSurface"]["customIndex"].Get<int64_t>();
-      asset->info.drawSurf.fields.hasGfxEntIndex =
-          materialJson["gfxDrawSurface"]["hasGfxEntIndex"].Get<int64_t>();
-      asset->info.drawSurf.fields.materialSortedIndex =
-          materialJson["gfxDrawSurface"]["materialSortedIndex"].Get<int64_t>();
-      asset->info.drawSurf.fields.objectId =
-          materialJson["gfxDrawSurface"]["objectId"].Get<int64_t>();
-      asset->info.drawSurf.fields.prepass =
-          materialJson["gfxDrawSurface"]["prepass"].Get<int64_t>();
-      asset->info.drawSurf.fields.primarySortKey =
-          materialJson["gfxDrawSurface"]["primarySortKey"].Get<int64_t>();
-      asset->info.drawSurf.fields.reflectionProbeIndex =
-          materialJson["gfxDrawSurface"]["reflectionProbeIndex"].Get<int64_t>();
-      asset->info.drawSurf.fields.sceneLightIndex =
-          materialJson["gfxDrawSurface"]["sceneLightIndex"].Get<int64_t>();
-      asset->info.drawSurf.fields.surfType =
-          materialJson["gfxDrawSurface"]["surfType"].Get<int64_t>();
-      asset->info.drawSurf.fields.unused =
-          materialJson["gfxDrawSurface"]["unused"].Get<int64_t>();
-      asset->info.drawSurf.fields.useHeroLighting =
-          materialJson["gfxDrawSurface"]["useHeroLighting"].Get<int64_t>();
+      asset->info.drawSurf.fields.customIndex = materialJson["gfxDrawSurface"]["customIndex"].Get<int64_t>();
+      asset->info.drawSurf.fields.hasGfxEntIndex = materialJson["gfxDrawSurface"]["hasGfxEntIndex"].Get<int64_t>();
+      asset->info.drawSurf.fields.materialSortedIndex = materialJson["gfxDrawSurface"]["materialSortedIndex"].Get<int64_t>();
+      asset->info.drawSurf.fields.objectId = materialJson["gfxDrawSurface"]["objectId"].Get<int64_t>();
+      asset->info.drawSurf.fields.prepass = materialJson["gfxDrawSurface"]["prepass"].Get<int64_t>();
+      asset->info.drawSurf.fields.primarySortKey = materialJson["gfxDrawSurface"]["primarySortKey"].Get<int64_t>();
+      asset->info.drawSurf.fields.reflectionProbeIndex = materialJson["gfxDrawSurface"]["reflectionProbeIndex"].Get<int64_t>();
+      asset->info.drawSurf.fields.sceneLightIndex = materialJson["gfxDrawSurface"]["sceneLightIndex"].Get<int64_t>();
+      asset->info.drawSurf.fields.surfType = materialJson["gfxDrawSurface"]["surfType"].Get<int64_t>();
+      asset->info.drawSurf.fields.unused = materialJson["gfxDrawSurface"]["unused"].Get<int64_t>();
+      asset->info.drawSurf.fields.useHeroLighting = materialJson["gfxDrawSurface"]["useHeroLighting"].Get<int64_t>();
     }
 
-    asset->stateFlags = static_cast<char>(utils::json::read_flags(
-        materialJson["stateFlags"].Get<std::string>(), sizeof(char)));
+    asset->stateFlags = static_cast<char>(utils::json::read_flags(materialJson["stateFlags"].Get<std::string>(), sizeof(char)));
 
     if (materialJson.HasMember("textureTable") && materialJson["textureTable"].IsArray())
     {
       const auto& textureTable = materialJson["textureTable"];
       asset->textureCount = static_cast<uint8_t>(textureTable.Size());
-      asset->textureTable =
-          local_allocator.allocate_array<native::MaterialTextureDef>(
-              asset->textureCount);
+      asset->textureTable = local_allocator.allocate_array<native::MaterialTextureDef>(asset->textureCount);
 
       for (size_t i = 0; i < textureTable.Size(); i++)
       {
@@ -371,8 +304,7 @@ namespace iw4of::interfaces
 
           if (textureDef->semantic == native::TextureSemantic::TS_WATER_MAP)
           {
-            native::water_t* water =
-                local_allocator.allocate<native::water_t>();
+            native::water_t* water = local_allocator.allocate<native::water_t>();
 
             if (textureJson["water"].IsObject())
             {
@@ -382,8 +314,7 @@ namespace iw4of::interfaces
               {
                 auto imageName = waterJson["image"].Get<std::string>();
 
-                water->image = find<native::GfxImage>(
-                    native::XAssetType::ASSET_TYPE_IMAGE, imageName.data());
+                water->image = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, imageName.data());
               }
 
               water->amplitude = waterJson["amplitude"].Get<float>();
@@ -395,42 +326,29 @@ namespace iw4of::interfaces
               water->windvel = waterJson["windvel"].Get<float>();
 
               utils::json::copy_array(water->winddir, waterJson["winddir"], 2);
-              utils::json::copy_array(
-                  water->codeConstant, waterJson["codeConstant"], 4);
+              utils::json::copy_array(water->codeConstant, waterJson["codeConstant"], 4);
 
               /// H0
-              [[maybe_unused]] auto idealSize =
-                  water->M * water->N * sizeof(native::complex_s);
+              [[maybe_unused]] auto idealSize = water->M * water->N * sizeof(native::complex_s);
               auto h064 = waterJson["H0"].Get<std::string>();
-              auto predictedSize = static_cast<unsigned long>(
-                  std::ceilf((h064.size() / 4.f) * 3.f));
+              auto predictedSize = static_cast<unsigned long>(std::ceilf((h064.size() / 4.f) * 3.f));
               assert(predictedSize >= idealSize);
 
-              auto h0 = reinterpret_cast<native::complex_s*>(
-                  local_allocator.allocate(predictedSize));
+              auto h0 = reinterpret_cast<native::complex_s*>(local_allocator.allocate(predictedSize));
 
-              [[maybe_unused]] auto h0Result =
-                  base64_decode(h064.data(),
-                                h064.size(),
-                                reinterpret_cast<uint8_t*>(h0),
-                                &predictedSize);
+              [[maybe_unused]] auto h0Result = base64_decode(h064.data(), h064.size(), reinterpret_cast<uint8_t*>(h0), &predictedSize);
 
               assert(h0Result == CRYPT_OK);
               water->H0 = h0;
 
               /// WTerm
               auto wTerm64 = waterJson["wTerm"].Get<std::string>();
-              auto predictedWTermSize = static_cast<unsigned long>(
-                  std::ceilf((wTerm64.size() / 4.f) * 3.f));
+              auto predictedWTermSize = static_cast<unsigned long>(std::ceilf((wTerm64.size() / 4.f) * 3.f));
 
-              auto wTerm = reinterpret_cast<float*>(
-                  local_allocator.allocate(predictedWTermSize));
+              auto wTerm = reinterpret_cast<float*>(local_allocator.allocate(predictedWTermSize));
 
               [[maybe_unused]] auto wTermResult =
-                  base64_decode(wTerm64.data(),
-                                wTerm64.size(),
-                                reinterpret_cast<uint8_t*>(wTerm),
-                                &predictedWTermSize);
+                  base64_decode(wTerm64.data(), wTerm64.size(), reinterpret_cast<uint8_t*>(wTerm), &predictedWTermSize);
 
               assert(wTermResult == CRYPT_OK);
               water->wTerm = wTerm;
@@ -444,8 +362,7 @@ namespace iw4of::interfaces
             if (textureJson["image"].IsString())
             {
               const auto& image_name = textureJson["image"].Get<std::string>();
-              textureDef->u.image = find<native::GfxImage>(
-                  native::XAssetType::ASSET_TYPE_IMAGE, image_name);
+              textureDef->u.image = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, image_name);
 
               assert(textureDef->u.image);
             }
@@ -474,8 +391,7 @@ namespace iw4of::interfaces
       const auto& array = materialJson["stateBitsTable"];
       asset->stateBitsCount = static_cast<uint8_t>(array.Size());
 
-      asset->stateBitsTable =
-          local_allocator.allocate_array<native::GfxStateBits>(array.Size());
+      asset->stateBitsTable = local_allocator.allocate_array<native::GfxStateBits>(array.Size());
 
       size_t statebitTableIndex = 0;
       for (size_t i = 0; i < array.Size(); i++)
@@ -486,8 +402,7 @@ namespace iw4of::interfaces
         uint32_t loadbits0 = 0;
         uint32_t loadbits1 = 0;
 
-#define READ_INT_LB_FROM_JSON(x) \
-  uint32_t x = jsonStateBitEntry[#x].Get<uint32_t>()
+#define READ_INT_LB_FROM_JSON(x) uint32_t x = jsonStateBitEntry[#x].Get<uint32_t>()
 #define READ_BOOL_LB_FROM_JSON(x) bool x = jsonStateBitEntry[#x].Get<bool>()
 
         READ_INT_LB_FROM_JSON(srcBlendRgb);
@@ -499,8 +414,7 @@ namespace iw4of::interfaces
         READ_INT_LB_FROM_JSON(depthTest);
         READ_INT_LB_FROM_JSON(polygonOffset);
 
-        const auto alphaTest =
-            jsonStateBitEntry["alphaTest"].Get<std::string>();
+        const auto alphaTest = jsonStateBitEntry["alphaTest"].Get<std::string>();
         const auto cullFace = jsonStateBitEntry["cullFace"].Get<std::string>();
 
         READ_BOOL_LB_FROM_JSON(colorWriteRgb);
@@ -557,9 +471,7 @@ namespace iw4of::interfaces
         }
         else
         {
-          print_error("Invalid alphatest loadbit0 '{}' in material {}\n",
-                      alphaTest,
-                      name);
+          print_error("Invalid alphatest loadbit0 '{}' in material {}\n", alphaTest, name);
           return nullptr;
         }
 
@@ -577,9 +489,7 @@ namespace iw4of::interfaces
         }
         else
         {
-          print_error("Invalid cullFace loadbit0 '{}' in material {}\n",
-                      cullFace,
-                      name);
+          print_error("Invalid cullFace loadbit0 '{}' in material {}\n", cullFace, name);
           return nullptr;
         }
 
@@ -618,8 +528,7 @@ namespace iw4of::interfaces
 
         loadbits1 |= stencilFrontPass << native::GFXS1_STENCIL_FRONT_PASS_SHIFT;
         loadbits1 |= stencilFrontFail << native::GFXS1_STENCIL_FRONT_FAIL_SHIFT;
-        loadbits1 |= stencilFrontZFail
-                     << native::GFXS1_STENCIL_FRONT_ZFAIL_SHIFT;
+        loadbits1 |= stencilFrontZFail << native::GFXS1_STENCIL_FRONT_ZFAIL_SHIFT;
         loadbits1 |= stencilFrontFunc << native::GFXS1_STENCIL_FRONT_FUNC_SHIFT;
         loadbits1 |= stencilBackPass << native::GFXS1_STENCIL_BACK_PASS_SHIFT;
         loadbits1 |= stencilBackFail << native::GFXS1_STENCIL_BACK_FAIL_SHIFT;
@@ -635,12 +544,9 @@ namespace iw4of::interfaces
       {
         const auto& constants = materialJson["constantTable"];
         asset->constantCount = static_cast<char>(constants.Size());
-        auto table =
-            local_allocator.allocate_array<native::MaterialConstantDef>(
-                asset->constantCount);
+        auto table = local_allocator.allocate_array<native::MaterialConstantDef>(asset->constantCount);
 
-        for (size_t constantIndex = 0; constantIndex < asset->constantCount;
-             constantIndex++)
+        for (size_t constantIndex = 0; constantIndex < asset->constantCount; constantIndex++)
         {
           auto& constant = constants[constantIndex];
           auto entry = &table[constantIndex];
@@ -658,17 +564,13 @@ namespace iw4of::interfaces
 
       if (materialJson["techniqueSet"].IsString())
       {
-        const std::string techsetName =
-            materialJson["techniqueSet"].Get<std::string>();
-        asset->techniqueSet = find<native::MaterialTechniqueSet>(
-            native::ASSET_TYPE_TECHNIQUE_SET, techsetName);
+        const std::string techsetName = materialJson["techniqueSet"].Get<std::string>();
+        asset->techniqueSet = find<native::MaterialTechniqueSet>(native::ASSET_TYPE_TECHNIQUE_SET, techsetName);
 
         if (asset->techniqueSet == nullptr)
         {
           assert(false);
-          print_error("Could not find technique set {} for material {}",
-                      techsetName,
-                      name);
+          print_error("Could not find technique set {} for material {}", techsetName, name);
           return nullptr;
         }
       }
@@ -679,15 +581,13 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path interfaces::imaterial::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path interfaces::imaterial::get_file_name(const std::string& basename) const
   {
     return std::format("{}.iw4x.json", basename);
   }
 
-  rapidjson::Value imaterial::statebits_to_json_array(
-      native::GfxStateBits* stateBits, uint8_t count,
-      rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const
+  rapidjson::Value imaterial::statebits_to_json_array(native::GfxStateBits* stateBits, uint8_t count,
+                                                      rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const
   {
     rapidjson::Value arr(rapidjson::kArrayType);
 
@@ -695,46 +595,27 @@ namespace iw4of::interfaces
     {
       const auto& entry = stateBits[index];
 
-      const auto srcBlendRgb =
-          (entry.flags.loadbit0 & native::GFXS0_SRCBLEND_RGB_MASK) >>
-          native::GFXS0_SRCBLEND_RGB_SHIFT;
-      const auto dstBlendRgb =
-          (entry.flags.loadbit0 & native::GFXS0_DSTBLEND_RGB_MASK) >>
-          native::GFXS0_DSTBLEND_RGB_SHIFT;
-      const auto blendOpRgb =
-          (entry.flags.loadbit0 & native::GFXS0_BLENDOP_RGB_MASK) >>
-          native::GFXS0_BLENDOP_RGB_SHIFT;
-      const auto srcBlendAlpha =
-          (entry.flags.loadbit0 & native::GFXS0_SRCBLEND_ALPHA_MASK) >>
-          native::GFXS0_SRCBLEND_ALPHA_SHIFT;
-      const auto dstBlendAlpha =
-          (entry.flags.loadbit0 & native::GFXS0_DSTBLEND_ALPHA_MASK) >>
-          native::GFXS0_DSTBLEND_ALPHA_SHIFT;
-      const auto blendOpAlpha =
-          (entry.flags.loadbit0 & native::GFXS0_BLENDOP_ALPHA_MASK) >>
-          native::GFXS0_BLENDOP_ALPHA_SHIFT;
-      const auto depthTest =
-          (entry.flags.loadbit1 & native::GFXS1_DEPTHTEST_DISABLE)
-              ? -1
-              : (entry.flags.loadbit1 & native::GFXS1_DEPTHTEST_MASK) >>
-                    native::GFXS1_DEPTHTEST_SHIFT;
-      const auto polygonOffset =
-          (entry.flags.loadbit1 & native::GFXS1_POLYGON_OFFSET_MASK) >>
-          native::GFXS1_POLYGON_OFFSET_SHIFT;
+      const auto srcBlendRgb = (entry.flags.loadbit0 & native::GFXS0_SRCBLEND_RGB_MASK) >> native::GFXS0_SRCBLEND_RGB_SHIFT;
+      const auto dstBlendRgb = (entry.flags.loadbit0 & native::GFXS0_DSTBLEND_RGB_MASK) >> native::GFXS0_DSTBLEND_RGB_SHIFT;
+      const auto blendOpRgb = (entry.flags.loadbit0 & native::GFXS0_BLENDOP_RGB_MASK) >> native::GFXS0_BLENDOP_RGB_SHIFT;
+      const auto srcBlendAlpha = (entry.flags.loadbit0 & native::GFXS0_SRCBLEND_ALPHA_MASK) >> native::GFXS0_SRCBLEND_ALPHA_SHIFT;
+      const auto dstBlendAlpha = (entry.flags.loadbit0 & native::GFXS0_DSTBLEND_ALPHA_MASK) >> native::GFXS0_DSTBLEND_ALPHA_SHIFT;
+      const auto blendOpAlpha = (entry.flags.loadbit0 & native::GFXS0_BLENDOP_ALPHA_MASK) >> native::GFXS0_BLENDOP_ALPHA_SHIFT;
+      const auto depthTest = (entry.flags.loadbit1 & native::GFXS1_DEPTHTEST_DISABLE)
+                                 ? -1
+                                 : (entry.flags.loadbit1 & native::GFXS1_DEPTHTEST_MASK) >> native::GFXS1_DEPTHTEST_SHIFT;
+      const auto polygonOffset = (entry.flags.loadbit1 & native::GFXS1_POLYGON_OFFSET_MASK) >> native::GFXS1_POLYGON_OFFSET_SHIFT;
 
       const auto* alphaTest = "disable";
-      if ((entry.flags.loadbit0 & native::GFXS0_ATEST_MASK) ==
-          native::GFXS0_ATEST_GE_128)
+      if ((entry.flags.loadbit0 & native::GFXS0_ATEST_MASK) == native::GFXS0_ATEST_GE_128)
       {
         alphaTest = ">=128";
       }
-      else if ((entry.flags.loadbit0 & native::GFXS0_ATEST_MASK) ==
-               native::GFXS0_ATEST_GT_0)
+      else if ((entry.flags.loadbit0 & native::GFXS0_ATEST_MASK) == native::GFXS0_ATEST_GT_0)
       {
         alphaTest = ">0";
       }
-      else if ((entry.flags.loadbit0 & native::GFXS0_ATEST_MASK) ==
-               native::GFXS0_ATEST_LT_128)
+      else if ((entry.flags.loadbit0 & native::GFXS0_ATEST_MASK) == native::GFXS0_ATEST_LT_128)
       {
         alphaTest = "<128";
       }
@@ -744,68 +625,39 @@ namespace iw4of::interfaces
       }
 
       const auto* cullFace = "none";
-      if ((entry.flags.loadbit0 & native::GFXS0_CULL_MASK) ==
-          native::GFXS0_CULL_BACK)
+      if ((entry.flags.loadbit0 & native::GFXS0_CULL_MASK) == native::GFXS0_CULL_BACK)
       {
         cullFace = "back";
       }
-      else if ((entry.flags.loadbit0 & native::GFXS0_CULL_MASK) ==
-               native::GFXS0_CULL_FRONT)
+      else if ((entry.flags.loadbit0 & native::GFXS0_CULL_MASK) == native::GFXS0_CULL_FRONT)
       {
         cullFace = "front";
       }
       else
       {
-        assert((entry.flags.loadbit0 & native::GFXS0_CULL_MASK) ==
-               native::GFXS0_CULL_NONE);
+        assert((entry.flags.loadbit0 & native::GFXS0_CULL_MASK) == native::GFXS0_CULL_NONE);
       }
 
       rapidjson::Value stateBitEntry(rapidjson::kObjectType);
 
-      const auto colorWriteRgb =
-          entry.flags.loadbit0 & native::GFXS0_COLORWRITE_RGB ? true : false;
-      const auto colorWriteAlpha =
-          entry.flags.loadbit0 & native::GFXS0_COLORWRITE_ALPHA ? true : false;
-      const auto polymodeLine =
-          entry.flags.loadbit0 & native::GFXS0_POLYMODE_LINE ? true : false;
-      const auto gammaWrite =
-          entry.flags.loadbit0 & native::GFXS0_GAMMAWRITE ? true : false;
-      const auto depthWrite =
-          (entry.flags.loadbit1 & native::GFXS1_DEPTHWRITE) ? true : false;
-      const auto stencilFrontEnabled =
-          (entry.flags.loadbit1 & native::GFXS1_STENCIL_FRONT_ENABLE) ? true
-                                                                      : false;
-      const auto stencilBackEnabled =
-          (entry.flags.loadbit1 & native::GFXS1_STENCIL_BACK_ENABLE) ? true
-                                                                     : false;
-      const auto stencilFrontPass =
-          (entry.flags.loadbit1 >> native::GFXS1_STENCIL_FRONT_PASS_SHIFT) &
-          native::GFXS_STENCILOP_MASK;
-      const auto stencilFrontFail =
-          (entry.flags.loadbit1 >> native::GFXS1_STENCIL_FRONT_FAIL_SHIFT) &
-          native::GFXS_STENCILOP_MASK;
-      const auto stencilFrontZFail =
-          (entry.flags.loadbit1 >> native::GFXS1_STENCIL_FRONT_ZFAIL_SHIFT) &
-          native::GFXS_STENCILOP_MASK;
-      const auto stencilFrontFunc =
-          (entry.flags.loadbit1 >> native::GFXS1_STENCIL_FRONT_FUNC_SHIFT) &
-          native::GFXS_STENCILOP_MASK;
-      const auto stencilBackPass =
-          (entry.flags.loadbit1 >> native::GFXS1_STENCIL_BACK_PASS_SHIFT) &
-          native::GFXS_STENCILOP_MASK;
-      const auto stencilBackFail =
-          (entry.flags.loadbit1 >> native::GFXS1_STENCIL_BACK_FAIL_SHIFT) &
-          native::GFXS_STENCILOP_MASK;
-      const auto stencilBackZFail =
-          (entry.flags.loadbit1 >> native::GFXS1_STENCIL_BACK_ZFAIL_SHIFT) &
-          native::GFXS_STENCILOP_MASK;
-      const auto stencilBackFunc =
-          (entry.flags.loadbit1 >> native::GFXS1_STENCIL_BACK_FUNC_SHIFT) &
-          native::GFXS_STENCILOP_MASK;
+      const auto colorWriteRgb = entry.flags.loadbit0 & native::GFXS0_COLORWRITE_RGB ? true : false;
+      const auto colorWriteAlpha = entry.flags.loadbit0 & native::GFXS0_COLORWRITE_ALPHA ? true : false;
+      const auto polymodeLine = entry.flags.loadbit0 & native::GFXS0_POLYMODE_LINE ? true : false;
+      const auto gammaWrite = entry.flags.loadbit0 & native::GFXS0_GAMMAWRITE ? true : false;
+      const auto depthWrite = (entry.flags.loadbit1 & native::GFXS1_DEPTHWRITE) ? true : false;
+      const auto stencilFrontEnabled = (entry.flags.loadbit1 & native::GFXS1_STENCIL_FRONT_ENABLE) ? true : false;
+      const auto stencilBackEnabled = (entry.flags.loadbit1 & native::GFXS1_STENCIL_BACK_ENABLE) ? true : false;
+      const auto stencilFrontPass = (entry.flags.loadbit1 >> native::GFXS1_STENCIL_FRONT_PASS_SHIFT) & native::GFXS_STENCILOP_MASK;
+      const auto stencilFrontFail = (entry.flags.loadbit1 >> native::GFXS1_STENCIL_FRONT_FAIL_SHIFT) & native::GFXS_STENCILOP_MASK;
+      const auto stencilFrontZFail = (entry.flags.loadbit1 >> native::GFXS1_STENCIL_FRONT_ZFAIL_SHIFT) & native::GFXS_STENCILOP_MASK;
+      const auto stencilFrontFunc = (entry.flags.loadbit1 >> native::GFXS1_STENCIL_FRONT_FUNC_SHIFT) & native::GFXS_STENCILOP_MASK;
+      const auto stencilBackPass = (entry.flags.loadbit1 >> native::GFXS1_STENCIL_BACK_PASS_SHIFT) & native::GFXS_STENCILOP_MASK;
+      const auto stencilBackFail = (entry.flags.loadbit1 >> native::GFXS1_STENCIL_BACK_FAIL_SHIFT) & native::GFXS_STENCILOP_MASK;
+      const auto stencilBackZFail = (entry.flags.loadbit1 >> native::GFXS1_STENCIL_BACK_ZFAIL_SHIFT) & native::GFXS_STENCILOP_MASK;
+      const auto stencilBackFunc = (entry.flags.loadbit1 >> native::GFXS1_STENCIL_BACK_FUNC_SHIFT) & native::GFXS_STENCILOP_MASK;
 
 #define ADD_TO_JSON(x) stateBitEntry.AddMember(#x, x, allocator)
-#define ADD_TO_JSON_STR(x) \
-  stateBitEntry.AddMember(#x, RAPIDJSON_STR(x), allocator)
+#define ADD_TO_JSON_STR(x) stateBitEntry.AddMember(#x, RAPIDJSON_STR(x), allocator)
 
       ADD_TO_JSON_STR(alphaTest);
       ADD_TO_JSON(blendOpAlpha);

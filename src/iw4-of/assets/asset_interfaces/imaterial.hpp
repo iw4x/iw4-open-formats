@@ -23,10 +23,8 @@ namespace iw4of::interfaces
     bool write_internal(const native::XAssetHeader& header) const override;
     void* read_internal(const std::string& name) const override;
 
-    std::filesystem::path get_file_name(
-        const std::string& basename) const override;
-    std::filesystem::path get_file_name(
-        const native::XAssetHeader& header) const override
+    std::filesystem::path get_file_name(const std::string& basename) const override;
+    std::filesystem::path get_file_name(const native::XAssetHeader& header) const override
     {
       return get_file_name(header.material->info.name);
     };
@@ -37,10 +35,8 @@ namespace iw4of::interfaces
     }
 
    private:
-    rapidjson::Value statebits_to_json_array(
-        native::GfxStateBits* stateBits, uint8_t count,
-        rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
-        const;
+    rapidjson::Value statebits_to_json_array(native::GfxStateBits* stateBits, uint8_t count,
+                                             rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const;
   };
 
 } // namespace iw4of::interfaces

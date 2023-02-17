@@ -21,10 +21,7 @@ namespace iw4of::utils::json
     if (binaryFlags.size() > binarySize)
     {
       assert(false);
-      throw std::runtime_error(std::format(
-          "Flag {} has the wrong size compared to what was expected (expected {} bits)\n",
-          binaryFlags,
-          binarySize));
+      throw std::runtime_error(std::format("Flag {} has the wrong size compared to what was expected (expected {} bits)\n", binaryFlags, binarySize));
       return 0;
     }
 
@@ -34,9 +31,8 @@ namespace iw4of::utils::json
       if (i < 0)
       {
         assert(false);
-        throw std::runtime_error(std::format(
-            "Flag {} might not be properly translated, it seems to contain an error (invalid length)\n",
-            binaryFlags));
+        throw std::runtime_error(
+            std::format("Flag {} might not be properly translated, it seems to contain an error (invalid length)\n", binaryFlags));
         break;
       }
 

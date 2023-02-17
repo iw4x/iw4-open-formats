@@ -58,8 +58,7 @@ namespace iw4of::utils
           {
             auto filePosition = this->position_;
             auto data = read_array<T>(count);
-            this->allocator_->map_pointer(reinterpret_cast<void*>(filePosition),
-                                          data);
+            this->allocator_->map_pointer(reinterpret_cast<void*>(filePosition), data);
             return data;
           }
           default: throw std::runtime_error("Bad data");

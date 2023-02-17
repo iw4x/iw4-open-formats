@@ -37,26 +37,22 @@ namespace iw4of::interfaces
 
     if (asset->parentList)
     {
-      buffer.save_array_if_not_existing(asset->parentList,
-                                        asset->numBones - asset->numRootBones);
+      buffer.save_array_if_not_existing(asset->parentList, asset->numBones - asset->numRootBones);
     }
 
     if (asset->quats)
     {
-      buffer.save_array_if_not_existing(
-          asset->quats, (asset->numBones - asset->numRootBones));
+      buffer.save_array_if_not_existing(asset->quats, (asset->numBones - asset->numRootBones));
     }
 
     if (asset->trans)
     {
-      buffer.save_array_if_not_existing(
-          asset->trans, (asset->numBones - asset->numRootBones));
+      buffer.save_array_if_not_existing(asset->trans, (asset->numBones - asset->numRootBones));
     }
 
     if (asset->partClassification)
     {
-      buffer.save_array_if_not_existing(asset->partClassification,
-                                        asset->numBones);
+      buffer.save_array_if_not_existing(asset->partClassification, asset->numBones);
     }
 
     if (asset->baseMat)
@@ -149,8 +145,7 @@ namespace iw4of::interfaces
             {
               if (brush->brush.sides)
               {
-                buffer.save_array_if_not_existing(brush->brush.sides,
-                                                  brush->brush.numsides);
+                buffer.save_array_if_not_existing(brush->brush.sides, brush->brush.numsides);
 
                 // Save_cbrushside_tArray
                 for (uint16_t j = 0; j < brush->brush.numsides; ++j)
@@ -167,28 +162,24 @@ namespace iw4of::interfaces
 
               if (brush->brush.baseAdjacentSide)
               {
-                buffer.save_array_if_not_existing(brush->brush.baseAdjacentSide,
-                                                  brush->totalEdgeCount);
+                buffer.save_array_if_not_existing(brush->brush.baseAdjacentSide, brush->totalEdgeCount);
               }
             }
 
             // TODO: Add pointer support
             if (brush->planes)
             {
-              buffer.save_array_if_not_existing(brush->planes,
-                                                brush->brush.numsides);
+              buffer.save_array_if_not_existing(brush->planes, brush->brush.numsides);
             }
           }
         }
       }
     }
 
-    return utils::io::write_file(get_work_path(header).string(),
-                                 buffer.to_buffer());
+    return utils::io::write_file(get_work_path(header).string(), buffer.to_buffer());
   }
 
-  void ixmodel::write(const native::XSurfaceCollisionTree* entry,
-                      utils::stream* buffer) const
+  void ixmodel::write(const native::XSurfaceCollisionTree* entry, utils::stream* buffer) const
   {
     buffer->save_object(*entry);
 
@@ -207,11 +198,9 @@ namespace iw4of::interfaces
   {
     if (surf->vertInfo.vertsBlend)
     {
-      buffer->save_array_if_not_existing(surf->vertInfo.vertsBlend,
-                                         surf->vertInfo.vertCount[0] +
-                                             (surf->vertInfo.vertCount[1] * 3) +
-                                             (surf->vertInfo.vertCount[2] * 5) +
-                                             (surf->vertInfo.vertCount[3] * 7));
+      buffer->save_array_if_not_existing(
+          surf->vertInfo.vertsBlend,
+          surf->vertInfo.vertCount[0] + (surf->vertInfo.vertCount[1] * 3) + (surf->vertInfo.vertCount[2] * 5) + (surf->vertInfo.vertCount[3] * 7));
     }
 
     // Access vertex block
@@ -243,8 +232,7 @@ namespace iw4of::interfaces
     }
   }
 
-  void ixmodel::write(const native::XModelSurfs* asset,
-                      utils::stream* buffer) const
+  void ixmodel::write(const native::XModelSurfs* asset, utils::stream* buffer) const
   {
     buffer->save_object(*asset);
 
@@ -264,45 +252,37 @@ namespace iw4of::interfaces
     }
   }
 
-  void interfaces::ixmodel::read(native::XSurfaceCollisionTree* entry,
-                                 utils::stream::reader* reader) const
+  void interfaces::ixmodel::read(native::XSurfaceCollisionTree* entry, utils::stream::reader* reader) const
   {
     if (entry->nodes)
     {
-      entry->nodes = reader->read_array_once<native::XSurfaceCollisionNode>(
-          entry->nodeCount);
+      entry->nodes = reader->read_array_once<native::XSurfaceCollisionNode>(entry->nodeCount);
     }
 
     if (entry->leafs)
     {
-      entry->leafs = reader->read_array_once<native::XSurfaceCollisionLeaf>(
-          entry->leafCount);
+      entry->leafs = reader->read_array_once<native::XSurfaceCollisionLeaf>(entry->leafCount);
     }
   }
 
-  void interfaces::ixmodel::read(native::XSurface* surf,
-                                 utils::stream::reader* reader) const
+  void interfaces::ixmodel::read(native::XSurface* surf, utils::stream::reader* reader) const
   {
     if (surf->vertInfo.vertsBlend)
     {
-      surf->vertInfo.vertsBlend = reader->read_array_once<uint16_t>(
-          surf->vertInfo.vertCount[0] + (surf->vertInfo.vertCount[1] * 3) +
-          (surf->vertInfo.vertCount[2] * 5) +
-          (surf->vertInfo.vertCount[3] * 7));
+      surf->vertInfo.vertsBlend = reader->read_array_once<uint16_t>(surf->vertInfo.vertCount[0] + (surf->vertInfo.vertCount[1] * 3) +
+                                                                    (surf->vertInfo.vertCount[2] * 5) + (surf->vertInfo.vertCount[3] * 7));
     }
 
     // Access vertex block
     if (surf->verts0)
     {
-      surf->verts0 =
-          reader->read_array_once<native::GfxPackedVertex>(surf->vertCount);
+      surf->verts0 = reader->read_array_once<native::GfxPackedVertex>(surf->vertCount);
     }
 
     // Save_XRigidVertListArray
     if (surf->vertList)
     {
-      surf->vertList =
-          reader->read_array_once<native::XRigidVertList>(surf->vertListCount);
+      surf->vertList = reader->read_array_once<native::XRigidVertList>(surf->vertListCount);
 
       for (uint32_t i = 0; i < surf->vertListCount; ++i)
       {
@@ -310,8 +290,7 @@ namespace iw4of::interfaces
 
         if (rigidVertList->collisionTree)
         {
-          rigidVertList->collisionTree =
-              reader->read_object<native::XSurfaceCollisionTree>();
+          rigidVertList->collisionTree = reader->read_object<native::XSurfaceCollisionTree>();
           read(rigidVertList->collisionTree, reader);
         }
       }
@@ -324,8 +303,7 @@ namespace iw4of::interfaces
     }
   }
 
-  void interfaces::ixmodel::read(native::XModelSurfs* asset,
-                                 utils::stream::reader* reader) const
+  void interfaces::ixmodel::read(native::XModelSurfs* asset, utils::stream::reader* reader) const
   {
     if (asset->name)
     {
@@ -334,8 +312,7 @@ namespace iw4of::interfaces
 
     if (asset->surfaces)
     {
-      asset->surfaces =
-          reader->read_array_once<native::XSurface>(asset->numSurfaces);
+      asset->surfaces = reader->read_array_once<native::XSurface>(asset->numSurfaces);
 
       for (int i = 0; i < asset->numSurfaces; ++i)
       {
@@ -364,11 +341,7 @@ namespace iw4of::interfaces
       int32_t version = reader.read<int32_t>();
       if (version != IW4X_MODEL_VERSION)
       {
-        print_error(
-            "Reading model '{}' failed, expected version is {}, but it was {}!",
-            name,
-            IW4X_MODEL_VERSION,
-            version);
+        print_error("Reading model '{}' failed, expected version is {}, but it was {}!", name, IW4X_MODEL_VERSION, version);
         return nullptr;
       }
 
@@ -381,59 +354,48 @@ namespace iw4of::interfaces
 
       if (asset->boneNames)
       {
-        asset->boneNames =
-            local_allocator.allocate_array<uint16_t>(asset->numBones);
+        asset->boneNames = local_allocator.allocate_array<uint16_t>(asset->numBones);
 
         for (char i = 0; i < asset->numBones; ++i)
         {
-          asset->boneNames[i] = static_cast<std::uint16_t>(
-              assets->write_in_stringtable(reader.read_cstring()));
+          asset->boneNames[i] = static_cast<std::uint16_t>(assets->write_in_stringtable(reader.read_cstring()));
         }
       }
 
       if (asset->parentList)
       {
-        asset->parentList = reader.read_array_once<uint8_t>(
-            asset->numBones - asset->numRootBones);
+        asset->parentList = reader.read_array_once<uint8_t>(asset->numBones - asset->numRootBones);
       }
 
       if (asset->quats)
       {
-        asset->quats =
-            reinterpret_cast<short(*)[4]>(reader.read_array_once<int16_t>(
-                (asset->numBones - asset->numRootBones) * 4));
+        asset->quats = reinterpret_cast<short(*)[4]>(reader.read_array_once<int16_t>((asset->numBones - asset->numRootBones) * 4));
       }
 
       if (asset->trans)
       {
-        asset->trans =
-            reinterpret_cast<float(*)[3]>(reader.read_array_once<float>(
-                (asset->numBones - asset->numRootBones) * 3));
+        asset->trans = reinterpret_cast<float(*)[3]>(reader.read_array_once<float>((asset->numBones - asset->numRootBones) * 3));
       }
 
       if (asset->partClassification)
       {
-        asset->partClassification =
-            reader.read_array_once<uint8_t>(asset->numBones);
+        asset->partClassification = reader.read_array_once<uint8_t>(asset->numBones);
       }
 
       if (asset->baseMat)
       {
-        asset->baseMat =
-            reader.read_array_once<native::DObjAnimMat>(asset->numBones);
+        asset->baseMat = reader.read_array_once<native::DObjAnimMat>(asset->numBones);
       }
 
       if (asset->materialHandles)
       {
-        asset->materialHandles =
-            reader.read_array<native::Material*>(asset->numsurfs);
+        asset->materialHandles = reader.read_array<native::Material*>(asset->numsurfs);
 
         for (uint8_t i = 0; i < asset->numsurfs; ++i)
         {
           if (asset->materialHandles[i])
           {
-            asset->materialHandles[i] = find<native::Material>(
-                native::XAssetType::ASSET_TYPE_MATERIAL, reader.read_string());
+            asset->materialHandles[i] = find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, reader.read_string());
           }
         }
       }
@@ -444,8 +406,7 @@ namespace iw4of::interfaces
         {
           if (asset->lodInfo[i].modelSurfs)
           {
-            asset->lodInfo[i].modelSurfs =
-                reader.read_object<native::XModelSurfs>();
+            asset->lodInfo[i].modelSurfs = reader.read_object<native::XModelSurfs>();
             read(asset->lodInfo[i].modelSurfs, &reader);
 
             asset->lodInfo[i].surfs = asset->lodInfo[i].modelSurfs->surfaces;
@@ -456,8 +417,7 @@ namespace iw4of::interfaces
       // Save_XModelCollSurfArray
       if (asset->collSurfs)
       {
-        asset->collSurfs =
-            reader.read_array<native::XModelCollSurf_s>(asset->numCollSurfs);
+        asset->collSurfs = reader.read_array<native::XModelCollSurf_s>(asset->numCollSurfs);
 
         for (int i = 0; i < asset->numCollSurfs; ++i)
         {
@@ -465,8 +425,7 @@ namespace iw4of::interfaces
 
           if (collSurf->collTris)
           {
-            collSurf->collTris = reader.read_array<native::XModelCollTri_s>(
-                collSurf->numCollTris);
+            collSurf->collTris = reader.read_array<native::XModelCollTri_s>(collSurf->numCollTris);
           }
         }
       }
@@ -490,8 +449,7 @@ namespace iw4of::interfaces
           asset->physPreset->sndAliasPrefix = reader.read_cstring();
         }
 
-        native::PhysPreset* preset = find<native::PhysPreset>(
-            native::XAssetType::ASSET_TYPE_PHYSPRESET, asset->physPreset->name);
+        native::PhysPreset* preset = find<native::PhysPreset>(native::XAssetType::ASSET_TYPE_PHYSPRESET, asset->physPreset->name);
         if (preset)
         {
           asset->physPreset = preset;
@@ -500,8 +458,7 @@ namespace iw4of::interfaces
 
       if (asset->physCollmap)
       {
-        native::PhysCollmap* collmap =
-            reader.read_object<native::PhysCollmap>();
+        native::PhysCollmap* collmap = reader.read_object<native::PhysCollmap>();
         asset->physCollmap = collmap;
 
         if (collmap->name)
@@ -511,8 +468,7 @@ namespace iw4of::interfaces
 
         if (collmap->geoms)
         {
-          collmap->geoms =
-              reader.read_array<native::PhysGeomInfo>(collmap->count);
+          collmap->geoms = reader.read_array<native::PhysGeomInfo>(collmap->count);
 
           for (uint32_t i = 0; i < collmap->count; ++i)
           {
@@ -520,15 +476,12 @@ namespace iw4of::interfaces
 
             if (geom->brushWrapper)
             {
-              native::BrushWrapper* brush =
-                  reader.read_array_once<native::BrushWrapper>();
+              native::BrushWrapper* brush = reader.read_array_once<native::BrushWrapper>();
               geom->brushWrapper = brush;
               {
                 if (brush->brush.sides)
                 {
-                  brush->brush.sides =
-                      reader.read_array_once<native::cbrushside_t>(
-                          brush->brush.numsides);
+                  brush->brush.sides = reader.read_array_once<native::cbrushside_t>(brush->brush.numsides);
                   for (uint16_t j = 0; j < brush->brush.numsides; ++j)
                   {
                     native::cbrushside_t* side = &brush->brush.sides[j];
@@ -542,15 +495,13 @@ namespace iw4of::interfaces
 
                 if (brush->brush.baseAdjacentSide)
                 {
-                  brush->brush.baseAdjacentSide =
-                      reader.read_array_once<uint8_t>(brush->totalEdgeCount);
+                  brush->brush.baseAdjacentSide = reader.read_array_once<uint8_t>(brush->totalEdgeCount);
                 }
               }
 
               if (brush->planes)
               {
-                brush->planes = reader.read_array_once<native::cplane_s>(
-                    brush->brush.numsides);
+                brush->planes = reader.read_array_once<native::cplane_s>(brush->brush.numsides);
               }
             }
           }
@@ -561,8 +512,7 @@ namespace iw4of::interfaces
 
       if (!reader.end())
       {
-        print_error("Reading model '{}' failed, remaining raw data found!",
-                    name);
+        print_error("Reading model '{}' failed, remaining raw data found!", name);
         return nullptr;
       }
 
@@ -572,8 +522,7 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path ixmodel::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path ixmodel::get_file_name(const std::string& basename) const
   {
     return std::format("{}.iw4xModel", basename);
   }

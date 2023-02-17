@@ -13,8 +13,7 @@
 
 namespace iw4of::interfaces
 {
-  bool interfaces::ilightdef::write_internal(
-      const native::XAssetHeader& header) const
+  bool interfaces::ilightdef::write_internal(const native::XAssetHeader& header) const
   {
     auto asset = header.lightDef;
 
@@ -32,8 +31,7 @@ namespace iw4of::interfaces
     {
       buffer.save_string(asset->attenuation.image->name);
 
-      if (!assets->write(native::XAssetType::ASSET_TYPE_IMAGE,
-                         asset->attenuation.image))
+      if (!assets->write(native::XAssetType::ASSET_TYPE_IMAGE, asset->attenuation.image))
       {
         return false;
       }
@@ -43,8 +41,7 @@ namespace iw4of::interfaces
 
     if (asset->name)
     {
-      return utils::io::write_file(get_work_path(header).string(),
-                                   buffer.to_buffer());
+      return utils::io::write_file(get_work_path(header).string(), buffer.to_buffer());
     }
 
     return false;
@@ -71,11 +68,7 @@ namespace iw4of::interfaces
       version.push_back(reader.read<char>());
       if (version != IW4X_LIGHT_VERSION)
       {
-        print_error(
-            "Reading light '{}' failed, expected version is {}, but it was {}!",
-            name,
-            IW4X_LIGHT_VERSION,
-            version);
+        print_error("Reading light '{}' failed, expected version is {}, but it was {}!", name, IW4X_LIGHT_VERSION, version);
         return nullptr;
       }
 
@@ -88,8 +81,7 @@ namespace iw4of::interfaces
 
       if (asset->attenuation.image)
       {
-        asset->attenuation.image = find<native::GfxImage>(
-            native::XAssetType::ASSET_TYPE_IMAGE, reader.read_string());
+        asset->attenuation.image = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, reader.read_string());
       }
 
       return asset;
@@ -98,8 +90,7 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path interfaces::ilightdef::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path interfaces::ilightdef::get_file_name(const std::string& basename) const
   {
     return std::format("{}.iw4xLight", basename);
   }

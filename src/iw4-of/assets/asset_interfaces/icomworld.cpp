@@ -11,8 +11,7 @@
 
 namespace iw4of::interfaces
 {
-  bool interfaces::icomworld::write_internal(
-      const native::XAssetHeader& header) const
+  bool interfaces::icomworld::write_internal(const native::XAssetHeader& header) const
   {
     auto asset = header.comWorld;
 
@@ -53,11 +52,9 @@ namespace iw4of::interfaces
       constexpr auto prefix = "maps/mp/";
       constexpr auto suffix = ".d3dbsp";
 
-      basename = basename.substr(
-          strlen(prefix), basename.size() - strlen(suffix) - strlen(prefix));
+      basename = basename.substr(strlen(prefix), basename.size() - strlen(suffix) - strlen(prefix));
 
-      return utils::io::write_file(get_work_path(header).string(),
-                                   buffer.to_buffer());
+      return utils::io::write_file(get_work_path(header).string(), buffer.to_buffer());
     }
 
     return false;
@@ -82,11 +79,7 @@ namespace iw4of::interfaces
       int32_t version = reader.read<int32_t>();
       if (version > IW4X_COMMAP_VERSION)
       {
-        print_error(
-            "Reading comworld '{}' failed, expected version is {}, but it was {}!",
-            name,
-            IW4X_COMMAP_VERSION,
-            version);
+        print_error("Reading comworld '{}' failed, expected version is {}, but it was {}!", name, IW4X_COMMAP_VERSION, version);
         return nullptr;
       }
 
@@ -99,8 +92,7 @@ namespace iw4of::interfaces
 
       if (asset->primaryLights)
       {
-        asset->primaryLights = reader.read_array<native::ComPrimaryLight>(
-            asset->primaryLightCount);
+        asset->primaryLights = reader.read_array<native::ComPrimaryLight>(asset->primaryLightCount);
 
         for (uint32_t i = 0; i < asset->primaryLightCount; ++i)
         {
@@ -109,8 +101,7 @@ namespace iw4of::interfaces
           if (light->defName)
           {
             light->defName = reader.read_cstring();
-            const auto& light_asset = find<void>(
-                native::XAssetType::ASSET_TYPE_LIGHT_DEF, light->defName);
+            const auto& light_asset = find<void>(native::XAssetType::ASSET_TYPE_LIGHT_DEF, light->defName);
 
             RETURN_IF_NULL(light_asset);
           }
@@ -123,8 +114,7 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path interfaces::icomworld::get_file_name(
-      const std::string& name) const
+  std::filesystem::path interfaces::icomworld::get_file_name(const std::string& name) const
   {
     constexpr auto prefix = "maps/mp/";
     constexpr auto suffix = ".d3dbsp";

@@ -11,19 +11,16 @@
 
 namespace iw4of::interfaces
 {
-  bool iw4of::interfaces::imapents::write_internal(
-      const native::XAssetHeader& header) const
+  bool iw4of::interfaces::imapents::write_internal(const native::XAssetHeader& header) const
   {
     std::string basename(header.mapEnts->name);
     basename.erase(0, 8);
     basename.erase(basename.end() - 7, basename.end());
 
-    return utils::io::write_file(get_work_path(header).string(),
-                                 header.mapEnts->entityString);
+    return utils::io::write_file(get_work_path(header).string(), header.mapEnts->entityString);
   }
 
-  void* iw4of::interfaces::imapents::read_internal(
-      const std::string& name) const
+  void* iw4of::interfaces::imapents::read_internal(const std::string& name) const
   {
     const auto& path = get_work_path(name).string();
 
@@ -39,8 +36,7 @@ namespace iw4of::interfaces
       entities->stages[0].triggerIndex = 0x400;
       entities->stages[0].sunPrimaryLightIndex = 0x1;
 
-      entities->name = local_allocator.duplicate_string(
-          std::format("maps/mp/{}.d3dbsp", name));
+      entities->name = local_allocator.duplicate_string(std::format("maps/mp/{}.d3dbsp", name));
       entities->entityString = local_allocator.duplicate_string(contents);
       entities->numEntityChars = contents.size() + 1;
 
@@ -50,8 +46,7 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path iw4of::interfaces::imapents::get_file_name(
-      const std::string& name) const
+  std::filesystem::path iw4of::interfaces::imapents::get_file_name(const std::string& name) const
   {
     constexpr auto prefix = "maps/mp/";
     constexpr auto suffix = ".d3dbsp";

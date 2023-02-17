@@ -7,13 +7,12 @@ namespace iw4of
 {
   class asset_interface
   {
-#define RETURN_IF_NULL(x)                                                    \
-  if (x == nullptr)                                                          \
-  {                                                                          \
-    print_error("{} was unexpectedly null! could not find the asset for it", \
-                #x);                                                         \
-    assert(false);                                                           \
-    return 0;                                                                \
+#define RETURN_IF_NULL(x)                                                         \
+  if (x == nullptr)                                                               \
+  {                                                                               \
+    print_error("{} was unexpectedly null! could not find the asset for it", #x); \
+    assert(false);                                                                \
+    return 0;                                                                     \
   }
 
    public:
@@ -39,23 +38,19 @@ namespace iw4of
    protected:
     virtual void* read_internal(const std::string& name) const = 0;
     virtual bool write_internal(const native::XAssetHeader& header) const = 0;
-    virtual std::filesystem::path get_file_name(
-        const std::string& asset_name) const = 0;
+    virtual std::filesystem::path get_file_name(const std::string& asset_name) const = 0;
     virtual std::filesystem::path get_folder_name() const = 0;
 
-    virtual std::filesystem::path get_file_name(
-        const native::XAssetHeader& header) const
+    virtual std::filesystem::path get_file_name(const native::XAssetHeader& header) const
     {
       return get_file_name(header.physPreset->name);
     };
 
     std::filesystem::path get_work_path(const std::string& asset_name) const;
 
-    std::filesystem::path get_work_path(
-        const std::filesystem::path& file_path) const;
+    std::filesystem::path get_work_path(const std::filesystem::path& file_path) const;
 
-    std::filesystem::path get_work_path(
-        const native::XAssetHeader& header) const;
+    std::filesystem::path get_work_path(const native::XAssetHeader& header) const;
 
     mutable utils::memory::allocator local_allocator{};
 
@@ -74,15 +69,13 @@ namespace iw4of
     template <typename... Args>
     void print_error(const std::string_view& fmt, Args&&... args) const
     {
-      this->print_error_internal(
-          std::vformat(fmt, std::make_format_args(args...)));
+      this->print_error_internal(std::vformat(fmt, std::make_format_args(args...)));
     }
 
     const class assets* assets;
 
    private:
-    void* find_internal(iw4of::native::XAssetType type,
-                        const std::string& name) const;
+    void* find_internal(iw4of::native::XAssetType type, const std::string& name) const;
     void print_error_internal(const std::string& message) const;
     void print_internal(const std::string& message) const;
   };

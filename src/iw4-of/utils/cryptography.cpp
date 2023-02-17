@@ -18,8 +18,7 @@ namespace iw4of::utils::cryptography
 
   bool ecc::key::is_valid() const
   {
-    return (
-        !memory::is_set(&this->key_storage_, 0, sizeof(this->key_storage_)));
+    return (!memory::is_set(&this->key_storage_, 0, sizeof(this->key_storage_)));
   }
 
   ecc_key* ecc::key::get()
@@ -44,10 +43,7 @@ namespace iw4of::utils::cryptography
   {
     this->free();
 
-    if (ecc_ansi_x963_import(
-            reinterpret_cast<const uint8_t*>(pub_key_buffer.data()),
-            pub_key_buffer.size(),
-            &this->key_storage_) != CRYPT_OK)
+    if (ecc_ansi_x963_import(reinterpret_cast<const uint8_t*>(pub_key_buffer.data()), pub_key_buffer.size(), &this->key_storage_) != CRYPT_OK)
     {
       ZeroMemory(&this->key_storage_, sizeof(this->key_storage_));
     }
@@ -57,9 +53,7 @@ namespace iw4of::utils::cryptography
   {
     this->free();
 
-    if (ecc_import(reinterpret_cast<const uint8_t*>(key.data()),
-                   key.size(),
-                   &this->key_storage_) != CRYPT_OK)
+    if (ecc_import(reinterpret_cast<const uint8_t*>(key.data()), key.size(), &this->key_storage_) != CRYPT_OK)
     {
       ZeroMemory(&this->key_storage_, sizeof(this->key_storage_));
     }
@@ -90,8 +84,7 @@ namespace iw4of::utils::cryptography
 
   bool ecc::key::operator==(key& key) const
   {
-    return (this->is_valid() && key.is_valid() &&
-            this->serialize(PK_PUBLIC) == key.serialize(PK_PUBLIC));
+    return (this->is_valid() && key.is_valid() && this->serialize(PK_PUBLIC) == key.serialize(PK_PUBLIC));
   }
 
   ecc::key ecc::generate_key(const int bits)
@@ -114,19 +107,12 @@ namespace iw4of::utils::cryptography
 
     ltc_mp = ltm_desc;
     register_prng(&sprng_desc);
-    ecc_sign_hash(reinterpret_cast<const uint8_t*>(message.data()),
-                  message.size(),
-                  buffer,
-                  &length,
-                  nullptr,
-                  find_prng("sprng"),
-                  key.get());
+    ecc_sign_hash(reinterpret_cast<const uint8_t*>(message.data()), message.size(), buffer, &length, nullptr, find_prng("sprng"), key.get());
 
     return std::string(reinterpret_cast<char*>(buffer), length);
   }
 
-  bool ecc::verify_message(key key, const std::string& message,
-                           const std::string& signature)
+  bool ecc::verify_message(key key, const std::string& message, const std::string& signature)
   {
     if (!key.is_valid()) return false;
 
@@ -142,8 +128,7 @@ namespace iw4of::utils::cryptography
             result != 0);
   }
 
-  std::string rsa::encrypt(const std::string& data, const std::string& hash,
-                           const std::string& key)
+  std::string rsa::encrypt(const std::string& data, const std::string& hash, const std::string& key)
   {
     initialize();
 
@@ -191,8 +176,7 @@ namespace iw4of::utils::cryptography
     register_prng(&yarrow_desc);
   }
 
-  std::string des3::encrypt(const std::string& data, const std::string& iv,
-                            const std::string& key)
+  std::string des3::encrypt(const std::string& data, const std::string& iv, const std::string& key)
   {
     initialize();
 
@@ -202,23 +186,14 @@ namespace iw4of::utils::cryptography
     symmetric_CBC cbc;
     const auto des3 = find_cipher("3des");
 
-    cbc_start(des3,
-              reinterpret_cast<const uint8_t*>(iv.data()),
-              reinterpret_cast<const uint8_t*>(key.data()),
-              key.size(),
-              0,
-              &cbc);
-    cbc_encrypt(reinterpret_cast<const uint8_t*>(data.data()),
-                reinterpret_cast<uint8_t*>(const_cast<char*>(enc_data.data())),
-                data.size(),
-                &cbc);
+    cbc_start(des3, reinterpret_cast<const uint8_t*>(iv.data()), reinterpret_cast<const uint8_t*>(key.data()), key.size(), 0, &cbc);
+    cbc_encrypt(reinterpret_cast<const uint8_t*>(data.data()), reinterpret_cast<uint8_t*>(const_cast<char*>(enc_data.data())), data.size(), &cbc);
     cbc_done(&cbc);
 
     return enc_data;
   }
 
-  std::string des3::decrypt(const std::string& data, const std::string& iv,
-                            const std::string& key)
+  std::string des3::decrypt(const std::string& data, const std::string& iv, const std::string& key)
   {
     initialize();
 
@@ -228,16 +203,8 @@ namespace iw4of::utils::cryptography
     symmetric_CBC cbc;
     const auto des3 = find_cipher("3des");
 
-    cbc_start(des3,
-              reinterpret_cast<const uint8_t*>(iv.data()),
-              reinterpret_cast<const uint8_t*>(key.data()),
-              key.size(),
-              0,
-              &cbc);
-    cbc_decrypt(reinterpret_cast<const uint8_t*>(data.data()),
-                reinterpret_cast<uint8_t*>(dec_data.data()),
-                data.size(),
-                &cbc);
+    cbc_start(des3, reinterpret_cast<const uint8_t*>(iv.data()), reinterpret_cast<const uint8_t*>(key.data()), key.size(), 0, &cbc);
+    cbc_decrypt(reinterpret_cast<const uint8_t*>(data.data()), reinterpret_cast<uint8_t*>(dec_data.data()), data.size(), &cbc);
     cbc_done(&cbc);
 
     return dec_data;
@@ -254,12 +221,10 @@ namespace iw4of::utils::cryptography
 
   std::string tiger::compute(const std::string& data, const bool hex)
   {
-    return compute(
-        reinterpret_cast<const uint8_t*>(data.data()), data.size(), hex);
+    return compute(reinterpret_cast<const uint8_t*>(data.data()), data.size(), hex);
   }
 
-  std::string tiger::compute(const uint8_t* data, const size_t length,
-                             const bool hex)
+  std::string tiger::compute(const uint8_t* data, const size_t length, const bool hex)
   {
     uint8_t buffer[24] = {0};
 
@@ -276,12 +241,10 @@ namespace iw4of::utils::cryptography
 
   std::string sha1::compute(const std::string& data, const bool hex)
   {
-    return compute(
-        reinterpret_cast<const uint8_t*>(data.data()), data.size(), hex);
+    return compute(reinterpret_cast<const uint8_t*>(data.data()), data.size(), hex);
   }
 
-  std::string sha1::compute(const uint8_t* data, const size_t length,
-                            const bool hex)
+  std::string sha1::compute(const uint8_t* data, const size_t length, const bool hex)
   {
     uint8_t buffer[20] = {0};
 
@@ -298,12 +261,10 @@ namespace iw4of::utils::cryptography
 
   std::string sha256::compute(const std::string& data, const bool hex)
   {
-    return compute(
-        reinterpret_cast<const uint8_t*>(data.data()), data.size(), hex);
+    return compute(reinterpret_cast<const uint8_t*>(data.data()), data.size(), hex);
   }
 
-  std::string sha256::compute(const uint8_t* data, const size_t length,
-                              const bool hex)
+  std::string sha256::compute(const uint8_t* data, const size_t length, const bool hex)
   {
     uint8_t buffer[32] = {0};
 
@@ -320,12 +281,10 @@ namespace iw4of::utils::cryptography
 
   std::string sha512::compute(const std::string& data, const bool hex)
   {
-    return compute(
-        reinterpret_cast<const uint8_t*>(data.data()), data.size(), hex);
+    return compute(reinterpret_cast<const uint8_t*>(data.data()), data.size(), hex);
   }
 
-  std::string sha512::compute(const uint8_t* data, const size_t length,
-                              const bool hex)
+  std::string sha512::compute(const uint8_t* data, const size_t length, const bool hex)
   {
     uint8_t buffer[64] = {0};
 

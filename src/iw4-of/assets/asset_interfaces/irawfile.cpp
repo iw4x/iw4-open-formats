@@ -19,8 +19,7 @@ namespace iw4of::interfaces
       char* uncompressed_buffer;
       if (header.rawfile->compressedLen > 0)
       {
-        const auto& str = utils::compression::zlib::decompress(
-            std::string(header.rawfile->buffer, header.rawfile->compressedLen));
+        const auto& str = utils::compression::zlib::decompress(std::string(header.rawfile->buffer, header.rawfile->compressedLen));
         uncompressed_buffer = local_allocator.duplicate_string(str);
       }
       else
@@ -28,9 +27,7 @@ namespace iw4of::interfaces
         uncompressed_buffer = header.rawfile->buffer;
       }
 
-      return utils::io::write_file(
-          get_work_path(header).string(),
-          std::string(uncompressed_buffer, header.rawfile->len));
+      return utils::io::write_file(get_work_path(header).string(), std::string(uncompressed_buffer, header.rawfile->len));
     }
 
     // Happens
@@ -59,26 +56,21 @@ namespace iw4of::interfaces
     // Only save the compressed buffer if we gained space
     if (compressedData.size() < asset->len)
     {
-      asset->buffer =
-          local_allocator.allocate_array<char>(compressedData.size());
-      std::memcpy(const_cast<char*>(asset->buffer),
-                  compressedData.data(),
-                  compressedData.size());
+      asset->buffer = local_allocator.allocate_array<char>(compressedData.size());
+      std::memcpy(const_cast<char*>(asset->buffer), compressedData.data(), compressedData.size());
       asset->compressedLen = static_cast<int32_t>(compressedData.size());
     }
     else
     {
       asset->buffer = local_allocator.allocate_array<char>(contents.size() + 1);
-      std::memcpy(
-          const_cast<char*>(asset->buffer), contents.data(), contents.size());
+      std::memcpy(const_cast<char*>(asset->buffer), contents.data(), contents.size());
       asset->compressedLen = 0;
     }
 
     return asset;
   }
 
-  std::filesystem::path irawfile::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path irawfile::get_file_name(const std::string& basename) const
   {
     return basename;
   }

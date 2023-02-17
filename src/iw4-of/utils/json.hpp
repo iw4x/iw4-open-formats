@@ -52,9 +52,7 @@ namespace iw4of::utils::json
   };
 
   template <class T>
-  rapidjson::Value make_json_array(
-      T* arr, size_t length,
-      rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
+  rapidjson::Value make_json_array(T* arr, size_t length, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
   {
     rapidjson::Value json_arr(rapidjson::kArrayType);
 
@@ -71,8 +69,7 @@ namespace iw4of::utils::json
   unsigned long read_flags(const std::string binaryFlags, std::size_t size);
 
   template <typename T>
-  void copy_array(T* destination, const rapidjson::Value& json_member,
-                  size_t count = 0)
+  void copy_array(T* destination, const rapidjson::Value& json_member, size_t count = 0)
   {
     if (count == 0)
     {

@@ -27,8 +27,7 @@ namespace iw4of::interfaces
 
     rapidjson::Value glass_system(rapidjson::kObjectType);
 
-#define SAME_NAME_JSON_MEMBER(obj, json, value) \
-  json.AddMember(#value, obj.value, allocator)
+#define SAME_NAME_JSON_MEMBER(obj, json, value) json.AddMember(#value, obj.value, allocator)
 
     SAME_NAME_JSON_MEMBER(asset->glassSys, glass_system, time);
     SAME_NAME_JSON_MEMBER(asset->glassSys, glass_system, prevTime);
@@ -61,13 +60,9 @@ namespace iw4of::interfaces
       def_json.AddMember("texVecs", texvecs_array, allocator);
 
       def_json.AddMember("color", def->color.packed, allocator);
-      def_json.AddMember(
-          "material", RAPIDJSON_STR(def->material->info.name), allocator);
-      def_json.AddMember("materialShattered",
-                         RAPIDJSON_STR(def->materialShattered->info.name),
-                         allocator);
-      def_json.AddMember(
-          "physPreset", RAPIDJSON_STR(def->physPreset->name), allocator);
+      def_json.AddMember("material", RAPIDJSON_STR(def->material->info.name), allocator);
+      def_json.AddMember("materialShattered", RAPIDJSON_STR(def->materialShattered->info.name), allocator);
+      def_json.AddMember("physPreset", RAPIDJSON_STR(def->physPreset->name), allocator);
 
       defs.PushBack(def_json, allocator);
     }
@@ -106,15 +101,11 @@ namespace iw4of::interfaces
       tex_coord_origin.PushBack(init_piece_state->texCoordOrigin[1], allocator);
       init_piece_json.AddMember("texCoordOrigin", tex_coord_origin, allocator);
 
-      init_piece_json.AddMember(
-          "supportMask", init_piece_state->supportMask, allocator);
+      init_piece_json.AddMember("supportMask", init_piece_state->supportMask, allocator);
       init_piece_json.AddMember("areaX2", init_piece_state->areaX2, allocator);
-      init_piece_json.AddMember(
-          "defIndex", init_piece_state->defIndex, allocator);
-      init_piece_json.AddMember(
-          "vertCount", init_piece_state->vertCount, allocator);
-      init_piece_json.AddMember(
-          "fanDataCount", init_piece_state->fanDataCount, allocator);
+      init_piece_json.AddMember("defIndex", init_piece_state->defIndex, allocator);
+      init_piece_json.AddMember("vertCount", init_piece_state->vertCount, allocator);
+      init_piece_json.AddMember("fanDataCount", init_piece_state->fanDataCount, allocator);
 
       init_pieces.PushBack(init_piece_json, allocator);
     }
@@ -177,16 +168,10 @@ namespace iw4of::interfaces
       return nullptr;
     }
 
-    auto version = fxWorldJson["version"].IsNumber()
-                       ? fxWorldJson["version"].Get<int32_t>()
-                       : 0;
+    auto version = fxWorldJson["version"].IsNumber() ? fxWorldJson["version"].Get<int32_t>() : 0;
     if (version > IW4X_FXWORLD_VERSION)
     {
-      print_error(
-          "Invalid FXWORLD json version for {}, expected {} and got {}\n",
-          name,
-          IW4X_FXWORLD_VERSION,
-          version);
+      print_error("Invalid FXWORLD json version for {}, expected {} and got {}\n", name, IW4X_FXWORLD_VERSION, version);
       return nullptr;
     }
 
@@ -205,16 +190,13 @@ namespace iw4of::interfaces
       glassSys->pieceWordCount = glassSysJson["pieceWordCount"].Get<uint32_t>();
       glassSys->initPieceCount = glassSysJson["initPieceCount"].Get<uint32_t>();
       glassSys->cellCount = glassSysJson["cellCount"].Get<uint32_t>();
-      glassSys->activePieceCount =
-          glassSysJson["activePieceCount"].Get<uint32_t>();
+      glassSys->activePieceCount = glassSysJson["activePieceCount"].Get<uint32_t>();
       glassSys->firstFreePiece = glassSysJson["firstFreePiece"].Get<uint32_t>();
       glassSys->geoDataLimit = glassSysJson["geoDataLimit"].Get<uint32_t>();
       glassSys->geoDataCount = glassSysJson["geoDataCount"].Get<uint32_t>();
-      glassSys->initGeoDataCount =
-          glassSysJson["initGeoDataCount"].Get<uint32_t>();
+      glassSys->initGeoDataCount = glassSysJson["initGeoDataCount"].Get<uint32_t>();
 
-      glassSys->defs = local_allocator.allocate_array<native::FxGlassDef>(
-          glassSys->defCount);
+      glassSys->defs = local_allocator.allocate_array<native::FxGlassDef>(glassSys->defCount);
       for (size_t i = 0; i < glassSysJson["defs"].Size(); i++)
       {
         const auto& member = glassSysJson["defs"][i];
@@ -237,21 +219,16 @@ namespace iw4of::interfaces
         auto matShateredName = member["materialShattered"].Get<std::string>();
         auto matName = member["material"].Get<std::string>();
         auto physPresetName = member["physPreset"].Get<std::string>();
-        def->material =
-            find<native::Material>(native::ASSET_TYPE_MATERIAL, matName);
-        def->materialShattered = find<native::Material>(
-            native::ASSET_TYPE_MATERIAL, matShateredName);
-        def->physPreset = find<native::PhysPreset>(
-            native::ASSET_TYPE_PHYSPRESET, physPresetName);
+        def->material = find<native::Material>(native::ASSET_TYPE_MATERIAL, matName);
+        def->materialShattered = find<native::Material>(native::ASSET_TYPE_MATERIAL, matShateredName);
+        def->physPreset = find<native::PhysPreset>(native::ASSET_TYPE_PHYSPRESET, physPresetName);
 
         RETURN_IF_NULL(def->material);
         RETURN_IF_NULL(def->materialShattered);
         RETURN_IF_NULL(def->physPreset);
       }
 
-      glassSys->initPieceStates =
-          local_allocator.allocate_array<native::FxGlassInitPieceState>(
-              glassSys->initPieceCount);
+      glassSys->initPieceStates = local_allocator.allocate_array<native::FxGlassInitPieceState>(glassSys->initPieceCount);
       for (size_t i = 0; i < glassSysJson["initPieceStates"].Size(); i++)
       {
         const auto& member = glassSysJson["initPieceStates"][i];
@@ -277,9 +254,7 @@ namespace iw4of::interfaces
         initial->fanDataCount = member["fanDataCount"].Get<char>();
       }
 
-      glassSys->initGeoData =
-          local_allocator.allocate_array<native::FxGlassGeometryData>(
-              glassSys->initGeoDataCount);
+      glassSys->initGeoData = local_allocator.allocate_array<native::FxGlassGeometryData>(glassSys->initGeoDataCount);
       for (size_t i = 0; i < glassSysJson["initGeoData"].Size(); i++)
       {
         const auto& member = glassSysJson["initGeoData"][i];
@@ -294,36 +269,21 @@ namespace iw4of::interfaces
       return nullptr;
     }
 
-    map->glassSys.piecePlaces =
-        local_allocator.allocate_array<native::FxGlassPiecePlace>(
-            map->glassSys.pieceLimit);
-    map->glassSys.pieceStates =
-        local_allocator.allocate_array<native::FxGlassPieceState>(
-            map->glassSys.pieceLimit);
-    map->glassSys.pieceDynamics =
-        local_allocator.allocate_array<native::FxGlassPieceDynamics>(
-            map->glassSys.pieceLimit);
-    map->glassSys.geoData =
-        local_allocator.allocate_array<native::FxGlassGeometryData>(
-            map->glassSys.geoDataLimit);
-    map->glassSys.isInUse =
-        local_allocator.allocate_array<uint32_t>(map->glassSys.pieceWordCount);
-    map->glassSys.cellBits = local_allocator.allocate_array<uint32_t>(
-        map->glassSys.pieceWordCount * map->glassSys.cellCount);
-    map->glassSys.visData = local_allocator.allocate_array<uint8_t>(
-        (map->glassSys.pieceLimit + 15) & 0xFFFFFFF0); // ugh
-    map->glassSys.linkOrg = reinterpret_cast<float(*)[3]>(
-        local_allocator.allocate_array<float>(map->glassSys.pieceLimit));
-    map->glassSys.halfThickness =
-        local_allocator.allocate_array<float>(map->glassSys.pieceLimit * 3);
-    map->glassSys.lightingHandles =
-        local_allocator.allocate_array<uint16_t>(map->glassSys.initPieceCount);
+    map->glassSys.piecePlaces = local_allocator.allocate_array<native::FxGlassPiecePlace>(map->glassSys.pieceLimit);
+    map->glassSys.pieceStates = local_allocator.allocate_array<native::FxGlassPieceState>(map->glassSys.pieceLimit);
+    map->glassSys.pieceDynamics = local_allocator.allocate_array<native::FxGlassPieceDynamics>(map->glassSys.pieceLimit);
+    map->glassSys.geoData = local_allocator.allocate_array<native::FxGlassGeometryData>(map->glassSys.geoDataLimit);
+    map->glassSys.isInUse = local_allocator.allocate_array<uint32_t>(map->glassSys.pieceWordCount);
+    map->glassSys.cellBits = local_allocator.allocate_array<uint32_t>(map->glassSys.pieceWordCount * map->glassSys.cellCount);
+    map->glassSys.visData = local_allocator.allocate_array<uint8_t>((map->glassSys.pieceLimit + 15) & 0xFFFFFFF0); // ugh
+    map->glassSys.linkOrg = reinterpret_cast<float(*)[3]>(local_allocator.allocate_array<float>(map->glassSys.pieceLimit));
+    map->glassSys.halfThickness = local_allocator.allocate_array<float>(map->glassSys.pieceLimit * 3);
+    map->glassSys.lightingHandles = local_allocator.allocate_array<uint16_t>(map->glassSys.initPieceCount);
 
     return map;
   }
 
-  std::filesystem::path interfaces::ifxworld::get_file_name(
-      const std::string& name) const
+  std::filesystem::path interfaces::ifxworld::get_file_name(const std::string& name) const
   {
     constexpr auto prefix = "maps/mp/";
     constexpr auto suffix = ".d3dbsp";
