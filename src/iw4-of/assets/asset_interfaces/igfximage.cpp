@@ -133,13 +133,13 @@ namespace iw4of::interfaces
     {
       const auto file_path = get_work_path(get_file_name(temp_name)).string();
 
-      if (!utils::io::file_exists(file_path))
+      auto iwiBuffer = assets->read_file(file_path);
+      if (file_path.empty())
       {
         print_error("Loading image '{}' failed!", file_path);
         return nullptr;
       }
 
-      auto iwiBuffer = utils::io::read_file(file_path);
 
       const native::GfxImageFileHeader* iwiHeader = reinterpret_cast<const native::GfxImageFileHeader*>(iwiBuffer.data());
 
