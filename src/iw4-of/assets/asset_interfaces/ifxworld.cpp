@@ -232,7 +232,7 @@ namespace iw4of::interfaces
           }
         }
 
-        def->color.packed = member["color"].Get<int32_t>();
+        def->color.packed = member["color"].Get<uint32_t>();
 
         auto matShateredName = member["materialShattered"].Get<std::string>();
         auto matName = member["material"].Get<std::string>();
@@ -270,7 +270,7 @@ namespace iw4of::interfaces
         initial->radius = member["radius"].Get<float>();
         initial->texCoordOrigin[0] = member["texCoordOrigin"][0].Get<float>();
         initial->texCoordOrigin[1] = member["texCoordOrigin"][1].Get<float>();
-        initial->supportMask = member["supportMask"].Get<int32_t>();
+        initial->supportMask = member["supportMask"].Get<uint32_t>();
         initial->areaX2 = member["areaX2"].Get<float>();
         initial->defIndex = member["defIndex"].Get<char>();
         initial->vertCount = member["vertCount"].Get<char>();
