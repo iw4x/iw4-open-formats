@@ -48,8 +48,7 @@ namespace iw4of::interfaces
     return nullptr;
   }
 
-  std::filesystem::path ivertexshader::get_file_name(
-      const std::string& basename) const
+  std::filesystem::path ivertexshader::get_file_name(const std::string& basename) const
   {
     return std::format("{}.cso", basename);
   }

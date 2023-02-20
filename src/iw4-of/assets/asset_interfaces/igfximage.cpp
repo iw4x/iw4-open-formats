@@ -78,7 +78,6 @@ namespace iw4of::interfaces
       image->texture.loadDef =
           reinterpret_cast<iw4of::native::GfxImageLoadDef*>(local_allocator.allocate(sizeof(iw4of::native::GfxImageLoadDef) + dataLength - 4));
 
-
       if (isLegacyZeroVersion)
       {
         struct LegacyLoadDef
@@ -139,7 +138,6 @@ namespace iw4of::interfaces
         print_error("Loading image '{}' failed!", file_path);
         return nullptr;
       }
-
 
       const native::GfxImageFileHeader* iwiHeader = reinterpret_cast<const native::GfxImageFileHeader*>(iwiBuffer.data());
 

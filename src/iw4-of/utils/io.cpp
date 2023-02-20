@@ -8,8 +8,7 @@ namespace iw4of::utils::io
     return std::ifstream(file).good();
   }
 
-  bool write_file(const std::string& file, const std::string& data,
-                  const bool append)
+  bool write_file(const std::string& file, const std::string& data, const bool append)
   {
     const auto pos = file.find_last_of("/\\");
     if (pos != std::string::npos)
@@ -17,10 +16,7 @@ namespace iw4of::utils::io
       create_directory(file.substr(0, pos));
     }
 
-    std::ofstream stream(
-        file,
-        std::ios::binary | std::ofstream::out |
-            (append ? std::ofstream::app : std::ofstream::out));
+    std::ofstream stream(file, std::ios::binary | std::ofstream::out | (append ? std::ofstream::app : std::ofstream::out));
 
     if (stream.is_open())
     {

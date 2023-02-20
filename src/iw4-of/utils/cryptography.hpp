@@ -33,15 +33,13 @@ namespace iw4of::utils::cryptography
 
     static key generate_key(int bits);
     static std::string sign_message(key key, const std::string& message);
-    static bool verify_message(key key, const std::string& message,
-                               const std::string& signature);
+    static bool verify_message(key key, const std::string& message, const std::string& signature);
   };
 
   class rsa final
   {
    public:
-    static std::string encrypt(const std::string& data, const std::string& hash,
-                               const std::string& key);
+    static std::string encrypt(const std::string& data, const std::string& hash, const std::string& key);
 
    private:
     static void initialize();
@@ -50,10 +48,8 @@ namespace iw4of::utils::cryptography
   class des3 final
   {
    public:
-    static std::string encrypt(const std::string& data, const std::string& iv,
-                               const std::string& key);
-    static std::string decrypt(const std::string& data, const std::string& iv,
-                               const std::string& key);
+    static std::string encrypt(const std::string& data, const std::string& iv, const std::string& key);
+    static std::string decrypt(const std::string& data, const std::string& iv, const std::string& key);
 
    private:
     static void initialize();
@@ -63,32 +59,28 @@ namespace iw4of::utils::cryptography
   {
    public:
     static std::string compute(const std::string& data, bool hex = false);
-    static std::string compute(const uint8_t* data, size_t length,
-                               bool hex = false);
+    static std::string compute(const uint8_t* data, size_t length, bool hex = false);
   };
 
   class sha1 final
   {
    public:
     static std::string compute(const std::string& data, bool hex = false);
-    static std::string compute(const uint8_t* data, size_t length,
-                               bool hex = false);
+    static std::string compute(const uint8_t* data, size_t length, bool hex = false);
   };
 
   class sha256 final
   {
    public:
     static std::string compute(const std::string& data, bool hex = false);
-    static std::string compute(const uint8_t* data, size_t length,
-                               bool hex = false);
+    static std::string compute(const uint8_t* data, size_t length, bool hex = false);
   };
 
   class sha512 final
   {
    public:
     static std::string compute(const std::string& data, bool hex = false);
-    static std::string compute(const uint8_t* data, size_t length,
-                               bool hex = false);
+    static std::string compute(const uint8_t* data, size_t length, bool hex = false);
   };
 
   class jenkins_one_at_a_time final

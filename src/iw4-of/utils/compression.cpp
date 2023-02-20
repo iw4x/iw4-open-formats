@@ -9,11 +9,9 @@ namespace iw4of::utils::compression
     memory::allocator allocator;
     unsigned long length = compressBound(data.size());
     const auto buffer = allocator.allocate_array<char>(length);
-    if (compress2(reinterpret_cast<Bytef*>(buffer),
-                  &length,
-                  reinterpret_cast<Bytef*>(const_cast<char*>(data.data())),
-                  data.size(),
-                  Z_BEST_COMPRESSION) != Z_OK)
+    if (compress2(
+            reinterpret_cast<Bytef*>(buffer), &length, reinterpret_cast<Bytef*>(const_cast<char*>(data.data())), data.size(), Z_BEST_COMPRESSION) !=
+        Z_OK)
     {
       return {};
     }
@@ -40,8 +38,7 @@ namespace iw4of::utils::compression
 
     do
     {
-      stream.avail_in = std::min(static_cast<size_t>(CHUNK),
-                                 data.size() - (data_ptr - data.data()));
+      stream.avail_in = std::min(static_cast<size_t>(CHUNK), data.size() - (data_ptr - data.data()));
       stream.next_in = reinterpret_cast<const uint8_t*>(data_ptr);
       data_ptr += stream.avail_in;
 
@@ -57,8 +54,7 @@ namespace iw4of::utils::compression
           return {};
         }
 
-        buffer.append(reinterpret_cast<const char*>(dest),
-                      CHUNK - stream.avail_out);
+        buffer.append(reinterpret_cast<const char*>(dest), CHUNK - stream.avail_out);
       } while (stream.avail_out == 0);
     } while (ret != Z_STREAM_END);
 

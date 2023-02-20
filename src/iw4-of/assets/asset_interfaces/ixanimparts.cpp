@@ -11,8 +11,7 @@
 
 #define IW4X_ANIM_VERSION 2
 
-bool iw4of::interfaces::ixanimparts::write_internal(
-    const native::XAssetHeader& header) const
+bool iw4of::interfaces::ixanimparts::write_internal(const native::XAssetHeader& header) const
 {
   assert(header.parts);
   utils::stream buffer;
@@ -28,8 +27,7 @@ bool iw4of::interfaces::ixanimparts::write_internal(
     buffer.save_string(parts->name);
   }
 
-  for (int i = 0; i < parts->boneCount[native::XAnimPartType::PART_TYPE_ALL];
-       ++i)
+  for (int i = 0; i < parts->boneCount[native::XAnimPartType::PART_TYPE_ALL]; ++i)
   {
     buffer.save_string(assets->read_from_stringtable(parts->names[i]));
   }
@@ -101,26 +99,22 @@ bool iw4of::interfaces::ixanimparts::write_internal(
 
         if (parts->numframes > 0xFF)
         {
-          buffer.save_array(delta->trans->u.frames.indices._2,
-                            delta->trans->size + 1);
+          buffer.save_array(delta->trans->u.frames.indices._2, delta->trans->size + 1);
         }
         else
         {
-          buffer.save_array(delta->trans->u.frames.indices._1,
-                            delta->trans->size + 1);
+          buffer.save_array(delta->trans->u.frames.indices._1, delta->trans->size + 1);
         }
 
         if (delta->trans->u.frames.frames._1)
         {
           if (delta->trans->smallTrans)
           {
-            buffer.save(
-                delta->trans->u.frames.frames._1, 3, delta->trans->size + 1);
+            buffer.save(delta->trans->u.frames.frames._1, 3, delta->trans->size + 1);
           }
           else
           {
-            buffer.save(
-                delta->trans->u.frames.frames._1, 6, delta->trans->size + 1);
+            buffer.save(delta->trans->u.frames.frames._1, 6, delta->trans->size + 1);
           }
         }
       }
@@ -131,12 +125,10 @@ bool iw4of::interfaces::ixanimparts::write_internal(
     }
   }
 
-  return utils::io::write_file(get_work_path(header).string(),
-                               buffer.to_buffer());
+  return utils::io::write_file(get_work_path(header).string(), buffer.to_buffer());
 }
 
-void* iw4of::interfaces::ixanimparts::read_internal(
-    const std::string& name) const
+void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) const
 {
   const auto& path = get_work_path(name).string();
 
@@ -155,11 +147,7 @@ void* iw4of::interfaces::ixanimparts::read_internal(
     int32_t version = reader.read<int32_t>();
     if (version > IW4X_ANIM_VERSION)
     {
-      print_error(
-          "Reading animation '{}' failed, expected version is {}, but it was {}!",
-          name,
-          IW4X_ANIM_VERSION,
-          version);
+      print_error("Reading animation '{}' failed, expected version is {}, but it was {}!", name, IW4X_ANIM_VERSION, version);
       return nullptr;
     }
 
@@ -174,24 +162,20 @@ void* iw4of::interfaces::ixanimparts::read_internal(
 
       if (xanim->names)
       {
-        xanim->names = local_allocator.allocate_array<uint16_t>(
-            xanim->boneCount[native::PART_TYPE_ALL]);
+        xanim->names = local_allocator.allocate_array<uint16_t>(xanim->boneCount[native::PART_TYPE_ALL]);
         for (int i = 0; i < xanim->boneCount[native::PART_TYPE_ALL]; ++i)
         {
-          xanim->names[i] = static_cast<std::uint16_t>(
-              assets->write_in_stringtable(reader.read_cstring()));
+          xanim->names[i] = static_cast<std::uint16_t>(assets->write_in_stringtable(reader.read_cstring()));
         }
       }
 
       if (xanim->notify)
       {
-        xanim->notify =
-            reader.read_array<native::XAnimNotifyInfo>(xanim->notifyCount);
+        xanim->notify = reader.read_array<native::XAnimNotifyInfo>(xanim->notifyCount);
 
         for (int i = 0; i < xanim->notifyCount; ++i)
         {
-          xanim->notify[i].name = static_cast<std::uint16_t>(
-              assets->write_in_stringtable(reader.read_cstring()));
+          xanim->notify[i].name = static_cast<std::uint16_t>(assets->write_in_stringtable(reader.read_cstring()));
         }
       }
 
@@ -212,20 +196,17 @@ void* iw4of::interfaces::ixanimparts::read_internal(
 
       if (xanim->randomDataByte)
       {
-        xanim->randomDataByte =
-            reader.read_array<char>(xanim->randomDataByteCount);
+        xanim->randomDataByte = reader.read_array<char>(xanim->randomDataByteCount);
       }
 
       if (xanim->randomDataShort)
       {
-        xanim->randomDataShort =
-            reader.read_array<uint16_t>(xanim->randomDataShortCount);
+        xanim->randomDataShort = reader.read_array<uint16_t>(xanim->randomDataShortCount);
       }
 
       if (xanim->randomDataInt)
       {
-        xanim->randomDataInt =
-            reader.read_array<int32_t>(xanim->randomDataIntCount);
+        xanim->randomDataInt = reader.read_array<int32_t>(xanim->randomDataIntCount);
       }
 
       if (xanim->indices.data)
@@ -251,37 +232,28 @@ void* iw4of::interfaces::ixanimparts::read_internal(
             delta->trans = reader.read_object<native::XAnimPartTrans>();
             if (delta->trans->size)
             {
-              delta->trans->u.frames =
-                  reader.read<native::XAnimPartTransFrames>();
+              delta->trans->u.frames = reader.read<native::XAnimPartTransFrames>();
 
               if (xanim->numframes > 0xFF)
               {
-                auto indices2 =
-                    reader.read_array<uint16_t>(delta->trans->size + 1);
-                memcpy(delta->trans->u.frames.indices._2,
-                       indices2,
-                       sizeof(short) * (delta->trans->size + 1));
+                auto indices2 = reader.read_array<uint16_t>(delta->trans->size + 1);
+                memcpy(delta->trans->u.frames.indices._2, indices2, sizeof(short) * (delta->trans->size + 1));
               }
               else
               {
                 auto indices1 = reader.read_array<char>(delta->trans->size + 1);
-                memcpy(delta->trans->u.frames.indices._1,
-                       indices1,
-                       delta->trans->size + 1);
+                memcpy(delta->trans->u.frames.indices._1, indices1, delta->trans->size + 1);
               }
 
               if (delta->trans->u.frames.frames._1)
               {
                 if (delta->trans->smallTrans)
                 {
-                  delta->trans->u.frames.frames._1 =
-                      reinterpret_cast<char(*)[3]>(3, (delta->trans->size + 1));
+                  delta->trans->u.frames.frames._1 = reinterpret_cast<char(*)[3]>(3, (delta->trans->size + 1));
                 }
                 else
                 {
-                  delta->trans->u.frames.frames._2 =
-                      reinterpret_cast<uint16_t(*)[3]>(
-                          6, (delta->trans->size + 1));
+                  delta->trans->u.frames.frames._2 = reinterpret_cast<uint16_t(*)[3]>(6, (delta->trans->size + 1));
                 }
               }
             }
@@ -296,8 +268,7 @@ void* iw4of::interfaces::ixanimparts::read_internal(
 
       if (!reader.end())
       {
-        print_error("Reading animation '{}' failed, remaining raw data found!",
-                    name);
+        print_error("Reading animation '{}' failed, remaining raw data found!", name);
         return nullptr;
       }
 
@@ -310,8 +281,7 @@ void* iw4of::interfaces::ixanimparts::read_internal(
   return nullptr;
 }
 
-std::filesystem::path iw4of::interfaces::ixanimparts::get_file_name(
-    const std::string& basename) const
+std::filesystem::path iw4of::interfaces::ixanimparts::get_file_name(const std::string& basename) const
 {
   return std::format("{}.iw4xAnim", basename);
 }

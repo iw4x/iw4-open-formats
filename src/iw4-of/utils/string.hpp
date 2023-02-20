@@ -7,8 +7,7 @@ namespace iw4of::utils::string
   class va_provider final
   {
    public:
-    static_assert(Buffers != 0 && MinBufferSize != 0,
-                  "Buffers and MinBufferSize mustn't be 0");
+    static_assert(Buffers != 0 && MinBufferSize != 0, "Buffers and MinBufferSize mustn't be 0");
 
     va_provider()
         : current_buffer_(0)
@@ -27,8 +26,7 @@ namespace iw4of::utils::string
 
       while (true)
       {
-        const int res =
-            vsnprintf_s(entry->buffer, entry->size, _TRUNCATE, format, ap);
+        const int res = vsnprintf_s(entry->buffer, entry->size, _TRUNCATE, format, ap);
         if (res > 0) break; // Success
         if (res == 0) return nullptr; // Error
 
@@ -60,8 +58,7 @@ namespace iw4of::utils::string
       void allocate()
       {
         if (this->buffer) memory::get_allocator()->free(this->buffer);
-        this->buffer =
-            memory::get_allocator()->allocate_array<char>(this->size + 1);
+        this->buffer = memory::get_allocator()->allocate_array<char>(this->size + 1);
       }
 
       void double_size()
@@ -79,15 +76,12 @@ namespace iw4of::utils::string
   };
 
   const char* va(const char* fmt, ...);
-  void replace(std::string& str, const std::string& from,
-               const std::string& to);
+  void replace(std::string& str, const std::string& from, const std::string& to);
 
   std::string to_lower(std::string text);
   std::string to_upper(std::string text);
-  std::vector<std::string> split(const char& delimiter,
-                                 const std::string& data);
+  std::vector<std::string> split(const char& delimiter, const std::string& data);
   std::wstring convert(const std::string& str);
 
-  std::string dump_hex(const std::string& data,
-                       const std::string& separator = " ");
+  std::string dump_hex(const std::string& data, const std::string& separator = " ");
 } // namespace iw4of::utils::string

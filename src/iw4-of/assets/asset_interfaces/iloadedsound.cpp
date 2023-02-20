@@ -17,8 +17,7 @@ namespace iw4of::interfaces
       return nullptr;
     }
 
-    native::LoadedSound* sound =
-        local_allocator.allocate<native::LoadedSound>();
+    native::LoadedSound* sound = local_allocator.allocate<native::LoadedSound>();
     if (!sound)
     {
       print("Error allocating memory for sound structure!\n");
@@ -112,8 +111,7 @@ namespace iw4of::interfaces
     auto loaded_sound = header.loadSnd;
     if (!loaded_sound->sound.data)
     {
-      print_error("Tried to save sound {} which was never loaded before!",
-                  loaded_sound->name);
+      print_error("Tried to save sound {} which was never loaded before!", loaded_sound->name);
       return false;
     }
 
@@ -148,8 +146,7 @@ namespace iw4of::interfaces
     buffer.save_object(audio_formt);
 
     // NumChannels
-    short num_channels =
-        static_cast<int16_t>(loaded_sound->sound.info.channels);
+    short num_channels = static_cast<int16_t>(loaded_sound->sound.info.channels);
     buffer.save_object(num_channels);
 
     // SampleRate
@@ -157,18 +154,14 @@ namespace iw4of::interfaces
     buffer.save(sampleRate);
 
     auto data_length = loaded_sound->sound.info.data_len;
-    assert(data_length / (loaded_sound->sound.info.bits / 8) ==
-           loaded_sound->sound.info.samples);
+    assert(data_length / (loaded_sound->sound.info.bits / 8) == loaded_sound->sound.info.samples);
 
     // ByteRate
-    int32_t byteRate = loaded_sound->sound.info.rate *
-                       loaded_sound->sound.info.channels *
-                       loaded_sound->sound.info.bits / 8;
+    int32_t byteRate = loaded_sound->sound.info.rate * loaded_sound->sound.info.channels * loaded_sound->sound.info.bits / 8;
     buffer.save(byteRate);
 
     // BlockAlign
-    short block_align =
-        static_cast<int16_t>(loaded_sound->sound.info.block_size);
+    short block_align = static_cast<int16_t>(loaded_sound->sound.info.block_size);
     buffer.save_object(block_align);
 
     // BitsPerSample
@@ -187,8 +180,7 @@ namespace iw4of::interfaces
     return true;
   }
 
-  std::filesystem::path interfaces::iloadedsound::get_file_name(
-      const std::string& asset_name) const
+  std::filesystem::path interfaces::iloadedsound::get_file_name(const std::string& asset_name) const
   {
     return asset_name;
   }
