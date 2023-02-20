@@ -22,7 +22,7 @@ namespace iw4of::interfaces
 
         for (auto asset : asset_list)
         {
-            assets->write<void>(asset.type, asset.header.data);
+            assets->write(asset.type, asset.header.data);
         }
 
         return utils::io::write_file(get_work_path(header).string(), header.mapEnts->entityString);

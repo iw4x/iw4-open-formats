@@ -274,7 +274,7 @@ namespace iw4of::interfaces
         static std::regex anim_script_catcher(" *(.*)::main\\(\\);");
         std::smatch anim_script_matches;
 
-        std::vector<native::XAsset> assets{};
+        std::vector<native::XAsset> asset_list{};
 
         std::string::const_iterator search_start(script_contents.cbegin());
         while (std::regex_search(search_start, script_contents.cend(), anim_script_matches, anim_script_catcher))
@@ -288,7 +288,7 @@ namespace iw4of::interfaces
                 search_start = anim_script_matches.suffix().first;
 
                 auto script = find<native::RawFile>(native::ASSET_TYPE_RAWFILE, script_name);
-                assets.push_back({native::ASSET_TYPE_RAWFILE, script});
+                asset_list.push_back({native::ASSET_TYPE_RAWFILE, script});
 
                 assert(script);
                 if (script)
@@ -304,18 +304,18 @@ namespace iw4of::interfaces
 
                     for (const auto& tree : anim_trees)
                     {
-                        assets.push_back({native::ASSET_TYPE_RAWFILE, tree});
+                        asset_list.push_back({native::ASSET_TYPE_RAWFILE, tree});
                     }
 
                     for (const auto& anims : model_anims)
                     {
-                        assets.push_back({native::ASSET_TYPE_XANIMPARTS, anims});
+                        asset_list.push_back({native::ASSET_TYPE_XANIMPARTS, anims});
                     }
                 }
             }
         }
 
-        return assets;
+        return asset_list;
     }
 
     std::vector<native::snd_alias_list_t*> irawfile::get_create_fx_sounds(const std::string& script) const
