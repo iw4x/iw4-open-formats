@@ -36,7 +36,8 @@ int main()
     }
 
     {
-      const auto& params = iw4of::params_t(std::filesystem::path(work_path), print);
+      auto params = iw4of::params_t(std::filesystem::path(work_path));
+	  params.print = print;
 
       iw4of::api iw4of(params);
 
