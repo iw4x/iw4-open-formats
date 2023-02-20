@@ -43,6 +43,7 @@ namespace iw4of::interfaces
         if (asset->techniqueSet)
         {
             output.AddMember("techniqueSet", RAPIDJSON_STR(asset->techniqueSet->name), allocator);
+            assets->write(native::ASSET_TYPE_TECHNIQUE_SET, asset->techniqueSet);
         }
 
         SAME_NAME_JSON_MEMBER(textureAtlasRowCount);
