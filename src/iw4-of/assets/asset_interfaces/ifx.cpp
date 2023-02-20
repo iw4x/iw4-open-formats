@@ -59,11 +59,13 @@ namespace iw4of::interfaces
                                 if (elem_def->visuals.markArray[j].materials[0])
                                 {
                                     buffer.save_string(elem_def->visuals.markArray[j].materials[0]->info.name);
+                                    assets->write(native::ASSET_TYPE_MATERIAL, elem_def->visuals.markArray[j].materials[0]);
                                 }
 
                                 if (elem_def->visuals.markArray[j].materials[1])
                                 {
                                     buffer.save_string(elem_def->visuals.markArray[j].materials[1]->info.name);
+                                    assets->write(native::ASSET_TYPE_MATERIAL, elem_def->visuals.markArray[j].materials[1]);
                                 }
                             }
                         }
@@ -88,19 +90,19 @@ namespace iw4of::interfaces
 
                 if (elem_def->effectOnImpact.handle)
                 {
-                    buffer.save_string(elem_def->effectOnImpact.name);
+                    buffer.save_string(elem_def->effectOnImpact.handle->name);
                     assets->write(native::ASSET_TYPE_FX, elem_def->effectOnImpact.handle);
                 }
 
                 if (elem_def->effectOnDeath.handle)
                 {
-                    buffer.save_string(elem_def->effectOnDeath.name);
+                    buffer.save_string(elem_def->effectOnDeath.handle->name);
                     assets->write(native::ASSET_TYPE_FX, elem_def->effectOnDeath.handle);
                 }
 
                 if (elem_def->effectEmitted.handle)
                 {
-                    buffer.save_string(elem_def->effectEmitted.name);
+                    buffer.save_string(elem_def->effectEmitted.handle->name);
                     assets->write(native::ASSET_TYPE_FX, elem_def->effectEmitted.handle);
                 }
 

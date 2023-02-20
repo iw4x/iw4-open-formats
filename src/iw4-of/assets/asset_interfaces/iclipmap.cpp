@@ -966,6 +966,7 @@ namespace iw4of::interfaces
             const auto ents = clip_map->mapEnts;
 
             json_map_ents.AddMember("name", RAPIDJSON_STR(ents->name), allocator);
+            assets->write(native::ASSET_TYPE_MAP_ENTS, clip_map->mapEnts);
 
             rapidjson::Value json_trigger(rapidjson::kObjectType);
 

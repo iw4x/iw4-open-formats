@@ -113,11 +113,6 @@ namespace iw4of::interfaces
                 buffer.save_string(asset->physPreset->name);
                 assets->write(native::ASSET_TYPE_PHYSPRESET, asset->physPreset);
             }
-
-            if (asset->physPreset->sndAliasPrefix)
-            {
-                buffer.save_string(asset->physPreset->sndAliasPrefix);
-            }
         }
 
         if (asset->physCollmap)
