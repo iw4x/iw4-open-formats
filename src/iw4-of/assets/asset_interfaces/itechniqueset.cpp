@@ -33,6 +33,7 @@ namespace iw4of::interfaces
         if (techset->remappedTechniqueSet)
         {
             output.AddMember("remappedTechniqueSet", RAPIDJSON_STR(techset->remappedTechniqueSet->name), allocator);
+            write_internal({techset->remappedTechniqueSet});
         }
 
         output.AddMember("hasBeenUploaded", techset->hasBeenUploaded, allocator);
