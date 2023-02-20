@@ -58,14 +58,14 @@ namespace iw4of::interfaces
 
     std::vector<native::XAsset> imapents::get_assets(const std::string& entity_string) const
     {
-        std::vector<native::XAsset> assets{};
+        std::vector<native::XAsset> asset_list{};
 
         for (auto xmodel : get_models(entity_string))
         {
-            assets.push_back({native::ASSET_TYPE_XMODEL, xmodel});
+            asset_list.push_back({native::ASSET_TYPE_XMODEL, xmodel});
         }
 
-        return assets;
+        return asset_list;
     }
 
     std::vector<native::XModel*> imapents::get_models(const std::string& entity_string) const
