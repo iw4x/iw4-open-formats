@@ -39,7 +39,11 @@ namespace iw4of::interfaces
                 if (light->defName)
                 {
                     buffer.save_string(light->defName);
-                    assets->write(native::XAssetType::ASSET_TYPE_LIGHT_DEF, light->defName);
+                    auto light_asset = find<iw4of::native::GfxLightDef>(native::ASSET_TYPE_LIGHT_DEF, light->defName);
+
+                    RETURN_IF_NULL(light_asset);
+
+                    assets->write(native::XAssetType::ASSET_TYPE_LIGHT_DEF, light_asset);
                 }
             }
         }
