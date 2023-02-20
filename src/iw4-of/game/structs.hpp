@@ -3039,4 +3039,10 @@ namespace iw4of::native
     // VehicleDef* vehDef;
     // AddonMapEnts* addonMapEnts;
   };
+
+  struct XAsset
+  {
+    XAssetType type;
+    XAssetHeader header;
+  };
 } // namespace iw4of::native
