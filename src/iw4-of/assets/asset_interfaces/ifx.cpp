@@ -339,7 +339,7 @@ namespace iw4of::interfaces
             case native::FX_ELEM_TYPE_RUNNER:
                 if (visuals->effectDef.handle)
                 {
-                    buffer->save_string(visuals->effectDef.name);
+                    buffer->save_string(visuals->effectDef.handle->name);
                     assets->write(native::ASSET_TYPE_FX, visuals->effectDef.handle);
                 }
 
