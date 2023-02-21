@@ -24,6 +24,11 @@ namespace iw4of::interfaces
             return nullptr;
         }
 
+        if (!utils::io::file_exists(path))
+        {
+            return nullptr;
+        }
+
         rapidjson::Document infoData;
         try
         {

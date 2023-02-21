@@ -240,19 +240,22 @@ namespace iw4of::interfaces
 
                     if (elemDef->effectOnImpact.handle)
                     {
-                        elemDef->effectOnImpact.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, buffer.read_string().data());
+                        auto fx_name = buffer.read_string();
+                        elemDef->effectOnImpact.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, fx_name.data());
                         RETURN_IF_NULL(elemDef->effectOnImpact.handle);
                     }
 
                     if (elemDef->effectOnDeath.handle)
                     {
-                        elemDef->effectOnDeath.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, buffer.read_string().data());
+                        auto fx_name = buffer.read_string();
+                        elemDef->effectOnDeath.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, fx_name.data());
                         RETURN_IF_NULL(elemDef->effectOnDeath.handle);
                     }
 
                     if (elemDef->effectEmitted.handle)
                     {
-                        elemDef->effectEmitted.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, buffer.read_string().data());
+                        auto fx_name = buffer.read_string();
+                        elemDef->effectEmitted.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, fx_name.data());
                         RETURN_IF_NULL(elemDef->effectEmitted.handle);
                     }
 
@@ -388,6 +391,7 @@ namespace iw4of::interfaces
                 if (visuals->effectDef.handle)
                 {
                     visuals->effectDef.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, reader->read_string().data());
+                    assert(visuals->effectDef.handle);
                 }
 
                 break;
@@ -398,6 +402,7 @@ namespace iw4of::interfaces
                 if (visuals->material)
                 {
                     visuals->material = find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, reader->read_string().data());
+                    assert(visuals->material);
                 }
 
                 break;

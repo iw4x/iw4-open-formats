@@ -447,17 +447,11 @@ namespace iw4of::interfaces
                     asset->physPreset = reader.read_object<native::PhysPreset>();
                 }
 
-                if (asset->physPreset->name)
-                {
-                    asset->physPreset->name = reader.read_cstring();
-                }
+                const auto& phys_preset_name = reader.read_cstring();
 
-                if (asset->physPreset->sndAliasPrefix)
-                {
-                    asset->physPreset->sndAliasPrefix = reader.read_cstring();
-                }
+                native::PhysPreset* preset = find<native::PhysPreset>(native::XAssetType::ASSET_TYPE_PHYSPRESET, phys_preset_name);
+                assert(preset);
 
-                native::PhysPreset* preset = find<native::PhysPreset>(native::XAssetType::ASSET_TYPE_PHYSPRESET, asset->physPreset->name);
                 if (preset)
                 {
                     asset->physPreset = preset;

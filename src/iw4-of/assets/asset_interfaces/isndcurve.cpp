@@ -22,7 +22,6 @@ namespace iw4of::interfaces
 
     if (!utils::io::file_exists(path))
     {
-      print_error("Missing file for sndcurve {}!", name);
       return nullptr;
     }
 
