@@ -110,6 +110,12 @@ namespace iw4of::interfaces
                 }
             }
 
+            const auto& anim_trees = get_map_animtrees(script_data);
+            for (const auto& tree : anim_trees)
+            {
+                assets->write(native::ASSET_TYPE_RAWFILE, tree);
+            }
+
             auto ambient_snd = get_ambient_play(script_data);
             if (ambient_snd)
             {
@@ -140,6 +146,7 @@ namespace iw4of::interfaces
                 get_assets_in_precache(script_data);
             }
 
+            get_map_animtrees(script_data);
             get_ambient_play(script_data);
         }
     }
