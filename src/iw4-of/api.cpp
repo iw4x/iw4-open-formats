@@ -27,3 +27,8 @@ void iw4of::api::set_work_path(const std::filesystem::path& path)
 {
   _assets->set_work_path(path);
 }
+
+void iw4of::api::clear_writes() const
+{
+    _assets->clear_writes();
+}

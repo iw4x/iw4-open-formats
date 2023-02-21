@@ -30,6 +30,7 @@ IncludeBlocks: Preserve
 IndentCaseLabels: 'true'
 IndentPPDirectives: BeforeHash
 IndentWrappedFunctionNames: 'true'
+IndentWidth: 4
 KeepEmptyLinesAtTheStartOfBlocks: 'false'
 Language: Cpp
 MaxEmptyLinesToKeep: '1'

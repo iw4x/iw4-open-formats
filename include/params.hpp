@@ -5,38 +5,28 @@
 
 namespace iw4of
 {
-  struct params_t
-  {
-    enum print_type
+    struct params_t
     {
-      P_WARN,
-      P_ERR
+        enum print_type
+        {
+            P_WARN,
+            P_ERR
+        };
+
+        std::filesystem::path work_directory{};
+        std::function<void*(int type, const std::string& name)> find_other_asset{};
+        std::function<void(print_type level, const std::string& message)> print{};
+        std::function<std::string(const std::string& filename)> fs_read_file{};
+        std::function<unsigned int(const std::string& text)> store_in_string_table{};
+        std::function<std::string(const unsigned int index)> get_from_string_table{};
+        
+        bool write_only_once = false;
+
+        params_t(const std::filesystem::path& work_directory)
+        {
+            this->work_directory = work_directory;
+        }
+
+        params_t(){};
     };
-
-    std::filesystem::path work_directory{};
-    std::function<void*(int type, const std::string& name)> find_other_asset{};
-    std::function<void(print_type level, const std::string& message)> print{};
-    std::function<std::string(const std::string& filename)> fs_read_file{};
-    std::function<unsigned int(const std::string& text)> store_in_string_table{};
-    std::function<std::string(const unsigned int index)> get_from_string_table{};
-
-    // All of these are somewhat facultative but if you want solid data
-    // you'll want all of them
-    params_t(const std::filesystem::path& work_directory,
-             const std::function<void(print_type level, const std::string& message)>& print_function = nullptr,
-             const std::function<void*(int type, const std::string& name)>& find_other_asset = nullptr,
-             const std::function<std::string(const std::string& filename)>& fs_read_file = nullptr,
-             const std::function<unsigned int(const std::string& text)>& store_in_string_table = nullptr,
-             const std::function<std::string(const unsigned int& index)>& get_from_string_table = nullptr)
-    {
-      this->find_other_asset = find_other_asset;
-      this->work_directory = work_directory;
-      this->print = print_function;
-      this->fs_read_file = fs_read_file;
-      this->store_in_string_table = store_in_string_table;
-      this->get_from_string_table = get_from_string_table;
-    }
-
-    params_t(){};
-  };
 } // namespace iw4of

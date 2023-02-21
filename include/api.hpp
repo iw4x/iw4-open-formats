@@ -20,7 +20,10 @@ namespace iw4of
       return reinterpret_cast<T*>(read_internal(iw4_int_type, name));
     }
 
+    void clear_writes() const;
+
     void set_work_path(const std::filesystem::path& path);
+
 
     api(const params_t& params);
 
