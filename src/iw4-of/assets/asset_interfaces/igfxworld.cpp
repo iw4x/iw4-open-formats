@@ -363,16 +363,6 @@ namespace iw4of::interfaces
                 {
                     auto name = reader->read_string();
 
-                    while (name.ends_with("."))
-                    {
-                        // Happens with some flowers in mp_paris
-                        // I'm not confident this will work on every map
-                        // But regardless Game FS does not support having a file terminated
-                        // with "." Probably an artist made a typo in MW3...
-                        // "foliage_gardenflowers_red_bright..iw4xModel"
-                        name = name.substr(0, name.size() - 1);
-                    }
-
                     model->model = find<native::XModel>(native::XAssetType::ASSET_TYPE_XMODEL, name.data());
 
                     RETURN_IF_NULL(model->model);
