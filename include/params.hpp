@@ -19,7 +19,7 @@ namespace iw4of
         std::function<std::string(const std::string& filename)> fs_read_file{};
         std::function<unsigned int(const std::string& text)> store_in_string_table{};
         std::function<std::string(const unsigned int index)> get_from_string_table{};
-        
+
         bool write_only_once = false;
 
         params_t(const std::filesystem::path& work_directory)

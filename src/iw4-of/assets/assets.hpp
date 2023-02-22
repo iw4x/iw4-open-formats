@@ -35,7 +35,6 @@ namespace iw4of
                     return written;
                 }
 
-
                 // Already written
                 return true;
             }

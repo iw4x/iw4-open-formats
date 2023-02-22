@@ -2,91 +2,91 @@
 
 namespace iw4of::utils::cryptography
 {
-  class ecc final
-  {
-   public:
-    class key final
+    class ecc final
     {
-     public:
-      key();
-      ~key();
+       public:
+        class key final
+        {
+           public:
+            key();
+            ~key();
 
-      bool is_valid() const;
+            bool is_valid() const;
 
-      ecc_key* get();
+            ecc_key* get();
 
-      std::string get_public_key() const;
+            std::string get_public_key() const;
 
-      void set(const std::string& pub_key_buffer);
+            void set(const std::string& pub_key_buffer);
 
-      void deserialize(const std::string& key);
+            void deserialize(const std::string& key);
 
-      std::string serialize(int type = PK_PRIVATE) const;
+            std::string serialize(int type = PK_PRIVATE) const;
 
-      void free();
+            void free();
 
-      bool operator==(key& key) const;
+            bool operator==(key& key) const;
 
-     private:
-      ecc_key key_storage_{};
+           private:
+            ecc_key key_storage_{};
+        };
+
+        static key generate_key(int bits);
+        static std::string sign_message(key key, const std::string& message);
+        static bool verify_message(key key, const std::string& message, const std::string& signature);
     };
 
-    static key generate_key(int bits);
-    static std::string sign_message(key key, const std::string& message);
-    static bool verify_message(key key, const std::string& message, const std::string& signature);
-  };
+    class rsa final
+    {
+       public:
+        static std::string encrypt(const std::string& data, const std::string& hash, const std::string& key);
 
-  class rsa final
-  {
-   public:
-    static std::string encrypt(const std::string& data, const std::string& hash, const std::string& key);
+       private:
+        static void initialize();
+    };
 
-   private:
-    static void initialize();
-  };
+    class des3 final
+    {
+       public:
+        static std::string encrypt(const std::string& data, const std::string& iv, const std::string& key);
+        static std::string decrypt(const std::string& data, const std::string& iv, const std::string& key);
 
-  class des3 final
-  {
-   public:
-    static std::string encrypt(const std::string& data, const std::string& iv, const std::string& key);
-    static std::string decrypt(const std::string& data, const std::string& iv, const std::string& key);
+       private:
+        static void initialize();
+    };
 
-   private:
-    static void initialize();
-  };
+    class tiger final
+    {
+       public:
+        static std::string compute(const std::string& data, bool hex = false);
+        static std::string compute(const uint8_t* data, size_t length, bool hex = false);
+    };
 
-  class tiger final
-  {
-   public:
-    static std::string compute(const std::string& data, bool hex = false);
-    static std::string compute(const uint8_t* data, size_t length, bool hex = false);
-  };
+    class sha1 final
+    {
+       public:
+        static std::string compute(const std::string& data, bool hex = false);
+        static std::string compute(const uint8_t* data, size_t length, bool hex = false);
+    };
 
-  class sha1 final
-  {
-   public:
-    static std::string compute(const std::string& data, bool hex = false);
-    static std::string compute(const uint8_t* data, size_t length, bool hex = false);
-  };
+    class sha256 final
+    {
+       public:
+        static std::string compute(const std::string& data, bool hex = false);
+        static std::string compute(const uint8_t* data, size_t length, bool hex = false);
+    };
 
-  class sha256 final
-  {
-   public:
-    static std::string compute(const std::string& data, bool hex = false);
-    static std::string compute(const uint8_t* data, size_t length, bool hex = false);
-  };
+    class sha512 final
+    {
+       public:
+        static std::string compute(const std::string& data, bool hex = false);
+        static std::string compute(const uint8_t* data, size_t length, bool hex = false);
+    };
 
-  class sha512 final
-  {
-   public:
-    static std::string compute(const std::string& data, bool hex = false);
-    static std::string compute(const uint8_t* data, size_t length, bool hex = false);
-  };
-
-  class jenkins_one_at_a_time final
-  {
-   public:
-    static uint32_t compute(const std::string& data);
-    static uint32_t compute(const char* key, size_t len);
-  };
+    class jenkins_one_at_a_time final
+    {
+       public:
+        static uint32_t compute(const std::string& data);
+        static uint32_t compute(const char* key, size_t len);
+    };
 } // namespace iw4of::utils::cryptography

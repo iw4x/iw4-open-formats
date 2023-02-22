@@ -3,85 +3,85 @@
 
 namespace iw4of::utils::string
 {
-  template <size_t Buffers, size_t MinBufferSize>
-  class va_provider final
-  {
-   public:
-    static_assert(Buffers != 0 && MinBufferSize != 0, "Buffers and MinBufferSize mustn't be 0");
-
-    va_provider()
-        : current_buffer_(0)
+    template <size_t Buffers, size_t MinBufferSize>
+    class va_provider final
     {
-    }
+       public:
+        static_assert(Buffers != 0 && MinBufferSize != 0, "Buffers and MinBufferSize mustn't be 0");
 
-    char* get(const char* format, const va_list ap)
-    {
-      ++this->current_buffer_ %= ARRAYSIZE(this->string_pool_);
-      auto entry = &this->string_pool_[this->current_buffer_];
+        va_provider()
+            : current_buffer_(0)
+        {
+        }
 
-      if (!entry->size || !entry->buffer)
-      {
-        throw std::runtime_error("String pool not initialized");
-      }
+        char* get(const char* format, const va_list ap)
+        {
+            ++this->current_buffer_ %= ARRAYSIZE(this->string_pool_);
+            auto entry = &this->string_pool_[this->current_buffer_];
 
-      while (true)
-      {
-        const int res = vsnprintf_s(entry->buffer, entry->size, _TRUNCATE, format, ap);
-        if (res > 0) break; // Success
-        if (res == 0) return nullptr; // Error
+            if (!entry->size || !entry->buffer)
+            {
+                throw std::runtime_error("String pool not initialized");
+            }
 
-        entry->double_size();
-      }
+            while (true)
+            {
+                const int res = vsnprintf_s(entry->buffer, entry->size, _TRUNCATE, format, ap);
+                if (res > 0) break; // Success
+                if (res == 0) return nullptr; // Error
 
-      return entry->buffer;
-    }
+                entry->double_size();
+            }
 
-   private:
-    class entry final
-    {
-     public:
-      explicit entry(const size_t _size = MinBufferSize)
-          : size(_size)
-          , buffer(nullptr)
-      {
-        if (this->size < MinBufferSize) this->size = MinBufferSize;
-        this->allocate();
-      }
+            return entry->buffer;
+        }
 
-      ~entry()
-      {
-        if (this->buffer) memory::get_allocator()->free(this->buffer);
-        this->size = 0;
-        this->buffer = nullptr;
-      }
+       private:
+        class entry final
+        {
+           public:
+            explicit entry(const size_t _size = MinBufferSize)
+                : size(_size)
+                , buffer(nullptr)
+            {
+                if (this->size < MinBufferSize) this->size = MinBufferSize;
+                this->allocate();
+            }
 
-      void allocate()
-      {
-        if (this->buffer) memory::get_allocator()->free(this->buffer);
-        this->buffer = memory::get_allocator()->allocate_array<char>(this->size + 1);
-      }
+            ~entry()
+            {
+                if (this->buffer) memory::get_allocator()->free(this->buffer);
+                this->size = 0;
+                this->buffer = nullptr;
+            }
 
-      void double_size()
-      {
-        this->size *= 2;
-        this->allocate();
-      }
+            void allocate()
+            {
+                if (this->buffer) memory::get_allocator()->free(this->buffer);
+                this->buffer = memory::get_allocator()->allocate_array<char>(this->size + 1);
+            }
 
-      size_t size;
-      char* buffer;
+            void double_size()
+            {
+                this->size *= 2;
+                this->allocate();
+            }
+
+            size_t size;
+            char* buffer;
+        };
+
+        size_t current_buffer_;
+        entry string_pool_[Buffers];
     };
 
-    size_t current_buffer_;
-    entry string_pool_[Buffers];
-  };
+    const char* va(const char* fmt, ...);
+    void replace(std::string& str, const std::string& from, const std::string& to);
 
-  const char* va(const char* fmt, ...);
-  void replace(std::string& str, const std::string& from, const std::string& to);
+    std::string to_lower(std::string text);
+    std::string to_upper(std::string text);
+    std::vector<std::string> split(const char& delimiter, const std::string& data);
+    std::wstring convert(const std::string& str);
 
-  std::string to_lower(std::string text);
-  std::string to_upper(std::string text);
-  std::vector<std::string> split(const char& delimiter, const std::string& data);
-  std::wstring convert(const std::string& str);
-
-  std::string dump_hex(const std::string& data, const std::string& separator = " ");
+    std::string dump_hex(const std::string& data, const std::string& separator = " ");
 } // namespace iw4of::utils::string

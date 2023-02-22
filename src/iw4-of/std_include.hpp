@@ -28,11 +28,11 @@
 
 // min and max is required by gdi, therefore NOMINMAX won't work
 #ifdef max
-  #undef max
+    #undef max
 #endif
 
 #ifdef min
-  #undef min
+    #undef min
 #endif
 
 #include <atomic>

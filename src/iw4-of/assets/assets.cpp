@@ -120,12 +120,13 @@ namespace iw4of
         return !params.write_only_once || !written_assets.contains(asset_predicted_path.string());
     }
 
-    void assets::clear_writes() {
+    void assets::clear_writes()
+    {
         if (!params.write_only_once)
         {
             print_error("You do not need to clear writes if write_once is not enabled.");
         }
-        
+
         written_assets.clear();
     }
 
