@@ -196,13 +196,30 @@ namespace iw4of::interfaces
 
                 if (lbn->leafBrushCount > 0)
                 {
-                    int32_t index = std::stoi(json_lbn["data"].Get<std::string>().substr(1));
+                    const auto& json_lbn_data = json_lbn["data"];
 
-                    assert(index < static_cast<int32_t>(clipmap->numLeafBrushes));
-                    assert(index >= 0);
+                    if (json_lbn_data.IsString())
+                    {
+                        int32_t index = std::stoi(json_lbn["data"].Get<std::string>().substr(1));
 
-                    lbn->data.leaf.brushes = &clipmap->leafbrushes[index];
-                    assert(lbn->data.leaf.brushes);
+                        assert(index < static_cast<int32_t>(clipmap->numLeafBrushes));
+                        assert(index >= 0);
+
+                        lbn->data.leaf.brushes = &clipmap->leafbrushes[index];
+                        assert(lbn->data.leaf.brushes);
+                    }
+                    else if (json_lbn_data.IsArray())
+                    {
+                        lbn->data.leaf.brushes = local_allocator.allocate_array<unsigned short>(lbn->leafBrushCount);
+                        for (short lbn_index = 0; lbn_index < lbn->leafBrushCount; lbn_index++)
+                        {
+                            lbn->data.leaf.brushes[lbn_index] = json_lbn_data[lbn_index].Get<unsigned short>();
+                        }
+                    }
+                    else
+                    {
+                        assert(false && "Broken clipmap: invalid LBN data");
+                    }
                 }
                 else
                 {
@@ -736,9 +753,22 @@ namespace iw4of::interfaces
 
             if (leaf_brush_node->leafBrushCount > 0)
             {
-                assert(leaf_brushes.contains(leaf_brush_node->data.leaf.brushes));
-                auto index_str = std::format("#{}", leaf_brushes[leaf_brush_node->data.leaf.brushes]);
-                json_leaf_brush_node.AddMember("data", RAPIDJSON_STR(mem_allocator.duplicate_string(index_str)), allocator);
+                if (leaf_brushes.contains(leaf_brush_node->data.leaf.brushes))
+                {
+                    // This happens on iw3, i suppose it's okay
+                    rapidjson::Value lbn_array(rapidjson::kArrayType);
+                    for (short brushIndex = 0; brushIndex < leaf_brush_node->leafBrushCount; brushIndex++)
+                    {
+                        lbn_array.PushBack(leaf_brush_node->data.leaf.brushes[brushIndex], allocator);
+                    }
+
+                    json_leaf_brush_node.AddMember("data", lbn_array, allocator);
+                }
+                else
+                {
+                    auto index_str = std::format("#{}", leaf_brushes[leaf_brush_node->data.leaf.brushes]);
+                    json_leaf_brush_node.AddMember("data", RAPIDJSON_STR(mem_allocator.duplicate_string(index_str)), allocator);
+                }
             }
             else
             {
