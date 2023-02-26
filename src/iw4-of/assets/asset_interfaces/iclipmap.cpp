@@ -218,7 +218,8 @@ namespace iw4of::interfaces
                     }
                     else
                     {
-                        assert(false && "Broken clipmap: invalid LBN data");
+                        print_error("Broken clipmap: invalid LBN data");
+                        return nullptr;
                     }
                 }
                 else
