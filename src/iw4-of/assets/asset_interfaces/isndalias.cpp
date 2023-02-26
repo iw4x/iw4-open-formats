@@ -102,7 +102,7 @@ namespace iw4of::interfaces
             std::string sound_file;
 
             // Fix casing
-            if (head["soundFile"].IsNull())
+            if (!head.HasMember("soundFile"))
             {
                 sound_file = head["soundfile"].GetString();
 
