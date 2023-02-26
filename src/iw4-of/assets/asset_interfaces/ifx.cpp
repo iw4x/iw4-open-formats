@@ -330,7 +330,6 @@ namespace iw4of::interfaces
 
                     auto list = find<native::snd_alias_list_t>(native::ASSET_TYPE_SOUND, visuals->soundName);
 
-                    assert(list);
                     if (list)
                     {
                         assets->write(native::ASSET_TYPE_SOUND, list);

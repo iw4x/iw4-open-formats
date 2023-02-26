@@ -295,11 +295,11 @@ namespace iw4of::interfaces
                 search_start = anim_script_matches.suffix().first;
 
                 auto script = find<native::RawFile>(native::ASSET_TYPE_RAWFILE, script_name);
-                asset_list.push_back({native::ASSET_TYPE_RAWFILE, script});
 
-                assert(script);
                 if (script)
                 {
+                    asset_list.push_back({native::ASSET_TYPE_RAWFILE, script});
+
                     std::string contents = script->buffer;
                     if (script->compressedLen)
                     {
