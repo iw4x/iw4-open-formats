@@ -30,7 +30,7 @@ namespace iw4of::interfaces
             output.AddMember("name", RAPIDJSON_STR(techset->name), allocator);
         }
 
-        if (techset->remappedTechniqueSet)
+        if (techset->remappedTechniqueSet && techset->remappedTechniqueSet != techset)
         {
             output.AddMember("remappedTechniqueSet", RAPIDJSON_STR(techset->remappedTechniqueSet->name), allocator);
             write_internal({techset->remappedTechniqueSet});

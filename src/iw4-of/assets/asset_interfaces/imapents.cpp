@@ -72,7 +72,7 @@ namespace iw4of::interfaces
     {
         auto models = std::vector<native::XModel*>();
 
-        std::regex model_catcher("model \"([^\\*\\?].*)\"");
+        std::regex model_catcher("model\"? \"([^\\*\\?].*)\"");
 
         std::smatch m;
 

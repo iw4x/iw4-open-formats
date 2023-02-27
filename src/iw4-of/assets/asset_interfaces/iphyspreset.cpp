@@ -49,10 +49,10 @@ namespace iw4of::interfaces
     void* iphyspreset::read_internal(const std::string& name) const
     {
         const auto& path = get_work_path(name).string();
-        auto asset = local_allocator.allocate<native::PhysPreset>();
 
         if (utils::io::file_exists(path))
         {
+            auto asset = local_allocator.allocate<native::PhysPreset>();
             rapidjson::Document physPresetJson;
 
             try
@@ -88,9 +88,11 @@ namespace iw4of::interfaces
                 print_error("Malformed JSON for physpreset {}! {}", name, e.what());
                 return nullptr;
             }
+
+            return asset;
         }
 
-        return asset;
+        return nullptr;
     }
 
     std::filesystem::path iphyspreset::get_file_name(const std::string& basename) const
