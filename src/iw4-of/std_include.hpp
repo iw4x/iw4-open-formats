@@ -13,18 +13,9 @@
 #pragma warning(disable : 28020)
 
 #define _CRT_SECURE_NO_WARNINGS
-#define WIN32_LEAN_AND_MEAN
 
-#include <Windows.h>
-#include <MsHTML.h>
-#include <MsHtmHst.h>
-#include <ExDisp.h>
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#include <corecrt_io.h>
-#include <fcntl.h>
-#include <shellapi.h>
-#include <csetjmp>
+#define ZeroMemory(ptr, size) std::memset(ptr, 0, size)
+#define ARRAYSIZE(a) ((sizeof(a) / sizeof(*(a))) / static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
 
 // min and max is required by gdi, therefore NOMINMAX won't work
 #ifdef max
