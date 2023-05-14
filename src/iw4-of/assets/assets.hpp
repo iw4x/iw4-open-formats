@@ -68,6 +68,14 @@ namespace iw4of
 
         void* find_other_asset(int type, const std::string& name) const;
 
+        bool is_type_supported(int iw4_int_type) const
+        {
+            return
+				iw4_int_type >= 0 &&
+				iw4_int_type < native::ASSET_TYPE_COUNT &&
+				interface_exists(static_cast<native::XAssetType>(iw4_int_type));
+        }
+
         uint32_t write_in_stringtable(const std::string& text) const;
 
         std::string read_from_stringtable(const uint32_t& index) const;
