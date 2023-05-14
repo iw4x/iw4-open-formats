@@ -155,7 +155,7 @@ namespace iw4of::interfaces
 
         auto data_length = loaded_sound->sound.info.data_len;
 
-		if (loaded_sound->sound.info.bits / 8 > 0)
+        if (loaded_sound->sound.info.bits / 8 > 0)
         {
             assert(data_length / (loaded_sound->sound.info.bits / 8) == loaded_sound->sound.info.samples);
         }

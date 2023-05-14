@@ -24,7 +24,7 @@ namespace iw4of
 
         void set_work_path(const std::filesystem::path& path);
 
-		bool is_type_supported(int iw4_type) const;
+        bool is_type_supported(int iw4_type) const;
 
         api(const params_t& params);
 

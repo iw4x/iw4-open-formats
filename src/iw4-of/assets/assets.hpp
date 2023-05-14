@@ -70,10 +70,7 @@ namespace iw4of
 
         bool is_type_supported(int iw4_int_type) const
         {
-            return
-				iw4_int_type >= 0 &&
-				iw4_int_type < native::ASSET_TYPE_COUNT &&
-				interface_exists(static_cast<native::XAssetType>(iw4_int_type));
+            return iw4_int_type >= 0 && iw4_int_type < native::ASSET_TYPE_COUNT && interface_exists(static_cast<native::XAssetType>(iw4_int_type));
         }
 
         uint32_t write_in_stringtable(const std::string& text) const;
