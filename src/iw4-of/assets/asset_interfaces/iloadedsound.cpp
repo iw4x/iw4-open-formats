@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include "iloadedsound.hpp"
 
@@ -154,7 +154,11 @@ namespace iw4of::interfaces
         buffer.save(sampleRate);
 
         auto data_length = loaded_sound->sound.info.data_len;
-        assert(data_length / (loaded_sound->sound.info.bits / 8) == loaded_sound->sound.info.samples);
+
+        if (loaded_sound->sound.info.bits / 8 > 0)
+        {
+            assert(data_length / (loaded_sound->sound.info.bits / 8) == loaded_sound->sound.info.samples);
+        }
 
         // ByteRate
         int32_t byteRate = loaded_sound->sound.info.rate * loaded_sound->sound.info.channels * loaded_sound->sound.info.bits / 8;

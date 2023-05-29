@@ -32,3 +32,8 @@ void iw4of::api::clear_writes() const
 {
     _assets->clear_writes();
 }
+
+bool iw4of::api::is_type_supported(int iw4_type) const
+{
+    return _assets->is_type_supported(iw4_type);
+}
