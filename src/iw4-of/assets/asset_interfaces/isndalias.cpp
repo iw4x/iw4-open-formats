@@ -332,7 +332,19 @@ namespace iw4of::interfaces
                         {
                             file_name = std::format("{}/{}", alias.soundFile->u.streamSnd.dir, file_name);
                         }
+                        
+                        auto fullPath = std::format("{}/sound/{}", assets->get_work_directory(), file_name);
+                        auto destinationDirectory = std::format("{}/sound/{}", assets->get_work_directory(), alias.soundFile->u.streamSnd.dir);
+                        auto internalPath = std::format("sound/{}", file_name);
+
+                        utils::io::create_directory(destinationDirectory);
+                        std::ofstream destination(fullPath, std::ios::binary);
+
+                        auto contents = assets->read_file(internalPath.data());
+
+                        destination.write(contents.data(), contents.size());
                     }
+
                     break;
                 }
             }

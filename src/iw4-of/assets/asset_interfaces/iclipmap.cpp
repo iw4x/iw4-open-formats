@@ -756,6 +756,11 @@ namespace iw4of::interfaces
             {
                 if (leaf_brushes.contains(leaf_brush_node->data.leaf.brushes))
                 {
+                    auto index_str = std::format("#{}", leaf_brushes[leaf_brush_node->data.leaf.brushes]);
+                    json_leaf_brush_node.AddMember("data", RAPIDJSON_STR(mem_allocator.duplicate_string(index_str)), allocator);
+                }
+                else
+                {
                     // This happens on iw3, i suppose it's okay
                     rapidjson::Value lbn_array(rapidjson::kArrayType);
                     for (short brushIndex = 0; brushIndex < leaf_brush_node->leafBrushCount; brushIndex++)
@@ -764,11 +769,6 @@ namespace iw4of::interfaces
                     }
 
                     json_leaf_brush_node.AddMember("data", lbn_array, allocator);
-                }
-                else
-                {
-                    auto index_str = std::format("#{}", leaf_brushes[leaf_brush_node->data.leaf.brushes]);
-                    json_leaf_brush_node.AddMember("data", RAPIDJSON_STR(mem_allocator.duplicate_string(index_str)), allocator);
                 }
             }
             else
