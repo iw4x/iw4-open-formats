@@ -81,7 +81,7 @@ namespace iw4of::interfaces
 
                 case 0x61746164: // data
                     sound->sound.info.data_len = chunkSize;
-                    sound->sound.info.samples = chunkSize / (sound->sound.info.bits / 8);
+                    sound->sound.info.samples = (uint32_t)(chunkSize / (sound->sound.info.bits / (float)8));
                     sound->sound.data = reader.read_array<char>(chunkSize);
                     sound->sound.info.data_ptr = sound->sound.data;
                     break;

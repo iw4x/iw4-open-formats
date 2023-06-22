@@ -21,16 +21,18 @@ namespace iw4of::interfaces
             if (header.rawfile->compressedLen > 0)
             {
                 const auto& str = utils::compression::zlib::decompress(std::string(header.rawfile->buffer, header.rawfile->compressedLen));
-                uncompressed_buffer = local_allocator.duplicate_string(str);
+                uncompressed_buffer = std::string(local_allocator.duplicate_string(str), header.rawfile->len);
             }
             else
             {
-                uncompressed_buffer = header.rawfile->buffer;
+                uncompressed_buffer = std::string(header.rawfile->buffer, header.rawfile->len);
             }
 
             write_named_assets(header.rawfile->name, uncompressed_buffer);
 
-            return utils::io::write_file(get_work_path(header).string(), std::string(uncompressed_buffer.data(), header.rawfile->len));
+			const auto work_path = get_work_path(header).string();
+            const auto data = std::string(uncompressed_buffer.data(), header.rawfile->len);
+            return utils::io::write_file(work_path, data);
         }
 
         // Happens
