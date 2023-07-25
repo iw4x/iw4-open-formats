@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include "isndalias.hpp"
 
@@ -106,7 +106,7 @@ namespace iw4of::interfaces
             {
                 sound_file = head["soundfile"].GetString();
 
-                print("Fixed casing on {}", name);
+                print("Fixed casing on {}\n", name);
             }
             else
             {

@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include "igfximage.hpp"
 
@@ -43,14 +43,15 @@ namespace iw4of::interfaces
     const char* temp_name = image->name;
     if (temp_name[0] == '*') temp_name++;
 
-    const auto special_path = get_special_file_name(temp_name).string();
+
+    const auto special_path = get_work_path(get_special_file_name(temp_name)).string();
     if (utils::io::file_exists(special_path))
     {
       auto contents = utils::io::read_file(special_path);
       auto reader = utils::stream::reader(&local_allocator, contents);
 
       void* magic = reader.read(8);
-      if (std::memcmp(&magic, "IW4xImg", 7))
+      if (std::memcmp(magic, "IW4xImg", 7))
       {
         print_error("Reading image '{}' failed, header is invalid!", name);
         return nullptr;
@@ -73,16 +74,17 @@ namespace iw4of::interfaces
         return nullptr;
       }
 
-      image->mapType = reader.read<char>();
+      image->mapType = reader.read<uint8_t>();
       image->semantic = reader.read<native::GfxImageCategory>();
-      image->category = reader.read<char>();
+      image->category = reader.read<uint8_t>();
 
       int32_t dataLength = reader.read<int32_t>();
       image->cardMemory.platform[0] = dataLength;
       image->cardMemory.platform[1] = dataLength;
 
-      image->texture.loadDef =
-          local_allocator.allocate<iw4of::native::GfxImageLoadDef>();
+      image->texture.loadDef = reinterpret_cast<iw4of::native::GfxImageLoadDef*>(
+          local_allocator.allocate(16 + dataLength)
+		);
 
       if (isLegacyZeroVersion)
       {
@@ -110,15 +112,18 @@ namespace iw4of::interfaces
       }
       else
       {
+        image->texture.loadDef->levelCount = reader.read<uint8_t>();
         image->texture.loadDef->flags = reader.read<int32_t>();
         image->width = reader.read<uint16_t>();
         image->height = reader.read<uint16_t>();
         image->depth = reader.read<uint16_t>();
-
+        image->texture.loadDef->resourceSize = dataLength; 
         image->texture.loadDef->format = reader.read<int32_t>();
       }
 
       ZeroMemory(image->texture.loadDef->pad, 3);
+
+      std::memcpy(image->texture.loadDef->data, reader.read(dataLength), dataLength);
 
       if (image->texture.loadDef->resourceSize != dataLength)
       {
@@ -128,19 +133,30 @@ namespace iw4of::interfaces
 
       image->delayLoadPixels = true;
 
+      std::string test{};
+      test.append(static_cast<const char*>(image->texture.loadDef->data), image->texture.loadDef->resourceSize);
+
       return image;
     }
     else if (name[0] != '*')
     {
-      const auto file_path = get_file_name(name).string();
+      const auto file_path = get_work_path(name).string();
+      std::string iwiBuffer{};
 
       if (!utils::io::file_exists(file_path))
       {
-        print_error("Loading image '{}' failed!", file_path);
-        return nullptr;
+        const auto game_vfs_path = (get_folder_name() / get_file_name(name));
+        iwiBuffer = this->assets->read_file(game_vfs_path.string());
+        if (iwiBuffer.empty())
+        {
+           print_error("Loading image '{}' failed!", file_path);
+           return nullptr;
+        }
       }
-
-      auto iwiBuffer = utils::io::read_file(file_path);
+      else
+      {
+        iwiBuffer = utils::io::read_file(file_path);
+      }
 
       const native::GfxImageFileHeader* iwiHeader =
           reinterpret_cast<const native::GfxImageFileHeader*>(iwiBuffer.data());
@@ -249,7 +265,7 @@ namespace iw4of::interfaces
     }
     else
     {
-      const auto game_file_path = std::format("images/{}.iwi", image->name);
+      const auto game_file_path = get_work_path(header).string();
       // > 10MB cannot use FS_FileRead (breaks hunk)
       auto contents = assets->read_file(game_file_path.data());
 
