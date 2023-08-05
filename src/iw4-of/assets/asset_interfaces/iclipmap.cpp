@@ -520,63 +520,27 @@ namespace iw4of::interfaces
         rapidjson::Document output(rapidjson::kObjectType);
         auto& allocator = output.GetAllocator();
 
-        auto float_array_to_json = [&allocator](const float* array, int size)
-        {
-            rapidjson::Value arr(rapidjson::kArrayType);
-
-            for (auto i = 0; i < size; i++)
-            {
-                arr.PushBack(rapidjson::Value(array[i]), allocator);
-            }
-
-            return arr;
-        };
-
         auto ushort_to_array = [&allocator](const uint16_t* array, int size)
         {
-            rapidjson::Value arr(rapidjson::kArrayType);
-
-            for (auto i = 0; i < size; i++)
-            {
-                arr.PushBack(rapidjson::Value(array[i]), allocator);
-            }
-
-            return arr;
+            return utils::json::make_json_array(array, size, allocator);
         };
 
         auto uchar_to_array = [&allocator](const uint8_t* array, int size)
         {
-            rapidjson::Value arr(rapidjson::kArrayType);
-
-            for (auto i = 0; i < size; i++)
-            {
-                arr.PushBack(rapidjson::Value(static_cast<uint8_t>(array[i])), allocator);
-            }
-
-            return arr;
+            return utils::json::make_json_array(array, size, allocator);
         };
 
-        auto bounds_to_json = [&allocator, &float_array_to_json](const native::Bounds& bounds)
-        {
-            rapidjson::Value bounds_json(rapidjson::kObjectType);
-
-            bounds_json.AddMember("midPoint", float_array_to_json(bounds.midPoint, 3), allocator);
-            bounds_json.AddMember("halfSize", float_array_to_json(bounds.halfSize, 3), allocator);
-
-            return bounds_json;
-        };
-
-        auto placement_to_json = [&allocator, &float_array_to_json](const native::GfxPlacement& placement)
+        auto placement_to_json = [&allocator](const native::GfxPlacement& placement)
         {
             rapidjson::Value placement_json(rapidjson::kObjectType);
 
-            placement_json.AddMember("quat", float_array_to_json(placement.quat, 4), allocator);
-            placement_json.AddMember("origin", float_array_to_json(placement.origin, 3), allocator);
+            placement_json.AddMember("quat", utils::json::make_json_array(placement.quat, 4, allocator), allocator);
+            placement_json.AddMember("origin", utils::json::make_json_array(placement.origin, 3, allocator), allocator);
 
             return placement_json;
         };
 
-        auto leaf_to_json = [&allocator, &bounds_to_json](const native::cLeaf_t& leaf)
+        auto leaf_to_json = [&allocator](const native::cLeaf_t& leaf)
         {
             rapidjson::Value json_leave(rapidjson::kObjectType);
 
@@ -585,7 +549,7 @@ namespace iw4of::interfaces
             json_leave.AddMember("brushContents", leaf.brushContents, allocator);
             json_leave.AddMember("terrainContents", leaf.terrainContents, allocator);
             json_leave.AddMember("leafBrushNode", leaf.leafBrushNode, allocator);
-            json_leave.AddMember("bounds", bounds_to_json(leaf.bounds), allocator);
+            json_leave.AddMember("bounds", utils::json::to_json(leaf.bounds, allocator), allocator);
 
             return json_leave;
         };
@@ -601,7 +565,7 @@ namespace iw4of::interfaces
             rapidjson::Value json_plane(rapidjson::kObjectType);
             auto plane = &clip_map->planes[i];
 
-            json_plane.AddMember("normal", float_array_to_json(plane->normal, ARRAYSIZE(plane->normal)), allocator);
+            json_plane.AddMember("normal", utils::json::make_json_array(plane->normal, ARRAYSIZE(plane->normal), allocator), allocator);
 
             json_plane.AddMember("dist", plane->dist, allocator);
             json_plane.AddMember("type", plane->type, allocator);
@@ -624,7 +588,7 @@ namespace iw4of::interfaces
                 "xmodel",
                 static_model->xmodel == nullptr ? rapidjson::Value(rapidjson::kNullType) : RAPIDJSON_STR(static_model->xmodel->name),
                 allocator);
-            json_static_model.AddMember("origin", float_array_to_json(static_model->origin, ARRAYSIZE(static_model->origin)), allocator);
+            json_static_model.AddMember("origin", utils::json::make_json_array(static_model->origin, ARRAYSIZE(static_model->origin), allocator), allocator);
 
             if (static_model->xmodel)
             {
@@ -634,12 +598,13 @@ namespace iw4of::interfaces
             rapidjson::Value inv_scaled_axis(rapidjson::kArrayType);
             for (size_t j = 0; j < ARRAYSIZE(static_model->invScaledAxis); j++)
             {
-                inv_scaled_axis.PushBack(float_array_to_json(static_model->invScaledAxis[j], ARRAYSIZE(static_model->invScaledAxis[j])), allocator);
+                inv_scaled_axis.PushBack(utils::json::make_json_array(static_model->invScaledAxis[j], ARRAYSIZE(static_model->invScaledAxis[j]), allocator),
+                                         allocator);
             }
 
             json_static_model.AddMember("invScaledAxis", inv_scaled_axis, allocator);
 
-            json_static_model.AddMember("absBounds", bounds_to_json(static_model->absBounds), allocator);
+            json_static_model.AddMember("absBounds", utils::json::to_json(static_model->absBounds, allocator), allocator);
 
             json_static_models.PushBack(json_static_model, allocator);
         }
@@ -807,7 +772,7 @@ namespace iw4of::interfaces
         rapidjson::Value json_vertices(rapidjson::kArrayType);
         for (size_t i = 0; i < clip_map->vertCount; i++)
         {
-            json_vertices.PushBack(float_array_to_json(clip_map->verts[i], 3), allocator);
+            json_vertices.PushBack(utils::json::make_json_array(clip_map->verts[i], 3, allocator), allocator);
         }
 
         output.AddMember("verts", json_vertices, allocator);
@@ -841,7 +806,7 @@ namespace iw4of::interfaces
 
             rapidjson::Value json_collision_border(rapidjson::kObjectType);
 
-            json_collision_border.AddMember("distEq", float_array_to_json(collision_border->distEq, 3), allocator);
+            json_collision_border.AddMember("distEq", utils::json::make_json_array(collision_border->distEq, ARRAYSIZE(collision_border->distEq), allocator), allocator);
             json_collision_border.AddMember("zBase", collision_border->zBase, allocator);
             json_collision_border.AddMember("zSlope", collision_border->zSlope, allocator);
             json_collision_border.AddMember("start", collision_border->start, allocator);
@@ -886,8 +851,8 @@ namespace iw4of::interfaces
 
             rapidjson::Value json_aabbtree(rapidjson::kObjectType);
 
-            json_aabbtree.AddMember("midPoint", float_array_to_json(aabbtree->midPoint, 3), allocator);
-            json_aabbtree.AddMember("halfSize", float_array_to_json(aabbtree->halfSize, 3), allocator);
+            json_aabbtree.AddMember("midPoint", utils::json::make_json_array(aabbtree->midPoint, 3, allocator), allocator);
+            json_aabbtree.AddMember("halfSize", utils::json::make_json_array(aabbtree->halfSize, 3, allocator), allocator);
             json_aabbtree.AddMember("materialIndex", aabbtree->materialIndex, allocator);
             json_aabbtree.AddMember("childCount", aabbtree->childCount, allocator);
             json_aabbtree.AddMember("u", aabbtree->u, allocator);
@@ -905,7 +870,7 @@ namespace iw4of::interfaces
 
             rapidjson::Value json_cmodel(rapidjson::kObjectType);
 
-            json_cmodel.AddMember("bounds", bounds_to_json(cmodel->bounds), allocator);
+            json_cmodel.AddMember("bounds", utils::json::to_json(cmodel->bounds, allocator), allocator);
             json_cmodel.AddMember("radius", cmodel->radius, allocator);
             json_cmodel.AddMember("leaf", leaf_to_json(cmodel->leaf), allocator);
 
@@ -972,7 +937,7 @@ namespace iw4of::interfaces
         rapidjson::Value json_brush_bounds(rapidjson::kArrayType);
         for (size_t i = 0; i < clip_map->numBrushes; i++)
         {
-            json_brush_bounds.PushBack(bounds_to_json(clip_map->brushBounds[i]), allocator);
+            json_brush_bounds.PushBack(utils::json::to_json(clip_map->brushBounds[i], allocator), allocator);
         }
 
         output.AddMember("brushBounds", json_brush_bounds, allocator);
@@ -1018,7 +983,7 @@ namespace iw4of::interfaces
             for (size_t i = 0; i < ents->trigger.hullCount; i++)
             {
                 rapidjson::Value json_trigger_hull(rapidjson::kObjectType);
-                json_trigger_hull.AddMember("bounds", bounds_to_json(ents->trigger.hulls[i].bounds), allocator);
+                json_trigger_hull.AddMember("bounds", utils::json::to_json(ents->trigger.hulls[i].bounds, allocator), allocator);
                 json_trigger_hull.AddMember("contents", ents->trigger.hulls[i].contents, allocator);
                 json_trigger_hull.AddMember("slabCount", ents->trigger.hulls[i].slabCount, allocator);
                 json_trigger_hull.AddMember("firstSlab", ents->trigger.hulls[i].firstSlab, allocator);
@@ -1032,7 +997,7 @@ namespace iw4of::interfaces
             for (size_t i = 0; i < ents->trigger.slabCount; i++)
             {
                 rapidjson::Value json_trigger_slab(rapidjson::kObjectType);
-                json_trigger_slab.AddMember("dir", float_array_to_json(ents->trigger.slabs[i].dir, 3), allocator);
+                json_trigger_slab.AddMember("dir", utils::json::make_json_array(ents->trigger.slabs[i].dir, 3, allocator), allocator);
                 json_trigger_slab.AddMember("midPoint", ents->trigger.slabs[i].midPoint, allocator);
                 json_trigger_slab.AddMember("halfSize", ents->trigger.slabs[i].halfSize, allocator);
 
@@ -1048,7 +1013,7 @@ namespace iw4of::interfaces
                 auto stage = &ents->stages[i];
                 rapidjson::Value json_stage(rapidjson::kObjectType);
                 json_stage.AddMember("name", RAPIDJSON_STR(stage->name), allocator);
-                json_stage.AddMember("origin", float_array_to_json(stage->origin, 3), allocator);
+                json_stage.AddMember("origin", utils::json::make_json_array(stage->origin, 3, allocator), allocator);
                 json_stage.AddMember("triggerIndex", stage->triggerIndex, allocator);
                 json_stage.AddMember("sunPrimaryLightIndex", stage->sunPrimaryLightIndex, allocator);
 
@@ -1072,7 +1037,7 @@ namespace iw4of::interfaces
 
             rapidjson::Value json_smodelnode(rapidjson::kObjectType);
 
-            json_smodelnode.AddMember("bounds", bounds_to_json(smodelNode->bounds), allocator);
+            json_smodelnode.AddMember("bounds", utils::json::to_json(smodelNode->bounds, allocator), allocator);
             json_smodelnode.AddMember("firstChild", smodelNode->firstChild, allocator);
             json_smodelnode.AddMember("childCount", smodelNode->childCount, allocator);
 
@@ -1109,9 +1074,9 @@ namespace iw4of::interfaces
                     json_dyn_entity_def.AddMember("health", def->health, allocator);
 
                     rapidjson::Value json_mass(rapidjson::kObjectType);
-                    json_mass.AddMember("centerOfMass", float_array_to_json(def->mass.centerOfMass, 3), allocator);
-                    json_mass.AddMember("momentsOfInertia", float_array_to_json(def->mass.momentsOfInertia, 3), allocator);
-                    json_mass.AddMember("productsOfInertia", float_array_to_json(def->mass.productsOfInertia, 3), allocator);
+                    json_mass.AddMember("centerOfMass", utils::json::make_json_array(def->mass.centerOfMass, 3, allocator), allocator);
+                    json_mass.AddMember("momentsOfInertia", utils::json::make_json_array(def->mass.momentsOfInertia, 3, allocator), allocator);
+                    json_mass.AddMember("productsOfInertia", utils::json::make_json_array(def->mass.productsOfInertia, 3, allocator), allocator);
                     json_dyn_entity_def.AddMember("mass", json_mass, allocator);
 
                     json_dyn_entity_def.AddMember("contents", def->contents, allocator);

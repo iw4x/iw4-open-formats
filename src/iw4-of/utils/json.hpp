@@ -81,4 +81,11 @@ namespace iw4of::utils::json
             destination[i] = json_member[i].Get<T>();
         }
     }
+
+    rapidjson::Value to_json(const native::FxFloatRange& floatRange, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+    rapidjson::Value to_json(const native::FxIntRange& intRange, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+    rapidjson::Value to_json(const native::FxElemVec3Range& vec3Range, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+    rapidjson::Value to_json(const native::Bounds& bounds, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+	rapidjson::Value to_json(const native::FxElemVisualState& elemVisualState, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
 } // namespace iw4of::utils::json

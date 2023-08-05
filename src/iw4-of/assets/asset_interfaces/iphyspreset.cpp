@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include "iphyspreset.hpp"
 
@@ -68,6 +68,9 @@ namespace iw4of::interfaces
 
             try
             {
+				// Must NOT be null!
+                assert(!physPresetJson["sndAliasPrefix"].IsNull());
+
                 asset->name = local_allocator.duplicate_string(physPresetJson["name"].GetString());
                 asset->type = physPresetJson["type"].Get<int32_t>();
                 asset->bounce = physPresetJson["bounce"].Get<float>();

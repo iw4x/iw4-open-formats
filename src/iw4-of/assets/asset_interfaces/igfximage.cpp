@@ -25,7 +25,9 @@ namespace iw4of::interfaces
   std::filesystem::path igfximage::get_special_file_name(
       const std::string& name) const
   {
-    return std::format("{}.iw4xImage", name);
+    auto fixed_name = name;
+    if (name[0] == '*') fixed_name.erase(fixed_name.begin());
+    return std::format("{}.iw4xImage", fixed_name);
   }
 
   void* igfximage::read_internal(const std::string& name) const
