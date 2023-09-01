@@ -86,6 +86,11 @@ namespace iw4of::utils::json
     rapidjson::Value to_json(const native::FxIntRange& intRange, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
     rapidjson::Value to_json(const native::FxElemVec3Range& vec3Range, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
     rapidjson::Value to_json(const native::Bounds& bounds, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
-	rapidjson::Value to_json(const native::FxElemVisualState& elemVisualState, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+    rapidjson::Value to_json(const native::FxElemVisualState& elemVisualState, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+    native::FxFloatRange float_range_from_json(const rapidjson::Value& value);
+    native::FxIntRange int_range_from_json(const rapidjson::Value& value);
+    native::FxElemVec3Range vec3_range_from_json(const rapidjson::Value& value);
+    native::FxElemVisualState visual_state_from_json(const rapidjson::Value& value);
 
 } // namespace iw4of::utils::json
