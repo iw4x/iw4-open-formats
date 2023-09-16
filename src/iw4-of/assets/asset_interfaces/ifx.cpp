@@ -19,7 +19,6 @@ namespace iw4of::interfaces
         AssertSize(native::FxEffectDef, 32);
 
         auto asset = header.fx;
-
         rapidjson::Document output(rapidjson::kObjectType);
         auto& allocator = output.GetAllocator();
         utils::memory::allocator str_duplicator;
@@ -721,11 +720,11 @@ namespace iw4of::interfaces
                             }
                             else if (elem_def->elemType == native::FX_ELEM_TYPE_SPARK_FOUNTAIN)
                             {
-                                if (elem.HasMember("jsonSparkFountain") && !elem["jsonSparkFountain"].IsNull())
+                                if (elem.HasMember("sparkFountain") && !elem["sparkFountain"].IsNull())
                                 {
                                     elem_def->extended.sparkFountainDef = local_allocator.allocate<iw4of::native::FxSparkFountainDef>();
                                     auto spark_fountain = elem_def->extended.sparkFountainDef;
-                                    const rapidjson::Value& json_spark_fountain = elem["jsonSparkFountain"];
+                                    const rapidjson::Value& json_spark_fountain = elem["sparkFountain"];
 
 #define READ_SPARK_FOUNTAIN_MEMBER(x, y) spark_fountain->x = json_spark_fountain[#x].Get<y>()
 
@@ -745,6 +744,11 @@ namespace iw4of::interfaces
 
 #undef READ_SPARK_FOUNTAIN_MEMBER
                                 }
+								else
+								{
+									// Guaranteed to crash
+									print_error("Missing spark fountain definition for fx {} elem {}, this will crash on iw4!", name, i);
+								}
                             }
                         }
 
