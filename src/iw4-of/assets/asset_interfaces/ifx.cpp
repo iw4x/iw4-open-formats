@@ -762,15 +762,6 @@ namespace iw4of::interfaces
             return nullptr;
         }
 
-		
-
-		if (asset->name == "impacts/pipe_fire"s)
-		{
-			printf("");
-		}
-
-
-
         return asset;
     }
 
