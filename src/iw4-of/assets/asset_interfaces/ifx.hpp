@@ -6,6 +6,9 @@
 
 #include "../asset_interface.hpp"
 #include "../assets.hpp"
+
+#include "rapidjson/document.h"
+
 #include <utils/stream.hpp>
 
 namespace iw4of::interfaces
@@ -29,7 +32,15 @@ namespace iw4of::interfaces
         }
 
        private:
-        void write(const native::FxElemVisuals* from, char elemType, utils::stream* buffer) const;
-        void read(native::FxElemVisuals* into, char elemType, utils::stream::reader* reader) const;
-    };
+        rapidjson::Value to_json(const native::FxElemVisuals* visuals, char elemType,
+                                 rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const;
+		void read(native::FxElemVisuals* visuals, char elemType, utils::stream::reader* reader) const;
+		void read(native::FxElemVisuals* into, char elemType, const rapidjson::Value& value) const;
+
+		std::filesystem::path get_legacy_work_path(const std::string& file_name) const;
+        std::filesystem::path get_binary_file_name(const std::string& basename) const;
+
+        native::FxEffectDef* read_binary(const std::string& name, const std::string& path) const;
+        native::FxEffectDef* read_plaintext(const std::string& name, const std::string& path) const;
+	};
 } // namespace iw4of::interfaces

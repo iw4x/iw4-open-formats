@@ -93,14 +93,61 @@ namespace iw4of::utils::json
     {
         rapidjson::Value output(rapidjson::kObjectType);
 
-        output.AddMember("midPoint", make_json_array(elemVisualState.color, 4, allocator), allocator);
-
+        output.AddMember("color", make_json_array(elemVisualState.color, 4, allocator), allocator);
         output.AddMember("rotationDelta", elemVisualState.rotationDelta, allocator);
         output.AddMember("rotationTotal", elemVisualState.rotationTotal, allocator);
         output.AddMember("size", make_json_array(elemVisualState.size, 2, allocator), allocator);
         output.AddMember("scale", elemVisualState.scale, allocator);
 
         return output;
+    }
+
+    native::FxFloatRange float_range_from_json(const rapidjson::Value& value)
+    {
+        native::FxFloatRange range{};
+
+        range.base = value["base"].GetFloat();
+        range.amplitude = value["amplitude"].GetFloat();
+
+        return range;
+    }
+
+    native::FxIntRange int_range_from_json(const rapidjson::Value& value)
+    {
+        native::FxIntRange range{};
+
+        range.base = value["base"].GetInt();
+        range.amplitude = value["amplitude"].GetInt();
+
+        return range;
+    }
+
+    native::FxElemVec3Range vec3_range_from_json(const rapidjson::Value& value)
+    {
+        native::FxElemVec3Range range{};
+
+        for (size_t i = 0; i < 3; i++)
+        {
+            range.base[i] = value["base"][i].GetFloat();
+            range.amplitude[i] = value["amplitude"][i].GetFloat();
+        }
+
+        return range;
+    }
+
+    native::FxElemVisualState visual_state_from_json(const rapidjson::Value& value)
+    {
+        native::FxElemVisualState state{};
+
+		copy_array(state.color, value["color"], 4);
+        state.rotationDelta = value["rotationDelta"].GetFloat();
+        state.rotationTotal = value["rotationTotal"].GetFloat();
+
+        copy_array(state.size, value["size"], 2);
+
+        state.scale = value["scale"].GetFloat();
+
+		return state;
     }
 
 } // namespace iw4of::utils::json
