@@ -103,7 +103,9 @@ namespace iw4of::interfaces
                 if (elem_def->velSamples)
                 {
                     rapidjson::Value vel_samples_json(rapidjson::kArrayType);
-                    for (size_t j = 0; j < elem_def->velIntervalCount; j++)
+
+                    // note the <=
+                    for (size_t j = 0; j <= elem_def->velIntervalCount; j++)
                     {
                         rapidjson::Value vel_sample(rapidjson::kObjectType);
 
@@ -126,8 +128,9 @@ namespace iw4of::interfaces
 
                 if (elem_def->visSamples)
                 {
-                    // note the <=
                     rapidjson::Value vis_samples_json(rapidjson::kArrayType);
+
+                    // note the <=
                     for (size_t j = 0; j <= elem_def->visStateIntervalCount; j++)
                     {
                         rapidjson::Value vis_sample(rapidjson::kObjectType);
@@ -580,10 +583,11 @@ namespace iw4of::interfaces
                         elem_def->velIntervalCount = elem["velIntervalCount"].Get<uint8_t>();
                         elem_def->visStateIntervalCount = elem["visStateIntervalCount"].Get<uint8_t>();
 
-                        elem_def->velSamples = local_allocator.allocate_array<native::FxElemVelStateSample>(elem_def->velIntervalCount);
+                        elem_def->velSamples = local_allocator.allocate_array<native::FxElemVelStateSample>(elem_def->velIntervalCount+1);
                         if (elem.HasMember("velSamples") && !elem["velSamples"].IsNull())
                         {
-                            for (size_t j = 0; j < elem_def->velIntervalCount; j++)
+							// Mind the <=
+                            for (size_t j = 0; j <= elem_def->velIntervalCount; j++)
                             {
                                 const auto& json_vel_sample = elem["velSamples"][j];
                                 auto vel_sample = &elem_def->velSamples[j];
