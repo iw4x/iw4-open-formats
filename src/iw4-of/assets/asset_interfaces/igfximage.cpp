@@ -273,6 +273,12 @@ namespace iw4of::interfaces
 
       if (contents.empty())
       {
+        // Try without work path
+        contents = assets->read_file(std::format("images/{}", get_file_name(header).string()));
+      }
+
+      if (contents.empty())
+      {
         // Ignore that
         if (std::string(image->name).starts_with("watersetup"))
         {
