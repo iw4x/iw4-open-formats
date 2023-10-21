@@ -47,7 +47,7 @@ namespace iw4of::interfaces
         rapidjson::Document clipmap_json;
         try
         {
-            clipmap_json.Parse(contents.data());
+            clipmap_json.Parse<rapidjson::kParseNanAndInfFlag>(contents.data());
         }
         catch (const std::exception& e)
         {
@@ -1115,7 +1115,14 @@ namespace iw4of::interfaces
 
         // Write to disk
         rapidjson::StringBuffer buff;
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buff);
+        rapidjson::PrettyWriter<
+					/*typename OutputStream  */ rapidjson::StringBuffer,
+					/*typename SourceEncoding*/ rapidjson::UTF8<>,
+					/*typename TargetEncoding*/ rapidjson::UTF8<>,
+					/*typename StackAllocator*/ rapidjson::CrtAllocator,
+					/*unsigned writeFlags*/     rapidjson::kWriteNanAndInfFlag 
+			>
+			writer(buff);
         writer.SetFormatOptions(rapidjson::PrettyFormatOptions::kFormatSingleLineArray);
         output.Accept(writer);
 

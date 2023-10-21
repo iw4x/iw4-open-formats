@@ -327,7 +327,7 @@ namespace iw4of::interfaces
         }
         else
         {
-            const auto old_path = get_legacy_work_path(path).string();
+            const auto old_path = get_legacy_work_path(name).string();
 
             if (utils::io::file_exists(old_path))
             {
