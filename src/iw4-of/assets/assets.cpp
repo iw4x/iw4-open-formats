@@ -21,7 +21,6 @@
 #include <assets/asset_interfaces/igfxworld.hpp>
 #include <assets/asset_interfaces/imapents.hpp>
 #include <assets/asset_interfaces/ixmodel.hpp>
-#include <assets/asset_interfaces/iphyscollmap.hpp>
 #include <assets/asset_interfaces/iweapon.hpp>
 #include <assets/asset_interfaces/itracerdef.hpp>
 
