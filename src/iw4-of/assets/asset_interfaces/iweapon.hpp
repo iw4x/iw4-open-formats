@@ -53,8 +53,25 @@ namespace iw4of::interfaces
             "xmags",
         };
 
-		bool write_variant(rapidjson::Value& parent_value, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator,
-                           const native::XAssetHeader&  weapon_original, const native::XAssetHeader& weapon_variant) const;
+        void write_xmodels_array(const std::string& name, native::XModel** arr, size_t count, native::XModel** original_arr,
+                                 rapidjson::Value& container, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const;
+
+        void write_sounds_array(const std::string& name, native::snd_alias_list_t** arr, size_t count, native::snd_alias_list_t** original_arr,
+                                rapidjson::Value& container, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const;
+
+        void read_weapon_anims(const std::string& name, const char*** arr, const rapidjson::Value& container) const;
+
+		void read_sounds_array(const std::string& name, native::snd_alias_list_t*** destination, const rapidjson::Value& container) const;
+
+		void read_xmodels_array(const std::string& name, native::XModel*** destination, const rapidjson::Value& container) const;
+
+        void write_weapon_anims(const std::string& name, const char** arr, const char** original_arr, rapidjson::Value& container,
+                                rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const;
+
+        bool write_variant(rapidjson::Value& parent_value, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator,
+                           const native::XAssetHeader& weapon_original, const native::XAssetHeader& weapon_variant) const;
+
+        bool read_variant(native::XAssetHeader& weapon, const rapidjson::Value& variant, const native::XAssetHeader& original) const;
     };
 
 } // namespace iw4of::interfaces

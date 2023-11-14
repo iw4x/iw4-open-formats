@@ -21,7 +21,10 @@
 #include <assets/asset_interfaces/igfxworld.hpp>
 #include <assets/asset_interfaces/imapents.hpp>
 #include <assets/asset_interfaces/ixmodel.hpp>
+#include <assets/asset_interfaces/iphyscollmap.hpp>
 #include <assets/asset_interfaces/iweapon.hpp>
+#include <assets/asset_interfaces/itracerdef.hpp>
+
 
 #include "assets.hpp"
 #include <utils/io.hpp>
@@ -157,6 +160,7 @@ namespace iw4of
         asset_interfaces[native::XAssetType::ASSET_TYPE_FX] = new interfaces::ifx(this);
         asset_interfaces[native::XAssetType::ASSET_TYPE_XANIMPARTS] = new interfaces::ixanimparts(this);
         asset_interfaces[native::XAssetType::ASSET_TYPE_WEAPON] = new interfaces::iweapon(this);
+        asset_interfaces[native::XAssetType::ASSET_TYPE_TRACER] = new interfaces::itracerdef(this);
     }
 
     assets::~assets()

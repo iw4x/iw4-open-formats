@@ -79,6 +79,30 @@ namespace iw4of::utils::json
         return elemTable;
     }
 
+	rapidjson::Value to_json(const native::cplane_s* planes, size_t count, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator, std::function<void(const native::cplane_s*, size_t)> const& callback_when_adding_plane)
+    {
+        rapidjson::Value json_planes(rapidjson::kArrayType);
+        for (size_t i = 0; i < count; i++)
+        {
+            rapidjson::Value json_plane(rapidjson::kObjectType);
+            auto plane = &planes[i];
+
+            json_plane.AddMember("normal", utils::json::make_json_array(plane->normal, ARRAYSIZE(plane->normal), allocator), allocator);
+
+            json_plane.AddMember("dist", plane->dist, allocator);
+            json_plane.AddMember("type", plane->type, allocator);
+
+            json_planes.PushBack(json_plane, allocator);
+
+			if (callback_when_adding_plane)
+			{
+                callback_when_adding_plane(plane, i);
+			}
+        }
+
+        return json_planes;
+	}
+
     rapidjson::Value to_json(const native::Bounds& bounds, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
     {
         rapidjson::Value bounds_json(rapidjson::kObjectType);

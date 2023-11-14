@@ -3031,6 +3031,17 @@ namespace iw4of::native
         WEAPSTICKINESS_COUNT = 0x6,
     };
 
+    static const char* WeapStickinessType_Names[] = 
+    {
+        NAMEOF(WEAPSTICKINESS_NONE),
+        NAMEOF(WEAPSTICKINESS_ALL),
+        NAMEOF(WEAPSTICKINESS_ALL_ORIENT),
+        NAMEOF(WEAPSTICKINESS_GROUND),
+        NAMEOF(WEAPSTICKINESS_GROUND_WITH_YAW),
+        NAMEOF(WEAPSTICKINESS_KNIFE),
+        NAMEOF(WEAPSTICKINESS_COUNT),
+    };
+
     enum weapType_t
     {
         WEAPTYPE_BULLET = 0x0,
@@ -3039,6 +3050,14 @@ namespace iw4of::native
         WEAPTYPE_RIOTSHIELD = 0x3,
         WEAPTYPE_NUM = 0x4,
     };
+	
+	static const char* weapType_t_Names[] =
+	{
+		NAMEOF(WEAPTYPE_BULLET),
+		NAMEOF(WEAPTYPE_GRENADE),
+		NAMEOF(WEAPTYPE_PROJECTILE),
+		NAMEOF(WEAPTYPE_RIOTSHIELD)
+	};
 
 	enum weapClass_t
     {
@@ -3056,6 +3075,23 @@ namespace iw4of::native
         WEAPCLASS_ITEM = 0xB,
         WEAPCLASS_NUM = 0xC,
     };
+	
+	static const char* weapClass_t_Names[] = 
+    {
+        NAMEOF(WEAPCLASS_RIFLE),
+        NAMEOF(WEAPCLASS_SNIPER),
+        NAMEOF(WEAPCLASS_MG),
+        NAMEOF(WEAPCLASS_SMG),
+        NAMEOF( WEAPCLASS_SPREAD),
+        NAMEOF(WEAPCLASS_PISTOL),
+        NAMEOF(WEAPCLASS_GRENADE),
+        NAMEOF(WEAPCLASS_ROCKETLAUNCHER),
+        NAMEOF(WEAPCLASS_TURRET),
+        NAMEOF( WEAPCLASS_THROWINGKNIFE),
+        NAMEOF( WEAPCLASS_NON_PLAYER),
+        NAMEOF( WEAPCLASS_ITEM),
+        NAMEOF(WEAPCLASS_NUM)
+    };
 
     enum PenetrateType
     {
@@ -3064,6 +3100,15 @@ namespace iw4of::native
         PENETRATE_TYPE_MEDIUM = 0x2,
         PENETRATE_TYPE_LARGE = 0x3,
         PENETRATE_TYPE_COUNT = 0x4,
+    };
+	
+	static const char* PenetrateType_Names[] = 
+    {
+        NAMEOF(PENETRATE_TYPE_NONE),
+        NAMEOF(PENETRATE_TYPE_SMALL),
+        NAMEOF(PENETRATE_TYPE_MEDIUM),
+        NAMEOF(PENETRATE_TYPE_LARGE),
+        NAMEOF( PENETRATE_TYPE_COUNT)
     };
 
     enum weapInventoryType_t
@@ -3077,6 +3122,17 @@ namespace iw4of::native
         WEAPINVENTORYCOUNT = 0x6,
     };
 
+    static const char* weapInventoryType_t_Names[] =
+    {
+        NAMEOF(WEAPINVENTORY_PRIMARY),
+        NAMEOF(WEAPINVENTORY_OFFHAND),
+        NAMEOF(WEAPINVENTORY_ITEM),
+        NAMEOF(WEAPINVENTORY_ALTMODE),
+        NAMEOF(WEAPINVENTORY_EXCLUSIVE),
+        NAMEOF(WEAPINVENTORY_SCAVENGER),
+        NAMEOF(WEAPINVENTORYCOUN),
+    };
+
     enum weapFireType_t
     {
         WEAPON_FIRETYPE_FULLAUTO = 0x0,
@@ -3088,6 +3144,17 @@ namespace iw4of::native
         WEAPON_FIRETYPECOUNT = 0x6,
         WEAPON_FIRETYPE_BURSTFIRE_FIRST = 0x2,
         WEAPON_FIRETYPE_BURSTFIRE_LAST = 0x4,
+    };
+	
+	static const char* weapFireType_t_Names[] = 
+    {
+         NAMEOF(WEAPON_FIRETYPE_FULLAUTO),
+         NAMEOF(WEAPON_FIRETYPE_SINGLESHOT),
+         NAMEOF(WEAPON_FIRETYPE_BURSTFIRE2),
+         NAMEOF(WEAPON_FIRETYPE_BURSTFIRE3),
+         NAMEOF(WEAPON_FIRETYPE_BURSTFIRE4),
+         NAMEOF(WEAPON_FIRETYPE_DOUBLEBARREL),
+         NAMEOF(WEAPON_FIRETYPECOUNT)
     };
 
     enum weapAnimFiles_t
@@ -3185,6 +3252,17 @@ namespace iw4of::native
         OFFHAND_CLASS_OTHER = 0x5,
         OFFHAND_CLASS_COUNT = 0x6,
     };
+
+    static const char* OffhandClass_Names[] =
+    {
+        NAMEOF(OFFHAND_CLASS_NONE),
+        NAMEOF(OFFHAND_CLASS_FRAG_GRENADE),
+        NAMEOF(OFFHAND_CLASS_SMOKE_GRENADE),
+        NAMEOF(OFFHAND_CLASS_FLASH_GRENADE),
+        NAMEOF(OFFHAND_CLASS_THROWINGKNIFE),
+        NAMEOF(OFFHAND_CLASS_OTHER),
+        NAMEOF(OFFHAND_CLASS_COUNT),
+    };
 	
 	enum weapStance_t
     {
@@ -3194,12 +3272,27 @@ namespace iw4of::native
         WEAPSTANCE_NUM = 0x3,
     };
 
+	static const char* weapStance_t_Names[] =
+    {
+        NAMEOF(WEAPSTANCE_STAND),
+        NAMEOF(WEAPSTANCE_DUCK),
+        NAMEOF(WEAPSTANCE_PRONE),
+        NAMEOF(WEAPSTANCE_NUM)
+    };
+	
     enum weaponIconRatioType_t
     {
         WEAPON_ICON_RATIO_1TO1 = 0x0,
         WEAPON_ICON_RATIO_2TO1 = 0x1,
         WEAPON_ICON_RATIO_4TO1 = 0x2,
         WEAPON_ICON_RATIO_COUNT = 0x3,
+    };
+	
+	static const char* weaponIconRatioType_t_Names[] =
+    {
+        NAMEOF(WEAPON_ICON_RATIO_1TO1),
+        NAMEOF(WEAPON_ICON_RATIO_2TO1),
+        NAMEOF(WEAPON_ICON_RATIO_4TO1)
     };
 
     /* 113 */
@@ -3209,6 +3302,14 @@ namespace iw4of::native
         VEH_ACTIVE_RETICLE_PIP_ON_A_STICK = 0x1,
         VEH_ACTIVE_RETICLE_BOUNCING_DIAMOND = 0x2,
         VEH_ACTIVE_RETICLE_COUNT = 0x3,
+    };
+
+    static const char* activeReticleType_t_Names[] = 
+    {
+        NAMEOF(VEH_ACTIVE_RETICLE_NONE),
+        NAMEOF(VEH_ACTIVE_RETICLE_PIP_ON_A_STICK),
+		NAMEOF(VEH_ACTIVE_RETICLE_BOUNCING_DIAMOND),
+        NAMEOF(VEH_ACTIVE_RETICLE_COUNT)
     };
 
     /* 114 */
@@ -3224,6 +3325,18 @@ namespace iw4of::native
         AMMO_COUNTER_CLIP_COUNT = 0x7,
     };
 
+	static const char* ammoCounterClipType_t_Names[] = 
+    {
+        NAMEOF(AMMO_COUNTER_CLIP_NONE),
+        NAMEOF(AMMO_COUNTER_CLIP_MAGAZINE),
+        NAMEOF(AMMO_COUNTER_CLIP_SHORTMAGAZINE),
+        NAMEOF(AMMO_COUNTER_CLIP_SHOTGUN),
+        NAMEOF(AMMO_COUNTER_CLIP_ROCKET),
+        NAMEOF(AMMO_COUNTER_CLIP_BELTFED),
+        NAMEOF(AMMO_COUNTER_CLIP_ALTWEAPON),
+        NAMEOF(AMMO_COUNTER_CLIP_COUNT)
+    };
+
     /* 115 */
     enum weapProjExposion_t
     {
@@ -3237,7 +3350,18 @@ namespace iw4of::native
         WEAPPROJEXP_NUM = 0x7,
     };
 
-    /* 116 */
+    static const char* weapProjExposion_t_Names[] =
+    {
+        NAMEOF(WEAPPROJEXP_GRENADE),
+        NAMEOF(WEAPPROJEXP_ROCKET),
+        NAMEOF(WEAPPROJEXP_FLASHBANG),
+        NAMEOF(WEAPPROJEXP_NONE),
+        NAMEOF(WEAPPROJEXP_DUD),
+        NAMEOF(WEAPPROJEXP_SMOKE),
+        NAMEOF(WEAPPROJEXP_HEAVY),
+        NAMEOF(WEAPPROJEXP_NUM)
+    };
+
     enum guidedMissileType_t
     {
         MISSILE_GUIDANCE_NONE = 0x0,
@@ -3247,11 +3371,26 @@ namespace iw4of::native
         MISSILE_GUIDANCE_COUNT = 0x4,
     };
 
+    static const char* guidedMissileType_t_Names[] =
+    {
+        NAMEOF(MISSILE_GUIDANCE_NONE),
+        NAMEOF(MISSILE_GUIDANCE_SIDEWINDER),
+        NAMEOF(MISSILE_GUIDANCE_HELLFIRE),
+        NAMEOF(MISSILE_GUIDANCE_JAVELIN),
+        NAMEOF(MISSILE_GUIDANCE_COUNT),
+    };
+
     enum weapOverlayReticle_t
     {
         WEAPOVERLAYRETICLE_NONE = 0x0,
         WEAPOVERLAYRETICLE_CROSSHAIR = 0x1,
         WEAPOVERLAYRETICLE_NUM = 0x2,
+    };
+
+	static const char* weapOverlayReticle_t_Names[] = 
+    {
+        NAMEOF(WEAPOVERLAYRETICLE_NONE),
+        NAMEOF(WEAPOVERLAYRETICLE_CROSSHAIR)
     };
 
     enum WeapOverlayInteface_t
@@ -3260,6 +3399,13 @@ namespace iw4of::native
         WEAPOVERLAYINTERFACE_JAVELIN = 0x1,
         WEAPOVERLAYINTERFACE_TURRETSCOPE = 0x2,
         WEAPOVERLAYINTERFACECOUNT = 0x3,
+    };
+
+    static const char* WeapOverlayInteface_t_Names[] =
+    {
+        NAMEOF(WEAPOVERLAYINTERFACE_NONE),
+        NAMEOF(WEAPOVERLAYINTERFACE_JAVELIN),
+        NAMEOF(WEAPOVERLAYINTERFACE_TURRETSCOPE)
     };
 
     struct __declspec(align(4)) WeaponDef
@@ -3755,7 +3901,7 @@ namespace iw4of::native
         // StringTable* stringTable;
         // LeaderboardDef* leaderboardDef;
         // StructuredDataDefSet* structuredDataDefSet;
-        // TracerDef* tracerDef;
+        TracerDef* tracerDef;
         // VehicleDef* vehDef;
         // AddonMapEnts* addonMapEnts;
     };
