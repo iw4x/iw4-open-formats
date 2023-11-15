@@ -81,6 +81,8 @@ namespace iw4of
 
         void* find_other_asset(int type, const std::string& name) const;
 
+        void request_mark_asset(int type, void* data) const;
+
         bool is_type_supported(int iw4_int_type) const
         {
             return iw4_int_type >= 0 && iw4_int_type < native::ASSET_TYPE_COUNT && interface_exists(static_cast<native::XAssetType>(iw4_int_type));

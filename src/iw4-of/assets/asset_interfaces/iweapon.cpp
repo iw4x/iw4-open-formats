@@ -179,7 +179,10 @@ namespace iw4of::interfaces
                                 
                                 if (val && strnlen(val, 1) > 0)
                                 {
-                                    const auto anim = assets->read<native::XAnimParts>(native::ASSET_TYPE_XANIMPARTS, val);
+                                    const auto anim = reinterpret_cast<native::XAnimParts*>(
+										assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, val)
+									);
+
                                     if (anim)
                                     {
                                         // good
@@ -470,7 +473,21 @@ namespace iw4of::interfaces
         WRITE_MEMBER_IF_NOT_NULL(weapon, penetrateMultiplier);
         WRITE_MEMBER_IF_NOT_NULL(weapon, fAdsViewKickCenterSpeed);
         WRITE_MEMBER_IF_NOT_NULL(weapon, fHipViewKickCenterSpeed);
-        WRITE_STR_MEMBER_IF_NOT_NULL(weapon, szAltWeaponName);
+
+		WRITE_STR_MEMBER_IF_NOT_NULL(weapon, szAltWeaponName);
+        if (weapon->szAltWeaponName && strnlen(weapon->szAltWeaponName, 1) > 0)
+        {
+            const auto alt = assets->find_other_asset(native::ASSET_TYPE_WEAPON, weapon->szAltWeaponName);
+            if (alt)
+            {
+                assets->write(native::ASSET_TYPE_WEAPON, alt);
+            }
+            else
+            {
+                print_error("Could not find alt weapon {} for weapon {}!", weapon->szAltWeaponName, full_name);
+            }
+		}
+
         WRITE_MEMBER_IF_NOT_NULL(weapon, altWeaponIndex);
         WRITE_MEMBER_IF_NOT_NULL(weapon, iAltRaiseTime);
         WRITE_MEMBER_MATERIAL(weapon, killIcon);
@@ -1281,7 +1298,20 @@ namespace iw4of::interfaces
         READ_FLOAT_MEMBER_IF_NOT_NULL(weapon, penetrateMultiplier);
         READ_FLOAT_MEMBER_IF_NOT_NULL(weapon, fAdsViewKickCenterSpeed);
         READ_FLOAT_MEMBER_IF_NOT_NULL(weapon, fHipViewKickCenterSpeed);
+
         READ_STR_MEMBER_IF_NOT_NULL(weapon, szAltWeaponName);
+
+		if (weapon->szAltWeaponName && strnlen(weapon->szAltWeaponName, 1) > 0)
+        {
+            const auto altWeapon =
+                reinterpret_cast<native::XAnimParts*>(assets->find_other_asset(native::ASSET_TYPE_WEAPON, weapon->szAltWeaponName));
+
+			if (!altWeapon)
+			{
+                print_error("Could not find alt weapon {} for weapon {}!", weapon->szAltWeaponName, full_name);
+			}
+        }
+
         READ_INT_MEMBER_IF_NOT_NULL(weapon, altWeaponIndex);
         READ_INT_MEMBER_IF_NOT_NULL(weapon, iAltRaiseTime);
         READ_MEMBER_ASSET(weapon, killIcon, native::Material, native::XAssetType::ASSET_TYPE_MATERIAL);
@@ -1847,6 +1877,11 @@ namespace iw4of::interfaces
                 native::XAssetHeader other_weapon_header{};
 
                 success |= read_variant(other_weapon_header, other_variant, {weapon});
+
+				if (other_weapon_header.data && success)
+                {
+                    assets->request_mark_asset(native::ASSET_TYPE_WEAPON, other_weapon_header.data);
+                }
             }
         }
 
