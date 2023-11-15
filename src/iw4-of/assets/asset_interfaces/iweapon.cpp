@@ -176,6 +176,19 @@ namespace iw4of::interfaces
                             if (std::string(native::weapAnimFiles_Names[i]) == elem.name.GetString())
                             {
                                 (*destination)[i] = local_allocator.duplicate_string(val);
+                                
+                                if (val && strnlen(val, 1) > 0)
+                                {
+                                    const auto anim = assets->read<native::XAnimParts>(native::ASSET_TYPE_XANIMPARTS, val);
+                                    if (anim)
+                                    {
+                                        // good
+                                    }
+                                    else
+                                    {
+                                        print_error("Could not find anim {}!", val);
+                                    }
+                                }
                                 break;
                             }
                         }
@@ -250,6 +263,19 @@ namespace iw4of::interfaces
                 if (arr[i])
                 {
                     szAnims.AddMember(RAPIDJSON_STR(native::weapAnimFiles_Names[i]), RAPIDJSON_STR(arr[i]), allocator);
+                    
+                    if (strnlen(arr[i], 1) > 0)
+                    {
+                        const auto anim = assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, arr[i]);
+                        if (anim)
+                        {
+                            assets->write(native::ASSET_TYPE_XANIMPARTS, anim);
+                        }
+                        else
+                        {
+                            print_error("Could not find anim {}!", arr[i]);
+                        }
+                    }
                 }
                 else
                 {
