@@ -475,7 +475,8 @@ namespace iw4of::interfaces
         WRITE_MEMBER_IF_NOT_NULL(weapon, fHipViewKickCenterSpeed);
 
 		WRITE_STR_MEMBER_IF_NOT_NULL(weapon, szAltWeaponName);
-        if (weapon->szAltWeaponName && strnlen(weapon->szAltWeaponName, 1) > 0)
+        if (original_weapon && weapon->weapDef->inventoryType != native::WEAPINVENTORY_ALTMODE && // << Prevents stack overflow due to infinite weapon looping between alt & main
+            weapon->szAltWeaponName && strnlen(weapon->szAltWeaponName, 1) > 0)
         {
             const auto alt = assets->find_other_asset(native::ASSET_TYPE_WEAPON, weapon->szAltWeaponName);
             if (alt)
