@@ -285,7 +285,10 @@ namespace iw4of::interfaces
                     szAnims.AddMember(RAPIDJSON_STR(native::weapAnimFiles_Names[i]), rapidjson::Value(rapidjson::kNullType), allocator);
                 }
 
-                if (!original_arr || arr[i] != original_arr[i])
+                if (!original_arr || 
+                    ((arr[i] == nullptr) != (original_arr[i] == nullptr)) ||
+                    arr[i] && std::string(arr[i]) != original_arr[i]
+                )
                 {
                     should_write = true;
                 }
