@@ -44,7 +44,10 @@ namespace iw4of::interfaces
     {
         auto path = get_work_path(name).string();
 
-        if (!utils::io::file_exists(path)) return nullptr;
+        if (!utils::io::file_exists(path))
+        {
+            return nullptr;
+        }
 
         native::XAssetHeader asset{};
 
@@ -176,12 +179,11 @@ namespace iw4of::interfaces
                             if (std::string(native::weapAnimFiles_Names[i]) == elem.name.GetString())
                             {
                                 (*destination)[i] = local_allocator.duplicate_string(val);
-                                
+
                                 if (val && strnlen(val, 1) > 0)
                                 {
-                                    const auto anim = reinterpret_cast<native::XAnimParts*>(
-										assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, val)
-									);
+                                    const auto anim =
+                                        reinterpret_cast<native::XAnimParts*>(assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, val));
 
                                     if (anim)
                                     {
@@ -266,7 +268,7 @@ namespace iw4of::interfaces
                 if (arr[i])
                 {
                     szAnims.AddMember(RAPIDJSON_STR(native::weapAnimFiles_Names[i]), RAPIDJSON_STR(arr[i]), allocator);
-                    
+
                     if (strnlen(arr[i], 1) > 0)
                     {
                         const auto anim = assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, arr[i]);
@@ -474,9 +476,12 @@ namespace iw4of::interfaces
         WRITE_MEMBER_IF_NOT_NULL(weapon, fAdsViewKickCenterSpeed);
         WRITE_MEMBER_IF_NOT_NULL(weapon, fHipViewKickCenterSpeed);
 
-		WRITE_STR_MEMBER_IF_NOT_NULL(weapon, szAltWeaponName);
-        if (original_weapon && weapon->weapDef->inventoryType != native::WEAPINVENTORY_ALTMODE && // << Prevents stack overflow due to infinite weapon looping between alt & main
-            weapon->szAltWeaponName && strnlen(weapon->szAltWeaponName, 1) > 0)
+        WRITE_STR_MEMBER_IF_NOT_NULL(weapon, szAltWeaponName);
+        if (original_weapon &&
+            weapon->weapDef->inventoryType !=
+                native::WEAPINVENTORY_ALTMODE && // << Prevents stack overflow due to infinite weapon looping between alt & main
+            weapon->szAltWeaponName &&
+            strnlen(weapon->szAltWeaponName, 1) > 0)
         {
             const auto alt = assets->find_other_asset(native::ASSET_TYPE_WEAPON, weapon->szAltWeaponName);
             if (alt)
@@ -487,7 +492,7 @@ namespace iw4of::interfaces
             {
                 print_error("Could not find alt weapon {} for weapon {}!", weapon->szAltWeaponName, full_name);
             }
-		}
+        }
 
         WRITE_MEMBER_IF_NOT_NULL(weapon, altWeaponIndex);
         WRITE_MEMBER_IF_NOT_NULL(weapon, iAltRaiseTime);
@@ -1233,16 +1238,18 @@ namespace iw4of::interfaces
 #define READ_MEMBER_NAMED_ENUM(obj, member, enm_type)                                                 \
     if (json_variant.HasMember(#member) && !json_variant[#member].IsNull())                           \
     {                                                                                                 \
+        bool _found = false;                                                                          \
         for (size_t _ = 0; _ < ARRAYSIZE(##enm_type##_Names); _++)                                    \
         {                                                                                             \
             if (std::string(##enm_type##_Names[_]) == std::string(json_variant[#member].GetString())) \
             {                                                                                         \
                 obj->member = static_cast<enm_type>(_);                                               \
+                _found = true;                                                                        \
                 break;                                                                                \
             }                                                                                         \
         }                                                                                             \
                                                                                                       \
-        obj->member = static_cast<enm_type>(0);                                                       \
+        if (!_found) obj->member = static_cast<enm_type>(0);                                          \
     }
 
 #define READ_STR_MEMBER_IF_NOT_NULL(obj, member)                             \
@@ -1302,15 +1309,16 @@ namespace iw4of::interfaces
 
         READ_STR_MEMBER_IF_NOT_NULL(weapon, szAltWeaponName);
 
-		if (weapon->szAltWeaponName && strnlen(weapon->szAltWeaponName, 1) > 0)
+        if (weapon->szAltWeaponName == nullptr)
         {
+            weapon->szAltWeaponName = local_allocator.duplicate_string("");
+        }
+
+        if (original && weapon->szAltWeaponName && strnlen(weapon->szAltWeaponName, 1) > 0)
+        {
+            // Ignore if missing, an error will pop up during marking anyway
             const auto altWeapon =
                 reinterpret_cast<native::XAnimParts*>(assets->find_other_asset(native::ASSET_TYPE_WEAPON, weapon->szAltWeaponName));
-
-			if (!altWeapon)
-			{
-                print_error("Could not find alt weapon {} for weapon {}!", weapon->szAltWeaponName, full_name);
-			}
         }
 
         READ_INT_MEMBER_IF_NOT_NULL(weapon, altWeaponIndex);
@@ -1879,7 +1887,7 @@ namespace iw4of::interfaces
 
                 success |= read_variant(other_weapon_header, other_variant, {weapon});
 
-				if (other_weapon_header.data && success)
+                if (other_weapon_header.data && success)
                 {
                     assets->request_mark_asset(native::ASSET_TYPE_WEAPON, other_weapon_header.data);
                 }
