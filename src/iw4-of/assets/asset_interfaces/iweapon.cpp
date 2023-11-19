@@ -1716,7 +1716,7 @@ namespace iw4of::interfaces
         READ_FLOAT_MEMBER_IF_NOT_NULL(weapon->weapDef, fightDist);
         READ_FLOAT_MEMBER_IF_NOT_NULL(weapon->weapDef, maxDist);
 
-        // fuck these
+        // not ported for now because they're a bit annoying and not very useful for PVP, but maybe one day
         weapon->weapDef->accuracyGraphName[0] = local_allocator.allocate_array<char>(1);
         weapon->weapDef->accuracyGraphName[1] = local_allocator.allocate_array<char>(1);
         weapon->weapDef->originalAccuracyGraphKnotCount[0] = 0;
