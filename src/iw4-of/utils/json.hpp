@@ -85,6 +85,8 @@ namespace iw4of::utils::json
     rapidjson::Value to_json(const native::FxFloatRange& floatRange, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
     rapidjson::Value to_json(const native::FxIntRange& intRange, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
     rapidjson::Value to_json(const native::FxElemVec3Range& vec3Range, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+    rapidjson::Value to_json(const native::cplane_s* planes, size_t count, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator,
+                             std::function<void(const native::cplane_s*, size_t)> const& callback_when_adding_plane=nullptr);
     rapidjson::Value to_json(const native::Bounds& bounds, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
     rapidjson::Value to_json(const native::FxElemVisualState& elemVisualState, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
 

@@ -510,7 +510,7 @@ namespace iw4of::interfaces
 
         utils::memory::allocator mem_allocator{};
 
-        std::unordered_map<native::cplane_s*, int> planes{}; // +++
+        std::unordered_map<const native::cplane_s*, int> planes{}; // +++
         std::unordered_map<native::cbrushside_t*, int> brush_sides{}; // +
         std::unordered_map<uint8_t*, int> brush_edges{}; // +
         std::unordered_map<uint16_t*, int> leaf_brushes{}; // ++
@@ -559,21 +559,13 @@ namespace iw4of::interfaces
         output.AddMember("isInUse", clip_map->isInUse, allocator);
 
         // Planes
-        rapidjson::Value json_planes(rapidjson::kArrayType);
-        for (size_t i = 0; i < clip_map->planeCount; i++)
-        {
-            rapidjson::Value json_plane(rapidjson::kObjectType);
-            auto plane = &clip_map->planes[i];
-
-            json_plane.AddMember("normal", utils::json::make_json_array(plane->normal, ARRAYSIZE(plane->normal), allocator), allocator);
-
-            json_plane.AddMember("dist", plane->dist, allocator);
-            json_plane.AddMember("type", plane->type, allocator);
-
-            json_planes.PushBack(json_plane, allocator);
-
-            planes[plane] = i;
-        }
+        rapidjson::Value json_planes = utils::json::to_json(clip_map->planes,
+                                                            clip_map->planeCount,
+                                                            allocator,
+                                                            [&planes](const native::cplane_s* plane, size_t i)
+                                                            {
+                                                                planes[plane] = i;
+                                                            });
 
         output.AddMember("planes", json_planes, allocator);
 
@@ -588,7 +580,8 @@ namespace iw4of::interfaces
                 "xmodel",
                 static_model->xmodel == nullptr ? rapidjson::Value(rapidjson::kNullType) : RAPIDJSON_STR(static_model->xmodel->name),
                 allocator);
-            json_static_model.AddMember("origin", utils::json::make_json_array(static_model->origin, ARRAYSIZE(static_model->origin), allocator), allocator);
+            json_static_model.AddMember(
+                "origin", utils::json::make_json_array(static_model->origin, ARRAYSIZE(static_model->origin), allocator), allocator);
 
             if (static_model->xmodel)
             {
@@ -598,8 +591,8 @@ namespace iw4of::interfaces
             rapidjson::Value inv_scaled_axis(rapidjson::kArrayType);
             for (size_t j = 0; j < ARRAYSIZE(static_model->invScaledAxis); j++)
             {
-                inv_scaled_axis.PushBack(utils::json::make_json_array(static_model->invScaledAxis[j], ARRAYSIZE(static_model->invScaledAxis[j]), allocator),
-                                         allocator);
+                inv_scaled_axis.PushBack(
+                    utils::json::make_json_array(static_model->invScaledAxis[j], ARRAYSIZE(static_model->invScaledAxis[j]), allocator), allocator);
             }
 
             json_static_model.AddMember("invScaledAxis", inv_scaled_axis, allocator);
@@ -806,7 +799,8 @@ namespace iw4of::interfaces
 
             rapidjson::Value json_collision_border(rapidjson::kObjectType);
 
-            json_collision_border.AddMember("distEq", utils::json::make_json_array(collision_border->distEq, ARRAYSIZE(collision_border->distEq), allocator), allocator);
+            json_collision_border.AddMember(
+                "distEq", utils::json::make_json_array(collision_border->distEq, ARRAYSIZE(collision_border->distEq), allocator), allocator);
             json_collision_border.AddMember("zBase", collision_border->zBase, allocator);
             json_collision_border.AddMember("zSlope", collision_border->zSlope, allocator);
             json_collision_border.AddMember("start", collision_border->start, allocator);

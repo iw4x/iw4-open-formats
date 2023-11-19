@@ -52,6 +52,19 @@ namespace iw4of
 
             return nullptr;
         }
+		
+        template <typename T>
+        void mark_written_elsewhere(int iw4_int_type, T* header) const
+		{
+            if (check_type_is_supported(iw4_int_type))
+            {
+                const auto& path = asset_interfaces[iw4_int_type]->get_work_path({header});
+                if (can_write(path))
+                {
+                    written_assets.insert(path.string());
+                }
+            }
+		}
 
         void set_work_path(const std::filesystem::path& path)
         {
@@ -67,6 +80,8 @@ namespace iw4of
         void print(const std::string& message) const;
 
         void* find_other_asset(int type, const std::string& name) const;
+
+        void request_mark_asset(int type, void* data) const;
 
         bool is_type_supported(int iw4_int_type) const
         {
