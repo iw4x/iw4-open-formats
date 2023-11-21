@@ -1320,7 +1320,7 @@ namespace iw4of::interfaces
         if (original && weapon->szAltWeaponName && strnlen(weapon->szAltWeaponName, 1) > 0)
         {
             // Ignore if missing, an error will pop up during marking anyway
-            const auto altWeapon =
+            [[maybe_unused]] const auto altWeapon =
                 reinterpret_cast<native::XAnimParts*>(assets->find_other_asset(native::ASSET_TYPE_WEAPON, weapon->szAltWeaponName));
         }
 
