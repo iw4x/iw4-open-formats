@@ -84,7 +84,7 @@ namespace iw4of::interfaces
         try
         {
             auto contents = utils::io::read_file(path.string());
-            techset.Parse(contents.data());
+            techset.Parse<rapidjson::ParseFlag::kParseNanAndInfFlag>(contents.data());
         }
         catch (std::exception& e)
         {
@@ -160,11 +160,12 @@ namespace iw4of::interfaces
         }
 
         rapidjson::Document technique;
+		std::string file;
 
         try
         {
-            auto file = utils::io::read_file(path);
-            technique.Parse(file.data());
+            file = utils::io::read_file(path);
+            technique.Parse<rapidjson::ParseFlag::kParseNanAndInfFlag>(file.data());
         }
         catch (std::exception& e)
         {
