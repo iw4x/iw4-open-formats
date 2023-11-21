@@ -65,9 +65,17 @@ namespace iw4of::interfaces
         }
 
         output.AddMember("techniques", technique_map, allocator);
-
+        
         rapidjson::StringBuffer buff;
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buff);
+        rapidjson::PrettyWriter<
+					/*typename OutputStream  */ rapidjson::StringBuffer,
+					/*typename SourceEncoding*/ rapidjson::UTF8<>,
+					/*typename TargetEncoding*/ rapidjson::UTF8<>,
+					/*typename StackAllocator*/ rapidjson::CrtAllocator,
+					/*unsigned writeFlags*/     rapidjson::kWriteNanAndInfFlag 
+			>
+			writer(buff);
+
         output.Accept(writer);
 
         utils::io::write_file(get_work_path(header).string(), buff.GetString());
@@ -405,7 +413,15 @@ namespace iw4of::interfaces
         output.AddMember("passArray", pass_array, allocator);
 
         rapidjson::StringBuffer buff;
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buff);
+        rapidjson::PrettyWriter<
+					/*typename OutputStream  */ rapidjson::StringBuffer,
+					/*typename SourceEncoding*/ rapidjson::UTF8<>,
+					/*typename TargetEncoding*/ rapidjson::UTF8<>,
+					/*typename StackAllocator*/ rapidjson::CrtAllocator,
+					/*unsigned writeFlags*/     rapidjson::kWriteNanAndInfFlag 
+			>
+			writer(buff);
+
         output.Accept(writer);
 
         utils::io::write_file(get_technique_work_path(iw4_technique->name).string(), buff.GetString());
