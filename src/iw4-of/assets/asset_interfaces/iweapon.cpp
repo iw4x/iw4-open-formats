@@ -1658,11 +1658,11 @@ namespace iw4of::interfaces
 
         if (json_variant.HasMember("perpendicularBounce"))
         {
-            weapon->weapDef->parallelBounce = local_allocator.allocate_array<float>(31);
+            weapon->weapDef->perpendicularBounce = local_allocator.allocate_array<float>(31);
             const auto arr = json_variant["perpendicularBounce"].GetArray();
             for (int i = 0; i < std::min(static_cast<int>(arr.Size()), 31); i++)
             {
-                weapon->weapDef->parallelBounce[i] = arr[i].Get<float>();
+                weapon->weapDef->perpendicularBounce[i] = arr[i].Get<float>();
             }
         }
 
