@@ -40,12 +40,11 @@ namespace iw4of::interfaces
     }
 
     image->name = local_allocator.duplicate_string(name);
-    image->semantic = native::IMG_CATEGORY_LOAD_FROM_FILE;
+    image->category = native::IMG_CATEGORY_LOAD_FROM_FILE;
 
     const char* temp_name = image->name;
     if (temp_name[0] == '*') temp_name++;
-
-
+	
     const auto special_path = get_work_path(get_special_file_name(temp_name)).string();
     if (utils::io::file_exists(special_path))
     {
@@ -77,8 +76,8 @@ namespace iw4of::interfaces
       }
 
       image->mapType = reader.read<uint8_t>();
-      image->semantic = reader.read<native::GfxImageCategory>();
-      image->category = reader.read<uint8_t>();
+      image->semantic = reader.read<native::TextureSemantic>();
+      image->category = reader.read<native::GfxImageCategory>();
 
       int32_t dataLength = reader.read<int32_t>();
       image->cardMemory.platform[0] = dataLength;

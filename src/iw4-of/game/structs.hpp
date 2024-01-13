@@ -57,6 +57,23 @@ namespace iw4of::native
         ASSET_TYPE_ASSETLIST = 0x2C,
         ASSET_TYPE_INVALID = -1,
     };
+	
+    enum TextureSemantic : uint8_t
+    {
+        TS_2D = 0x0,
+        TS_FUNCTION = 0x1,
+        TS_COLOR_MAP = 0x2,
+        TS_DETAIL_MAP = 0x3,
+        TS_UNUSED_2 = 0x4,
+        TS_NORMAL_MAP = 0x5,
+        TS_UNUSED_3 = 0x6,
+        TS_UNUSED_4 = 0x7,
+        TS_SPECULAR_MAP = 0x8,
+        TS_UNUSED_5 = 0x9,
+        TS_UNUSED_6 = 0xA,
+        TS_WATER_MAP = 0xB,
+        TS_DISPLACEMENT_MAP = 0xC
+    };
 
     enum FxElemType
     {
@@ -459,8 +476,8 @@ namespace iw4of::native
     {
         GfxTexture texture;
         uint8_t mapType;
-        GfxImageCategory semantic;
-        uint8_t category;
+        TextureSemantic semantic;
+        GfxImageCategory category;
         bool useSrgbReads;
         Picmip picmip;
         bool noPicmip;
@@ -1538,23 +1555,6 @@ namespace iw4of::native
         CAMERA_REGION_DEPTH_HACK = 0x3,
         CAMERA_REGION_COUNT = 0x4,
         CAMERA_REGION_NONE = 0x4,
-    };
-
-    enum TextureSemantic
-    {
-        TS_2D = 0x0,
-        TS_FUNCTION = 0x1,
-        TS_COLOR_MAP = 0x2,
-        TS_DETAIL_MAP = 0x3,
-        TS_UNUSED_2 = 0x4,
-        TS_NORMAL_MAP = 0x5,
-        TS_UNUSED_3 = 0x6,
-        TS_UNUSED_4 = 0x7,
-        TS_SPECULAR_MAP = 0x8,
-        TS_UNUSED_5 = 0x9,
-        TS_UNUSED_6 = 0xA,
-        TS_WATER_MAP = 0xB,
-        TS_DISPLACEMENT_MAP = 0xC
     };
 
     struct WaterWritable

@@ -317,6 +317,7 @@ namespace iw4of::interfaces
                                 auto imageName = waterJson["image"].Get<std::string>();
 
                                 water->image = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, imageName.data());
+                                water->image->semantic = native::TextureSemantic::TS_WATER_MAP;
                             }
 
                             water->amplitude = waterJson["amplitude"].Get<float>();
@@ -365,8 +366,11 @@ namespace iw4of::interfaces
                         {
                             const auto& image_name = textureJson["image"].Get<std::string>();
                             textureDef->u.image = find<native::GfxImage>(native::XAssetType::ASSET_TYPE_IMAGE, image_name);
+                            textureDef->u.image->semantic = static_cast<native::TextureSemantic>(textureDef->semantic);
 
                             assert(textureDef->u.image);
+							assert(textureDef->u.image->semantic >= native::TextureSemantic::TS_2D);
+							assert(textureDef->u.image->semantic <= native::TextureSemantic::TS_DISPLACEMENT_MAP);
                         }
                         else
                         {
