@@ -137,6 +137,8 @@ namespace iw4of::interfaces
       std::string test{};
       test.append(static_cast<const char*>(image->texture.loadDef->data), image->texture.loadDef->resourceSize);
 
+	  assert(image->category != native::IMG_CATEGORY_UNKNOWN);
+
       return image;
     }
     else if (name[0] != '*')
@@ -224,6 +226,8 @@ namespace iw4of::interfaces
           break;
         }
       }
+	  
+	  assert(image->category != native::IMG_CATEGORY_UNKNOWN);
 
       return image;
     }
