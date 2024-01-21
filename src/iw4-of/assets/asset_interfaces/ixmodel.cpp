@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include "assets/assets.hpp"
 #include "ixmodel.hpp"
@@ -29,7 +29,7 @@ namespace iw4of::interfaces
 
         if (asset->boneNames)
         {
-            for (char i = 0; i < asset->numBones; ++i)
+            for (uint8_t i = 0; i < asset->numBones; ++i)
             {
                 buffer.save_string(assets->read_from_stringtable(asset->boneNames[i]));
             }
@@ -360,7 +360,7 @@ namespace iw4of::interfaces
             {
                 asset->boneNames = local_allocator.allocate_array<uint16_t>(asset->numBones);
 
-                for (char i = 0; i < asset->numBones; ++i)
+                for (uint8_t i = 0; i < asset->numBones; ++i)
                 {
                     asset->boneNames[i] = static_cast<std::uint16_t>(assets->write_in_stringtable(reader.read_cstring()));
                 }
