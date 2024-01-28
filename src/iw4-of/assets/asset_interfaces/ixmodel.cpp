@@ -413,6 +413,15 @@ namespace iw4of::interfaces
                         asset->lodInfo[i].modelSurfs = reader.read_object<native::XModelSurfs>();
                         read(asset->lodInfo[i].modelSurfs, &reader);
 
+						if (asset->lodInfo[i].modelSurfs->name)
+						{
+							const auto existingSurfs = find<native::XModelSurfs>(native::ASSET_TYPE_XMODEL_SURFS, asset->lodInfo[i].modelSurfs->name);
+							if (existingSurfs)
+							{
+								asset->lodInfo[i].modelSurfs = existingSurfs;
+							}
+						}
+
                         asset->lodInfo[i].surfs = asset->lodInfo[i].modelSurfs->surfaces;
                     }
                 }

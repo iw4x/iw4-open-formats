@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include "imapents.hpp"
 #include "assets/assets.hpp"
@@ -44,7 +44,7 @@ namespace iw4of::interfaces
             entities->stages[0].triggerIndex = 0x400;
             entities->stages[0].sunPrimaryLightIndex = 0x1;
 
-            entities->name = local_allocator.duplicate_string(std::format("maps/mp/{}.d3dbsp", name));
+            entities->name = local_allocator.duplicate_string(name);
             entities->entityString = local_allocator.duplicate_string(contents);
             entities->numEntityChars = contents.size() + 1;
 
