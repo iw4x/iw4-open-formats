@@ -28,6 +28,11 @@ void iw4of::api::set_work_path(const std::filesystem::path& path)
     _assets->set_work_path(path);
 }
 
+std::unordered_set<iw4of::iw4_native_asset, iw4of::iw4_native_asset::hash> iw4of::api::get_children(int type, void* asset) const
+{
+	return _assets->get_children(type, asset);
+}
+
 void iw4of::api::clear_writes() const
 {
     _assets->clear_writes();

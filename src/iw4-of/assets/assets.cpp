@@ -24,7 +24,6 @@
 #include <assets/asset_interfaces/iweapon.hpp>
 #include <assets/asset_interfaces/itracerdef.hpp>
 
-
 #include "assets.hpp"
 #include <utils/io.hpp>
 
@@ -52,6 +51,28 @@ namespace iw4of
         }
 
         return true;
+    }
+
+	std::unordered_set<iw4_native_asset, iw4_native_asset::hash> assets::get_children(int type, void* asset) const
+    {
+        if (check_type_is_supported(type))
+        {
+            const auto children = asset_interfaces[type]->get_children({asset});
+
+            std::unordered_set<iw4_native_asset, iw4_native_asset::hash> result{};
+
+			for (const auto child : children)
+			{
+				if (child.header.data != nullptr)
+				{
+					result.insert({child.type, child.header.data});
+				}
+			}
+
+            return result;
+        }
+
+        return std::unordered_set<iw4_native_asset, iw4_native_asset::hash>();
     }
 
     std::string assets::read_file(const std::string& name) const
@@ -96,13 +117,13 @@ namespace iw4of
         return nullptr;
     }
 
-	void assets::request_mark_asset(int type, void* data) const
-	{
-		if (params.request_mark_asset)
-		{
+    void assets::request_mark_asset(int type, void* data) const
+    {
+        if (params.request_mark_asset)
+        {
             params.request_mark_asset(type, data);
-		}
-	}
+        }
+    }
 
     uint32_t assets::write_in_stringtable(const std::string& text) const
     {

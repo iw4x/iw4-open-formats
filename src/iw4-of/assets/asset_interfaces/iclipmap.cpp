@@ -1110,18 +1110,50 @@ namespace iw4of::interfaces
         // Write to disk
         rapidjson::StringBuffer buff;
         rapidjson::PrettyWriter<
-					/*typename OutputStream  */ rapidjson::StringBuffer,
-					/*typename SourceEncoding*/ rapidjson::UTF8<>,
-					/*typename TargetEncoding*/ rapidjson::UTF8<>,
-					/*typename StackAllocator*/ rapidjson::CrtAllocator,
-					/*unsigned writeFlags*/     rapidjson::kWriteNanAndInfFlag 
-			>
-			writer(buff);
+            /*typename OutputStream  */ rapidjson::StringBuffer,
+            /*typename SourceEncoding*/ rapidjson::UTF8<>,
+            /*typename TargetEncoding*/ rapidjson::UTF8<>,
+            /*typename StackAllocator*/ rapidjson::CrtAllocator,
+            /*unsigned writeFlags*/ rapidjson::kWriteNanAndInfFlag>
+            writer(buff);
         writer.SetFormatOptions(rapidjson::PrettyFormatOptions::kFormatSingleLineArray);
         output.Accept(writer);
 
         utils::io::write_file(get_work_path(header).string(), buff.GetString());
 
         return true;
+    }
+
+    std::vector<native::XAsset> iclipmap::get_child_assets(const native::XAssetHeader& header) const
+    {
+        std::vector<native::XAsset> result{};
+		const auto clipmap = header.clipMap;
+
+        for (size_t i = 0; i < clipmap->numStaticModels; i++)
+        {
+			result.push_back({native::ASSET_TYPE_XMODEL, { clipmap->staticModelList[i].xmodel } });
+        }
+
+		result.push_back({native::ASSET_TYPE_MAP_ENTS, { clipmap->mapEnts } });
+
+		for (size_t t = 0; t < 2; t++)
+		{
+			for (size_t i = 0; i < clipmap->dynEntCount[t]; i++)
+			{
+				const auto def = &clipmap->dynEntDefList[t][i];
+
+				if (def->xModel)
+				{
+					result.push_back({native::ASSET_TYPE_XMODEL, { def->xModel } });
+				}
+				
+				if (def->physPreset)
+				{
+					result.push_back({native::ASSET_TYPE_PHYSPRESET, { def->physPreset } });
+				}
+			}
+		}
+
+        return result;
     }
 } // namespace iw4of::interfaces

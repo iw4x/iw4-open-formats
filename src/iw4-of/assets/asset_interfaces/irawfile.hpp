@@ -20,6 +20,7 @@ namespace iw4of::interfaces
        protected:
         bool write_internal(const native::XAssetHeader& header) const override;
         void* read_internal(const std::string& name) const override;
+        std::vector<native::XAsset> get_child_assets(const native::XAssetHeader& header) const;
 
         std::filesystem::path get_file_name(const std::string& basename) const override;
         std::filesystem::path get_folder_name() const override
@@ -30,7 +31,9 @@ namespace iw4of::interfaces
        private:
         void write_named_assets(const std::string& script_name, const std::string& script_contents) const;
         void read_named_assets(const std::string& script_name, const std::string& script_contents) const;
-
+		
+        std::vector<native::XAsset> get_child_assets(const std::string& script_name, const std::string& script_contents) const;
+		std::vector<native::XAnimParts*> get_animtree_anims(const std::string& script) const;
         std::vector<native::RawFile*> get_map_animtrees(const std::string& script) const;
         std::vector<native::XAnimParts*> get_map_animated_model_anims(const std::string& script) const;
         native::snd_alias_list_t* get_ambient_play(const std::string& script) const;

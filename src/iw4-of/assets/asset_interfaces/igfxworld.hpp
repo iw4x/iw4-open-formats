@@ -20,6 +20,7 @@ namespace iw4of::interfaces
 
        private:
         void write(const native::GfxWorldDraw* dpvs_static, utils::stream* buffer) const;
+        std::vector<native::XAsset> get_child_assets(const native::XAssetHeader& header) const;
         void write(const native::GfxWorld* world, const native::GfxWorldDpvsStatic* dpvs_static, utils::stream* buffer) const;
         void write(const native::GfxLightGrid* asset, utils::stream* buffer) const;
         void write(const native::GfxWorld* world, const native::GfxWorldDpvsPlanes* asset, utils::stream* buffer) const;

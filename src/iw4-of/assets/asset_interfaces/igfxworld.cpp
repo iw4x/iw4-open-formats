@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include <assets\assets.hpp>
 
@@ -11,6 +11,122 @@
 
 namespace iw4of::interfaces
 {
+    std::vector<native::XAsset> igfxworld::get_child_assets(const native::XAssetHeader& header) const
+    {
+        std::vector<native::XAsset> result{};
+        const auto asset = header.gfxWorld;
+
+        if (asset->skies)
+        {
+            for (int i = 0; i < asset->skyCount; ++i)
+            {
+                native::GfxSky* sky = &asset->skies[i];
+
+                if (sky->skyImage)
+                {
+                    result.push_back({native::ASSET_TYPE_IMAGE, {sky->skyImage}});
+                }
+            }
+        }
+
+        const auto draw = &asset->draw;
+        if (draw->reflectionProbes)
+        {
+            for (uint32_t i = 0; i < draw->reflectionProbeCount; ++i)
+            {
+                if (draw->reflectionProbes[i])
+                {
+                    result.push_back({native::ASSET_TYPE_IMAGE, {draw->reflectionProbes[i]}});
+                }
+            }
+        }
+
+        if (draw->lightmaps)
+        {
+            AssertSize(native::GfxLightmapArray, 8);
+
+            for (int i = 0; i < draw->lightmapCount; ++i)
+            {
+                native::GfxLightmapArray* lightmapArray = &draw->lightmaps[i];
+
+                if (lightmapArray->primary)
+                {
+                    result.push_back({native::ASSET_TYPE_IMAGE, {lightmapArray->primary}});
+                }
+
+                if (lightmapArray->secondary)
+                {
+                    result.push_back({native::ASSET_TYPE_IMAGE, {lightmapArray->secondary}});
+                }
+            }
+        }
+
+        if (draw->lightmapOverridePrimary)
+        {
+            result.push_back({native::ASSET_TYPE_IMAGE, {draw->lightmapOverridePrimary}});
+        }
+
+        if (draw->lightmapOverrideSecondary)
+        {
+            result.push_back({native::ASSET_TYPE_IMAGE, {draw->lightmapOverrideSecondary}});
+        }
+
+        if (asset->materialMemory)
+        {
+            for (int i = 0; i < asset->materialMemoryCount; ++i)
+            {
+                native::MaterialMemory* materialMemory = &asset->materialMemory[i];
+
+                if (materialMemory->material)
+                {
+                    result.push_back({native::ASSET_TYPE_MATERIAL, {materialMemory->material}});
+                }
+            }
+        }
+
+        if (asset->sun.spriteMaterial)
+        {
+            result.push_back({native::ASSET_TYPE_MATERIAL, {asset->sun.spriteMaterial}});
+        }
+
+        if (asset->sun.flareMaterial)
+        {
+            result.push_back({native::ASSET_TYPE_MATERIAL, {asset->sun.flareMaterial}});
+        }
+
+        if (asset->outdoorImage)
+        {
+            result.push_back({native::ASSET_TYPE_IMAGE, {asset->outdoorImage}});
+        }
+
+        if (asset->dpvs.surfaces)
+        {
+            for (uint32_t i = 0; i < asset->surfaceCount; ++i)
+            {
+                native::GfxSurface* surface = &asset->dpvs.surfaces[i];
+
+                if (surface->material)
+                {
+                    result.push_back({native::ASSET_TYPE_MATERIAL, {surface->material}});
+                }
+            }
+        }
+
+        if (asset->dpvs.smodelDrawInsts)
+        {
+            for (uint32_t i = 0; i < asset->dpvs.smodelCount; ++i)
+            {
+                native::GfxStaticModelDrawInst* model = &asset->dpvs.smodelDrawInsts[i];
+
+                if (model->model)
+                {
+                    result.push_back({native::ASSET_TYPE_XMODEL, {model->model}});
+                }
+            }
+        }
+        return result;
+    }
+
     bool interfaces::igfxworld::write_internal(const native::XAssetHeader& header) const
     {
         const auto asset = header.gfxWorld;

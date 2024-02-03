@@ -21,6 +21,7 @@ namespace iw4of::interfaces
         bool write_internal(const native::XAssetHeader& header) const override;
         void* read_internal(const std::string& name) const override;
         bool write_plaintext(const native::XAssetHeader& header) const;
+		std::vector<native::XAsset> get_child_assets(const native::XAssetHeader& header) const;
 
         std::filesystem::path get_file_name(const std::string& basename) const override;
         std::filesystem::path get_folder_name() const override

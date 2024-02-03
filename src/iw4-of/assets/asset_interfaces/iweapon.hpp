@@ -22,6 +22,7 @@ namespace iw4of::interfaces
        protected:
         bool write_internal(const native::XAssetHeader& header) const override;
         void* read_internal(const std::string& name) const override;
+        std::vector<native::XAsset> get_child_assets(const native::XAssetHeader& header) const override;
 
         std::filesystem::path get_file_name(const std::string& basename) const override;
         std::filesystem::path get_file_name(const native::XAssetHeader& header) const override

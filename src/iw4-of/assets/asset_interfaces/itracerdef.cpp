@@ -13,6 +13,19 @@ namespace iw4of::interfaces
 {
 
 #define IW4X_TRACERDEF_VERSION 1
+	
+	std::vector<native::XAsset> itracerdef::get_child_assets(const native::XAssetHeader& header) const
+    {
+        std::vector<native::XAsset> result{};
+        auto tracer = header.tracerDef;
+
+		if (tracer->material)
+		{
+			result.push_back({native::ASSET_TYPE_MATERIAL, {tracer->material}});
+		}
+
+		return result;
+	}
 
     bool itracerdef::write_internal(const native::XAssetHeader& header) const
     {

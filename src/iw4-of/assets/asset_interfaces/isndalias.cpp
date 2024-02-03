@@ -253,6 +253,45 @@ namespace iw4of::interfaces
         return alias_list;
     }
 
+	std::vector<native::XAsset> isndalias::get_child_assets(const native::XAssetHeader& header) const
+	{
+		auto result = std::vector<native::XAsset>();
+		
+        auto ents = header.sound;
+
+        if (ents->count == 0)
+        {
+			return result;
+        }
+
+        for (size_t i = 0; i < ents->count; i++)
+        {
+            auto alias = ents->head[i];
+
+            if (alias.soundFile)
+            {
+                switch (alias.soundFile->type)
+                {
+                    // LOADED
+                    case native::snd_alias_type_t::SAT_LOADED:
+                    {
+                        assets->write(native::ASSET_TYPE_LOADED_SOUND, alias.soundFile->u.loadSnd);
+						result.push_back({ native::ASSET_TYPE_LOADED_SOUND, alias.soundFile->u.loadSnd});
+                    }
+                    break;
+
+                }
+            }
+
+			if (alias.volumeFalloffCurve)
+			{
+				result.push_back({ native::ASSET_TYPE_SOUND_CURVE, alias.volumeFalloffCurve});
+			}
+        }
+
+		return result;
+	}
+
     bool isndalias::write_internal(const native::XAssetHeader& header) const
     {
         auto ents = header.sound;

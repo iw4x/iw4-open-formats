@@ -287,10 +287,7 @@ namespace iw4of::interfaces
                     szAnims.AddMember(RAPIDJSON_STR(native::weapAnimFiles_Names[i]), rapidjson::Value(rapidjson::kNullType), allocator);
                 }
 
-                if (!original_arr || 
-                    ((arr[i] == nullptr) != (original_arr[i] == nullptr)) ||
-                    arr[i] && std::string(arr[i]) != original_arr[i]
-                )
+                if (!original_arr || ((arr[i] == nullptr) != (original_arr[i] == nullptr)) || arr[i] && std::string(arr[i]) != original_arr[i])
                 {
                     should_write = true;
                 }
@@ -303,6 +300,253 @@ namespace iw4of::interfaces
             }
         }
     }
+
+    std::vector<native::XAsset> iweapon::get_child_assets(const native::XAssetHeader& header) const
+    {
+        std::vector<native::XAsset> result{};
+        const auto* weapon = header.weapon;
+
+#define REGISTER_MEMBER_MATERIAL(obj, member)                                          \
+    if (obj->member)                                                                \
+    {                                                                               \
+        result.push_back({native::XAssetType::ASSET_TYPE_MATERIAL, {obj->member}}); \
+    }
+
+#define REGISTER_MEMBER_SOUND(obj, member)                                                                    \
+    if (obj->member)                                                                                       \
+    {                                                                                                      \
+        const auto snd = find<native::snd_alias_list_t>(native::ASSET_TYPE_SOUND, obj->member->aliasName); \
+        if (snd)                                                                                           \
+        {                                                                                                  \
+            result.push_back({native::ASSET_TYPE_SOUND, {snd}});                                           \
+        }                                                                                                  \
+    }
+#define REGISTER_MEMBER_ASSET(obj, member, xassettype)    \
+    if (obj->member)                                   \
+    {                                                  \
+        result.push_back({xassettype, {obj->member}}); \
+    }
+
+
+		if (weapon->szXAnims)
+        {
+            for (size_t i = 0; i < native::weapAnimFiles_t::NUM_WEAP_ANIMS; i++)
+            {
+                if (weapon->szXAnims[i])
+                {
+                    if (strnlen(weapon->szXAnims[i], 1) > 0)
+                    {
+                        const auto anim = assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, weapon->szXAnims[i]);
+                        if (anim)
+                        {
+							result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
+                        }
+                    }
+                }
+            }
+        }
+		
+        REGISTER_MEMBER_MATERIAL(weapon, killIcon);
+        REGISTER_MEMBER_MATERIAL(weapon, dpadIcon);
+
+        // Dump weapondef
+        const auto weapon_def = weapon->weapDef;
+		
+        for (size_t i = 0; i < 16; i++)
+        {
+            if (weapon_def->gunXModel[i])
+            {
+				result.push_back({iw4of::native::ASSET_TYPE_XMODEL,  weapon_def->gunXModel[i]});
+            }
+        }
+
+        REGISTER_MEMBER_ASSET(weapon->weapDef, handXModel, native::XAssetType::ASSET_TYPE_XMODEL);
+
+		if (weapon->weapDef->szXAnimsRightHanded)
+        {
+            for (size_t i = 0; i < native::weapAnimFiles_t::NUM_WEAP_ANIMS; i++)
+            {
+                if (weapon->weapDef->szXAnimsRightHanded[i])
+                {
+                    if (strnlen(weapon->weapDef->szXAnimsRightHanded[i], 1) > 0)
+                    {
+                        const auto anim = assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, weapon->weapDef->szXAnimsRightHanded[i]);
+                        if (anim)
+                        {
+							result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
+                        }
+                    }
+                }
+            }
+        }
+		
+		if (weapon->weapDef->szXAnimsLeftHanded)
+        {
+            for (size_t i = 0; i < native::weapAnimFiles_t::NUM_WEAP_ANIMS; i++)
+            {
+                if (weapon->weapDef->szXAnimsLeftHanded[i])
+                {
+                    if (strnlen(weapon->weapDef->szXAnimsLeftHanded[i], 1) > 0)
+                    {
+                        const auto anim = assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, weapon->weapDef->szXAnimsLeftHanded[i]);
+                        if (anim)
+                        {
+							result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
+                        }
+                    }
+                }
+            }
+        }
+
+        REGISTER_MEMBER_ASSET(weapon->weapDef, viewFlashEffect, native::XAssetType::ASSET_TYPE_FX);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, worldFlashEffect, native::XAssetType::ASSET_TYPE_FX);
+
+        REGISTER_MEMBER_SOUND(weapon->weapDef, pickupSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, pickupSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, ammoPickupSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, ammoPickupSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, projectileSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, pullbackSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, pullbackSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, fireSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, fireSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, fireSoundPlayerAkimbo);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, fireLoopSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, fireLoopSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, fireStopSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, fireStopSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, fireLastSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, fireLastSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, emptyFireSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, emptyFireSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, meleeSwipeSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, meleeSwipeSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, meleeHitSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, meleeMissSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, rechamberSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, rechamberSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, reloadSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, reloadSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, reloadEmptySound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, reloadEmptySoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, reloadStartSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, reloadStartSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, reloadEndSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, reloadEndSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, detonateSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, detonateSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, nightVisionWearSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, nightVisionWearSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, nightVisionRemoveSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, nightVisionRemoveSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, altSwitchSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, altSwitchSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, raiseSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, raiseSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, firstRaiseSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, firstRaiseSoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, putawaySound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, putawaySoundPlayer);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, scanSound);
+
+		if (weapon_def->bounceSound)
+		{
+			for (size_t i = 0; i < 31; i++)
+			{
+				if (weapon_def->bounceSound[i])
+				{
+					result.push_back({iw4of::native::XAssetType::ASSET_TYPE_SOUND, weapon_def->bounceSound[i]});
+				}
+			}
+		}
+
+        REGISTER_MEMBER_ASSET(weapon->weapDef, viewShellEjectEffect, native::XAssetType::ASSET_TYPE_FX);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, worldShellEjectEffect, native::XAssetType::ASSET_TYPE_FX);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, viewLastShotEjectEffect, native::XAssetType::ASSET_TYPE_FX);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, worldLastShotEjectEffect, native::XAssetType::ASSET_TYPE_FX);
+
+        REGISTER_MEMBER_MATERIAL(weapon->weapDef, reticleCenter);
+        REGISTER_MEMBER_MATERIAL(weapon->weapDef, reticleSide);
+
+        for (size_t i = 0; i < 16; i++)
+        {
+            if (weapon_def->worldModel[i])
+            {
+				result.push_back({iw4of::native::ASSET_TYPE_XMODEL,  weapon_def->worldModel[i]});
+            }
+        }
+
+        REGISTER_MEMBER_ASSET(weapon->weapDef, worldClipModel, native::ASSET_TYPE_XMODEL);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, rocketModel, native::ASSET_TYPE_XMODEL);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, knifeModel, native::ASSET_TYPE_XMODEL);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, worldKnifeModel, native::ASSET_TYPE_XMODEL);
+        REGISTER_MEMBER_MATERIAL(weapon->weapDef, hudIcon);
+        REGISTER_MEMBER_MATERIAL(weapon->weapDef, pickupIcon);
+        REGISTER_MEMBER_MATERIAL(weapon->weapDef, ammoCounterIcon);
+
+        REGISTER_MEMBER_MATERIAL(weapon->weapDef, overlayMaterial);
+        REGISTER_MEMBER_MATERIAL(weapon->weapDef, overlayMaterialLowRes);
+        REGISTER_MEMBER_MATERIAL(weapon->weapDef, overlayMaterialEMP);
+        REGISTER_MEMBER_MATERIAL(weapon->weapDef, overlayMaterialEMPLowRes);
+
+        REGISTER_MEMBER_ASSET(weapon->weapDef, physCollmap, native::ASSET_TYPE_PHYSCOLLMAP);
+
+        REGISTER_MEMBER_ASSET(weapon->weapDef, projectileModel, native::ASSET_TYPE_XMODEL);
+
+        REGISTER_MEMBER_ASSET(weapon->weapDef, projExplosionEffect, native::ASSET_TYPE_FX);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, projDudEffect, native::ASSET_TYPE_FX);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, projExplosionSound);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, projDudSound);
+
+        REGISTER_MEMBER_ASSET(weapon->weapDef, projTrailEffect, native::ASSET_TYPE_FX);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, projBeaconEffect, native::ASSET_TYPE_FX);
+
+        REGISTER_MEMBER_ASSET(weapon->weapDef, projIgnitionEffect, native::ASSET_TYPE_FX);
+        REGISTER_MEMBER_SOUND(weapon->weapDef, projIgnitionSound);
+        REGISTER_MEMBER_ASSET(weapon->weapDef, tracerType, native::ASSET_TYPE_TRACER);
+
+        if (weapon_def->weapClass == native::WEAPCLASS_TURRET)
+        {
+            REGISTER_MEMBER_SOUND(weapon->weapDef, turretOverheatSound);
+            REGISTER_MEMBER_ASSET(weapon->weapDef, turretOverheatEffect, native::ASSET_TYPE_FX);
+
+            REGISTER_MEMBER_SOUND(weapon->weapDef, turretBarrelSpinMaxSnd);
+			
+			if (weapon_def->turretBarrelSpinUpSnd)
+			{
+				for (size_t i = 0; i < ARRAYSIZE(weapon_def->turretBarrelSpinUpSnd); i++)
+				{
+					if (weapon_def->turretBarrelSpinUpSnd[i])
+					{
+						result.push_back({iw4of::native::XAssetType::ASSET_TYPE_SOUND, weapon_def->turretBarrelSpinUpSnd[i]});
+					}
+				}
+			}
+
+			if (weapon_def->turretBarrelSpinDownSnd)
+			{
+				for (size_t i = 0; i < ARRAYSIZE(weapon_def->turretBarrelSpinDownSnd); i++)
+				{
+					if (weapon_def->turretBarrelSpinDownSnd[i])
+					{
+						result.push_back({iw4of::native::XAssetType::ASSET_TYPE_SOUND, weapon_def->turretBarrelSpinDownSnd[i]});
+					}
+				}
+			}
+        }
+
+        if (weapon_def->weapClass == native::weapClass_t::WEAPCLASS_ROCKETLAUNCHER)
+        {
+            REGISTER_MEMBER_SOUND(weapon->weapDef, missileConeSoundAlias);
+            REGISTER_MEMBER_SOUND(weapon->weapDef, missileConeSoundAliasAtBase);
+        }
+
+		#undef REGISTER_MEMBER_MATERIAL
+		#undef REGISTER_MEMBER_SOUND
+		#undef REGISTER_MEMBER_ASSET
+
+        return result;
+    } // namespace iw4of::interfaces
 
     bool iweapon::write_variant(rapidjson::Value& container, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator,
                                 const native::XAssetHeader& weapon_original, const native::XAssetHeader& weapon_variant) const

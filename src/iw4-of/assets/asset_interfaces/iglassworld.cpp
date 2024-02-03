@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include "iglassworld.hpp"
 
@@ -14,7 +14,6 @@
 
 namespace iw4of::interfaces
 {
-
     bool iglassworld::write_internal(const native::XAssetHeader& header) const
     {
         auto asset = header.gameWorldMp;

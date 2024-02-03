@@ -131,4 +131,27 @@ namespace iw4of::interfaces
 
         return std::format("{}.iw4xComWorld", basename);
     }
+	
+    std::vector<native::XAsset> icomworld::get_child_assets(const native::XAssetHeader& header) const
+    {
+        std::vector<native::XAsset> result{};
+		const auto asset = header.comWorld;
+
+        for (size_t i = 0; i < asset->primaryLightCount; i++)
+        {
+			native::ComPrimaryLight* light = &asset->primaryLights[i];
+
+			if (light->defName)
+			{
+				const auto& light_asset = find<void>(native::XAssetType::ASSET_TYPE_LIGHT_DEF, light->defName);
+
+				if (light_asset)
+				{
+					result.push_back({native::ASSET_TYPE_LIGHT_DEF, { light_asset } });
+				}
+			}
+        }
+
+        return result;
+    }
 } // namespace iw4of::interfaces
