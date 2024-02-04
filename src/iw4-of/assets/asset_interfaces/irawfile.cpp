@@ -177,6 +177,7 @@ namespace iw4of::interfaces
                 }
                 else
                 {
+                    print_error("Could not find animtree {}\n", animtree_name);
                     assert(false);
                 }
             }
