@@ -4,6 +4,7 @@
 #include <unordered_set>
 
 #include "params.hpp"
+#include "iw4_native_asset.hpp"
 #include "asset_interface.hpp"
 #include <game/structs.hpp>
 
@@ -70,6 +71,8 @@ namespace iw4of
         {
             params.work_directory = path;
         }
+
+		std::unordered_set<iw4_native_asset, iw4_native_asset::hash> get_children(int type, void* asset) const;
 
         std::string read_file(const std::string& name) const;
 

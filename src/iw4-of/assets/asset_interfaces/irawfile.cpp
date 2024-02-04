@@ -30,7 +30,7 @@ namespace iw4of::interfaces
 
             write_named_assets(header.rawfile->name, uncompressed_buffer);
 
-			const auto work_path = get_work_path(header).string();
+            const auto work_path = get_work_path(header).string();
             const auto data = std::string(uncompressed_buffer.data(), header.rawfile->len);
             return utils::io::write_file(work_path, data);
         }
@@ -80,54 +80,42 @@ namespace iw4of::interfaces
 
     void irawfile::write_named_assets(const std::string& script_name, const std::string& script_data) const
     {
-        if (script_name.ends_with(".gsc"))
-        {
-            if (script_name.ends_with("_fx.gsc"))
-            {
-                if (script_name.starts_with("maps/createfx/"))
-                {
-                    // Createfx
-                    auto snds = get_create_fx_sounds(script_data);
-                    for (const auto& snd : snds)
-                    {
-                        assets->write(native::ASSET_TYPE_SOUND, snd);
-                    }
-                }
-                else
-                {
-                    // General FX
-                    auto fxs = get_map_fx(script_data);
-                    for (const auto& fx : fxs)
-                    {
-                        assets->write(native::ASSET_TYPE_FX, fx);
-                    }
-                }
-            }
-            else if (script_name.ends_with("_precache.gsc"))
-            {
-                auto asset_list = get_assets_in_precache(script_data);
-                for (const auto& asset : asset_list)
-                {
-                    assets->write(asset.type, asset.header.data);
-                }
-            }
-
-            const auto& anim_trees = get_map_animtrees(script_data);
-            for (const auto& tree : anim_trees)
-            {
-                assets->write(native::ASSET_TYPE_RAWFILE, tree);
-            }
-
-            auto ambient_snd = get_ambient_play(script_data);
-            if (ambient_snd)
-            {
-                assets->write(native::ASSET_TYPE_SOUND, ambient_snd);
-            }
-        }
+		const auto children = get_child_assets(script_name, script_data);
+		for(const auto& child : children)
+		{
+			assets->write(child.type, child.header.data);
+		}
     }
 
-    void irawfile::read_named_assets(const std::string& script_name, const std::string& script_data) const
+    void irawfile::read_named_assets(const std::string& script_name, const std::string& script_data) const {
+		
+		// And this should be enough
+		get_child_assets(script_name, script_data);
+	}
+
+    std::vector<native::XAsset> irawfile::get_child_assets(const native::XAssetHeader& header) const
     {
+        const std::string script_name = header.rawfile->name;
+        std::string script_data;
+
+        // Decompress
+        if (header.rawfile->compressedLen > 0)
+        {
+            const auto& str = utils::compression::zlib::decompress(std::string(header.rawfile->buffer, header.rawfile->compressedLen));
+            script_data = std::string(local_allocator.duplicate_string(str), header.rawfile->len);
+        }
+        else
+        {
+            script_data = std::string(header.rawfile->buffer, header.rawfile->len);
+        }
+
+		return get_child_assets(script_name, script_data);
+    }
+
+	std::vector<native::XAsset> irawfile::get_child_assets(const std::string& script_name, const std::string& script_data) const
+	{
+        auto result = std::vector<native::XAsset>();
+
         if (script_name.ends_with(".gsc"))
         {
             if (script_name.ends_with("_fx.gsc"))
@@ -135,22 +123,79 @@ namespace iw4of::interfaces
                 if (script_name.starts_with("maps/createfx/"))
                 {
                     // Createfx
-                    get_create_fx_sounds(script_data);
+                    const auto sounds = get_create_fx_sounds(script_data);
+                    for (const auto& sound : sounds)
+                    {
+                        result.push_back({native::ASSET_TYPE_SOUND, sound});
+                    }
                 }
                 else
                 {
                     // General FX
-                    get_map_fx(script_data);
+                    const auto fxs = get_map_fx(script_data);
+                    for (const auto& fx : fxs)
+                    {
+                        result.push_back({native::ASSET_TYPE_FX, fx});
+                    }
                 }
             }
             else if (script_name.ends_with("_precache.gsc"))
             {
-                get_assets_in_precache(script_data);
+                const auto precache = get_assets_in_precache(script_data);
+                for (const auto& asset : precache)
+                {
+                    result.push_back(asset);
+                }
             }
 
-            get_map_animtrees(script_data);
-            get_ambient_play(script_data);
+            const auto anim_trees = get_map_animtrees(script_data);
+            for (const auto& anim_tree : anim_trees)
+            {
+                result.push_back({native::ASSET_TYPE_RAWFILE, anim_tree});
+            }
+
+            const auto ambient = get_ambient_play(script_data);
+			if (ambient)
+			{
+                result.push_back({native::ASSET_TYPE_SOUND, ambient});
+			}
         }
+        else if (script_name.ends_with(".atr"))
+        {
+            const auto anims = get_animtree_anims(script_data);
+            for (const auto& anim : anims)
+            {
+                result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
+            }
+        }
+
+        return result;
+	}
+
+	std::vector<native::XAnimParts*> irawfile::get_animtree_anims(const std::string& script) const
+    {
+        auto result = std::vector<native::XAnimParts*>();
+        std::istringstream iss(script);
+
+        for (std::string line; std::getline(iss, line);)
+        {
+            line = line.erase(0, line.find_first_not_of(" \n\r\t"));
+			while (line.length() > 0 && (line.ends_with("\n") || line.ends_with("\r") || line.ends_with(" ")))
+			{
+				line.pop_back();
+			}
+
+            if (line.length() > 0 && line[0] != '/' && line[1] != '/')
+            {
+                const auto parts = find<native::XAnimParts>(iw4of::native::XAssetType::ASSET_TYPE_XANIMPARTS, line);
+                if (parts)
+                {
+                    result.push_back(parts);
+                }
+            }
+        }
+
+        return result;
     }
 
     std::vector<native::RawFile*> irawfile::get_map_animtrees(const std::string& script) const

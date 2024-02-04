@@ -2,6 +2,7 @@
 #include <game/structs.hpp>
 #include <utils/memory.hpp>
 #include <string>
+#include <vector>
 
 namespace iw4of
 {
@@ -28,6 +29,11 @@ namespace iw4of
             return reinterpret_cast<T*>(read_internal(name));
         };
 
+		std::vector<native::XAsset> get_children(const native::XAssetHeader& header) const
+		{
+			return get_child_assets(header);
+		}
+
         asset_interface(const class assets* assets)
         {
             this->assets = assets;
@@ -46,6 +52,11 @@ namespace iw4of
         {
             return get_file_name(header.physPreset->name);
         };
+
+		virtual std::vector<native::XAsset> get_child_assets(const native::XAssetHeader& header) const
+		{
+			return {};
+		};
 
         std::filesystem::path get_work_path(const std::string& asset_name) const;
 

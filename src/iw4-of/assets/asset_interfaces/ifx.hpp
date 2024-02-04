@@ -23,6 +23,7 @@ namespace iw4of::interfaces
 
        protected:
         bool write_internal(const native::XAssetHeader& header) const override;
+        std::vector<native::XAsset> get_child_assets(const native::XAssetHeader& header) const;
         void* read_internal(const std::string& name) const override;
 
         std::filesystem::path get_file_name(const std::string& basename) const override;
@@ -42,5 +43,7 @@ namespace iw4of::interfaces
 
         native::FxEffectDef* read_binary(const std::string& name, const std::string& path) const;
         native::FxEffectDef* read_plaintext(const std::string& name, const std::string& path) const;
+
+		void get_dependencies(const native::FxElemVisuals* visuals, char elemType, std::vector<native::XAsset>& assets) const;
 	};
 } // namespace iw4of::interfaces

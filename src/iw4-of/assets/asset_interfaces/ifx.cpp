@@ -22,7 +22,7 @@ namespace iw4of::interfaces
         rapidjson::Document output(rapidjson::kObjectType);
         auto& allocator = output.GetAllocator();
         utils::memory::allocator str_duplicator;
-		
+
         output.AddMember("version", IW4X_FX_VERSION, allocator);
         output.AddMember("name", RAPIDJSON_STR(asset->name), allocator);
 
@@ -187,7 +187,7 @@ namespace iw4of::interfaces
                         }
                     }
                     else if (elem_def->visualCount)
-					{
+                    {
                         json_elem_def.AddMember("instance", to_json(&elem_def->visuals.instance, elem_def->elemType, allocator), allocator);
                     }
                 }
@@ -315,6 +315,73 @@ namespace iw4of::interfaces
     std::filesystem::path ifx::get_legacy_work_path(const std::string& file_name) const
     {
         return get_work_path(get_binary_file_name(file_name));
+    }
+
+    std::vector<native::XAsset> ifx::get_child_assets(const native::XAssetHeader& header) const
+    {
+        std::vector<native::XAsset> result{};
+        const auto asset = header.fx;
+
+        if (asset->elemDefs)
+        {
+            for (int i = 0; i < (asset->elemDefCountEmission + asset->elemDefCountLooping + asset->elemDefCountOneShot); ++i)
+            {
+                native::FxElemDef* elem_def = &asset->elemDefs[i];
+
+                // Save_FxElemDefVisuals
+                {
+                    if (elem_def->elemType == native::FX_ELEM_TYPE_DECAL)
+                    {
+                        if (elem_def->visuals.markArray)
+                        {
+                            rapidjson::Value mark_array_json(rapidjson::kArrayType);
+                            for (char j = 0; j < elem_def->visualCount; ++j)
+                            {
+                                rapidjson::Value materials(rapidjson::kArrayType);
+                                for (auto k = 0; k < 2; k++)
+                                {
+                                    if (elem_def->visuals.markArray[j].materials[k])
+                                    {
+                                        result.push_back({native::ASSET_TYPE_MATERIAL, {elem_def->visuals.markArray[j].materials[k]}});
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (elem_def->visualCount > 1)
+                    {
+                        if (elem_def->visuals.array)
+                        {
+                            for (char j = 0; j < elem_def->visualCount; ++j)
+                            {
+                                const auto visuals = &elem_def->visuals.array[j];
+                                get_dependencies(visuals, elem_def->elemType, result);
+                            }
+                        }
+                        else if (elem_def->visualCount)
+                        {
+                            get_dependencies(&elem_def->visuals.instance, elem_def->elemType, result);
+                        }
+                    }
+
+                    if (elem_def->effectOnImpact.handle)
+                    {
+                        result.push_back({native::ASSET_TYPE_FX, {elem_def->effectOnImpact.handle}});
+                    }
+
+                    if (elem_def->effectOnDeath.handle)
+                    {
+                        result.push_back({native::ASSET_TYPE_FX, {elem_def->effectOnDeath.handle}});
+                    }
+
+                    if (elem_def->effectEmitted.handle)
+                    {
+                        result.push_back({native::ASSET_TYPE_FX, {elem_def->effectEmitted.handle}});
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     void* ifx::read_internal(const std::string& name) const
@@ -527,7 +594,8 @@ namespace iw4of::interfaces
                 const auto json_elem_defs = fx_json["elemDefs"].GetArray();
 
                 const auto json_elem_count = json_elem_defs.Size();
-                assert(static_cast<int32_t>(json_elem_count) == asset->elemDefCountEmission + asset->elemDefCountLooping + asset->elemDefCountOneShot);
+                assert(static_cast<int32_t>(json_elem_count) ==
+                       asset->elemDefCountEmission + asset->elemDefCountLooping + asset->elemDefCountOneShot);
 
                 asset->elemDefs = local_allocator.allocate_array<iw4of::native::FxElemDef>(json_elem_count);
 
@@ -582,10 +650,10 @@ namespace iw4of::interfaces
                         elem_def->velIntervalCount = elem["velIntervalCount"].Get<uint8_t>();
                         elem_def->visStateIntervalCount = elem["visStateIntervalCount"].Get<uint8_t>();
 
-                        elem_def->velSamples = local_allocator.allocate_array<native::FxElemVelStateSample>(elem_def->velIntervalCount+1);
+                        elem_def->velSamples = local_allocator.allocate_array<native::FxElemVelStateSample>(elem_def->velIntervalCount + 1);
                         if (elem.HasMember("velSamples") && !elem["velSamples"].IsNull())
                         {
-							// Mind the <=
+                            // Mind the <=
                             for (size_t j = 0; j <= elem_def->velIntervalCount; j++)
                             {
                                 const auto& json_vel_sample = elem["velSamples"][j];
@@ -598,10 +666,10 @@ namespace iw4of::interfaces
                             }
                         }
 
-                        elem_def->visSamples = local_allocator.allocate_array<native::FxElemVisStateSample>(elem_def->visStateIntervalCount+1);
+                        elem_def->visSamples = local_allocator.allocate_array<native::FxElemVisStateSample>(elem_def->visStateIntervalCount + 1);
                         if (elem.HasMember("visSamples") && !elem["visSamples"].IsNull())
                         {
-							// Mind the <=
+                            // Mind the <=
                             for (size_t j = 0; j <= elem_def->visStateIntervalCount; j++)
                             {
                                 const auto& json_vel_sample = elem["visSamples"][j];
@@ -664,7 +732,7 @@ namespace iw4of::interfaces
 
                                 for (char j = 0; j < elem_def->visualCount; ++j)
                                 {
-									const auto& json_array = elem["visualsArray"];
+                                    const auto& json_array = elem["visualsArray"];
                                     read(&elem_def->visuals.array[j], elem_def->elemType, json_array[j]);
                                 }
                             }
@@ -744,11 +812,11 @@ namespace iw4of::interfaces
 
 #undef READ_SPARK_FOUNTAIN_MEMBER
                                 }
-								else
-								{
-									// Guaranteed to crash
-									print_error("Missing spark fountain definition for fx {} elem {}, this will crash on iw4!", name, i);
-								}
+                                else
+                                {
+                                    // Guaranteed to crash
+                                    print_error("Missing spark fountain definition for fx {} elem {}, this will crash on iw4!", name, i);
+                                }
                             }
                         }
 
@@ -777,6 +845,52 @@ namespace iw4of::interfaces
     std::filesystem::path iw4of::interfaces::ifx::get_file_name(const std::string& basename) const
     {
         return std::format("{}.iw4x.json", basename);
+    }
+
+    void iw4of::interfaces::ifx::get_dependencies(const native::FxElemVisuals* visuals, char elemType,
+                                                  std::vector<native::XAsset>& dependencies) const
+    {
+        switch (elemType)
+        {
+            case native::FX_ELEM_TYPE_MODEL:
+                if (visuals->model)
+                {
+                    dependencies.push_back({native::ASSET_TYPE_XMODEL, {visuals->model}});
+                }
+                break;
+
+            case native::FX_ELEM_TYPE_OMNI_LIGHT:
+            case native::FX_ELEM_TYPE_SPOT_LIGHT: break;
+
+            case native::FX_ELEM_TYPE_SOUND:
+                if (visuals->soundName)
+                {
+                    auto list = find<native::snd_alias_list_t>(native::ASSET_TYPE_SOUND, visuals->soundName);
+
+                    if (list)
+                    {
+                        dependencies.push_back({native::ASSET_TYPE_SOUND, {list}});
+                    }
+                }
+
+                break;
+
+            case native::FX_ELEM_TYPE_RUNNER:
+                if (visuals->effectDef.handle)
+                {
+                    dependencies.push_back({native::ASSET_TYPE_FX, {visuals->effectDef.handle}});
+                }
+
+                break;
+
+            default:
+                if (visuals->material)
+                {
+                    dependencies.push_back({native::ASSET_TYPE_MATERIAL, {visuals->material}});
+                }
+
+                break;
+        }
     }
 
     rapidjson::Value ifx::to_json(const native::FxElemVisuals* visuals, char elemType,
@@ -837,7 +951,6 @@ namespace iw4of::interfaces
 
         return output;
     }
-
 
     void interfaces::ifx::read(native::FxElemVisuals* visuals, char elemType, utils::stream::reader* reader) const
     {
@@ -917,13 +1030,13 @@ namespace iw4of::interfaces
                 if (value.HasMember("sound"))
                 {
                     visuals->soundName = local_allocator.duplicate_string(value["sound"].GetString());
-					const auto sound = find<native::snd_alias_list_t>(native::XAssetType::ASSET_TYPE_SOUND,  visuals->soundName);
+                    const auto sound = find<native::snd_alias_list_t>(native::XAssetType::ASSET_TYPE_SOUND, visuals->soundName);
 
-					if (!sound)
-					{
-						print_error("Critical error - could not find sound {}. This will crash the game!", visuals->soundName);
-					}
-				}
+                    if (!sound)
+                    {
+                        print_error("Critical error - could not find sound {}. This will crash the game!", visuals->soundName);
+                    }
+                }
                 break;
             }
 
@@ -932,10 +1045,10 @@ namespace iw4of::interfaces
                 if (value.HasMember("runner"))
                 {
                     visuals->effectDef.handle = find<native::FxEffectDef>(native::XAssetType::ASSET_TYPE_FX, value["runner"].GetString());
-					if (!visuals->effectDef.handle)
-					{
-						print_error("Critical error - could not find fx {}. This will crash the game!", value["runner"].GetString());
-					}
+                    if (!visuals->effectDef.handle)
+                    {
+                        print_error("Critical error - could not find fx {}. This will crash the game!", value["runner"].GetString());
+                    }
                 }
 
                 break;
@@ -946,10 +1059,10 @@ namespace iw4of::interfaces
                 if (value.HasMember("material"))
                 {
                     visuals->material = find<native::Material>(native::XAssetType::ASSET_TYPE_MATERIAL, value["material"].GetString());
-					if (!visuals->material)
-					{
-						print_error("Critical error - could not find fx {}. This will crash the game!", value["material"].GetString());
-					}
+                    if (!visuals->material)
+                    {
+                        print_error("Critical error - could not find fx {}. This will crash the game!", value["material"].GetString());
+                    }
                 }
 
                 break;

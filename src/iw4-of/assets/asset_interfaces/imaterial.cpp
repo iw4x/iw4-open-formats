@@ -587,6 +587,48 @@ namespace iw4of::interfaces
         return nullptr;
     }
 
+	std::vector<native::XAsset> imaterial::get_child_assets(const native::XAssetHeader& header) const
+	{
+		auto result = std::vector<native::XAsset>();
+
+		auto asset = header.material;
+
+        if (asset->techniqueSet)
+        {
+			result.push_back({native::ASSET_TYPE_TECHNIQUE_SET, asset->techniqueSet});
+        }
+
+        if (asset->textureTable)
+        {
+            for (char i = 0; i < asset->textureCount; ++i)
+            {
+                auto textureDef = &asset->textureTable[i];
+
+                if (textureDef->semantic == native::TS_WATER_MAP)
+                {
+                    auto water = textureDef->u.water;
+
+                    if (water)
+                    {
+                        if (water->image)
+                        {
+							result.push_back({native::XAssetType::ASSET_TYPE_IMAGE, water->image});
+                        }
+                    }
+                }
+                else
+                {
+                    if (textureDef->u.image)
+                    {
+						result.push_back({native::XAssetType::ASSET_TYPE_IMAGE, textureDef->u.image});
+                    }
+                }
+            }
+        }
+
+		return result;
+	}
+
     std::filesystem::path interfaces::imaterial::get_file_name(const std::string& basename) const
     {
         return std::format("{}.iw4x.json", basename);

@@ -10,6 +10,44 @@
 
 namespace iw4of::interfaces
 {
+	std::vector<native::XAsset> ixmodel::get_child_assets(const native::XAssetHeader& header) const
+    {
+        std::vector<native::XAsset> result{};
+        auto asset = header.model;
+        assert(asset);
+
+        if (asset->materialHandles)
+        {
+            for (uint8_t i = 0; i < asset->numsurfs; ++i)
+            {
+                if (asset->materialHandles[i])
+                {
+					result.push_back({native::ASSET_TYPE_MATERIAL, {asset->materialHandles[i]}});
+                }
+            }
+        }
+
+        for (int i = 0; i < 4; ++i)
+        {
+            if (asset->lodInfo[i].modelSurfs)
+            {
+				result.push_back({native::ASSET_TYPE_XMODEL_SURFS, {asset->lodInfo[i].modelSurfs}});
+            }
+        }
+
+        if (asset->physPreset)
+        {
+			result.push_back({native::ASSET_TYPE_PHYSPRESET, {asset->physPreset}});
+        }
+
+        if (asset->physCollmap)
+        {
+			result.push_back({native::ASSET_TYPE_PHYSCOLLMAP, {asset->physCollmap}});
+        }
+
+		return result;
+	}
+
     bool ixmodel::write_internal(const native::XAssetHeader& header) const
     {
         auto asset = header.model;

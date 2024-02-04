@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include "ifxworld.hpp"
 
@@ -13,6 +13,23 @@
 
 namespace iw4of::interfaces
 {
+    std::vector<native::XAsset> ifxworld::get_child_assets(const native::XAssetHeader& header) const
+    {
+        std::vector<native::XAsset> result{};
+		const auto asset = header.fxWorld;
+		
+        for (size_t i = 0; i < asset->glassSys.defCount; i++)
+        {
+            auto def = &asset->glassSys.defs[i];
+
+			result.push_back({ native::ASSET_TYPE_MATERIAL, { def->material } });
+			result.push_back({ native::ASSET_TYPE_MATERIAL, { def->materialShattered } });
+			result.push_back({ native::ASSET_TYPE_PHYSPRESET, { def->physPreset } });
+        }
+
+        return result;
+    }
+
     bool ifxworld::write_internal(const native::XAssetHeader& header) const
     {
         auto asset = header.fxWorld;

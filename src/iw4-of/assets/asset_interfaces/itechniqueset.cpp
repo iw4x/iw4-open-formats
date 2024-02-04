@@ -16,6 +16,48 @@
 
 namespace iw4of::interfaces
 {
+	std::vector<native::XAsset> itechniqueset::get_child_assets(const native::XAssetHeader& header) const
+    {
+        std::vector<native::XAsset> result{};
+        auto techset = header.techniqueSet;
+
+        if (techset->remappedTechniqueSet &&
+			techset->remappedTechniqueSet != techset &&
+			techset->remappedTechniqueSet->name)
+        {
+			result.push_back({native::ASSET_TYPE_TECHNIQUE_SET, { techset->remappedTechniqueSet } });
+        }
+
+        for (size_t i = 0; i < native::TECHNIQUE_COUNT; i++)
+        {
+            if (techset->techniques[i])
+            {
+				const auto technique = techset->techniques[i];
+				for(size_t j = 0; j < technique->passCount; j++)
+				{
+					const auto pass = &technique->passArray[j];
+
+					if (pass->pixelShader)
+					{
+						result.push_back({native::ASSET_TYPE_PIXELSHADER, {pass->pixelShader}});
+					}
+
+					if (pass->vertexShader)
+					{
+						result.push_back({native::ASSET_TYPE_VERTEXSHADER, {pass->vertexShader}});
+					}
+
+					if (pass->vertexDecl)
+					{
+						result.push_back({native::ASSET_TYPE_VERTEXDECL, {pass->vertexDecl}});
+					}
+				}
+            }
+        }
+
+        return result;
+    }
+
     bool itechniqueset::write_internal(const native::XAssetHeader& header) const
     {
         const auto techset = header.techniqueSet;

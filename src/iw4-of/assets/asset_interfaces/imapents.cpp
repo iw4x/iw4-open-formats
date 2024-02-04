@@ -65,6 +65,10 @@ namespace iw4of::interfaces
             asset_list.push_back({native::ASSET_TYPE_XMODEL, xmodel});
         }
 
+		// TODO: Vehicles?
+		// TODO: Weapons?
+		// More?
+
         return asset_list;
     }
 
@@ -72,7 +76,7 @@ namespace iw4of::interfaces
     {
         auto models = std::vector<native::XModel*>();
 
-        std::regex model_catcher("model\"? \"([^\\*\\?].*)\"");
+        static std::regex model_catcher("model\"? \"([^\\*\\?].*)\"");
 
         std::smatch m;
 
@@ -118,4 +122,9 @@ namespace iw4of::interfaces
     {
         return "mapents";
     }
+
+	std::vector<native::XAsset> imapents::get_child_assets(const native::XAssetHeader& header) const
+	{
+		return get_assets(header.mapEnts->entityString);
+	}
 } // namespace iw4of::interfaces

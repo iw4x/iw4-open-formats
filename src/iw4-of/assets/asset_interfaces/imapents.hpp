@@ -17,6 +17,7 @@ namespace iw4of::interfaces
         void* read_internal(const std::string& name) const override;
         std::filesystem::path get_file_name(const std::string& basename) const override;
         std::filesystem::path get_folder_name() const override;
+        std::vector<native::XAsset> get_child_assets(const native::XAssetHeader& header) const;
 
        private:
         std::vector<native::XAsset> get_assets(const std::string& entity_string) const;
