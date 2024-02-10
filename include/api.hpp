@@ -4,6 +4,7 @@
 #include "iw4_native_asset.hpp"
 #include <functional>
 #include <filesystem>
+#include <unordered_set>
 
 namespace iw4of
 {
