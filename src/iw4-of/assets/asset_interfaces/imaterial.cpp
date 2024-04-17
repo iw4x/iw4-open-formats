@@ -210,7 +210,13 @@ namespace iw4of::interfaces
         }
 
         rapidjson::StringBuffer buff;
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buff);
+        rapidjson::PrettyWriter<
+            /*typename OutputStream  */ rapidjson::StringBuffer,
+            /*typename SourceEncoding*/ rapidjson::UTF8<>,
+            /*typename TargetEncoding*/ rapidjson::UTF8<>,
+            /*typename StackAllocator*/ rapidjson::CrtAllocator,
+            /*unsigned writeFlags*/ rapidjson::kWriteNanAndInfNullFlag | rapidjson::kWriteNanAndInfFlag>
+            writer(buff);
         output.Accept(writer);
 
         utils::io::write_file(get_work_path(header).string(), buff.GetString());

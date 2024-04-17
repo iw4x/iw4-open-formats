@@ -1114,7 +1114,7 @@ namespace iw4of::interfaces
             /*typename SourceEncoding*/ rapidjson::UTF8<>,
             /*typename TargetEncoding*/ rapidjson::UTF8<>,
             /*typename StackAllocator*/ rapidjson::CrtAllocator,
-            /*unsigned writeFlags*/ rapidjson::kWriteNanAndInfFlag>
+            /*unsigned writeFlags*/ rapidjson::kWriteNanAndInfNullFlag | rapidjson::kWriteNanAndInfFlag>
             writer(buff);
         writer.SetFormatOptions(rapidjson::PrettyFormatOptions::kFormatSingleLineArray);
         output.Accept(writer);
