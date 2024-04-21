@@ -209,6 +209,7 @@ namespace iw4of::interfaces
             output.AddMember("stateBitsTable", statebits_to_json_array(asset->stateBitsTable, asset->stateBitsCount, allocator), allocator);
         }
 
+        // Write to disk
         rapidjson::StringBuffer buff;
         rapidjson::PrettyWriter<
             /*typename OutputStream  */ rapidjson::StringBuffer,
@@ -217,6 +218,8 @@ namespace iw4of::interfaces
             /*typename StackAllocator*/ rapidjson::CrtAllocator,
             /*unsigned writeFlags*/ rapidjson::kWriteNanAndInfNullFlag | rapidjson::kWriteNanAndInfFlag>
             writer(buff);
+        writer.SetFormatOptions(rapidjson::PrettyFormatOptions::kFormatSingleLineArray);
+
         output.Accept(writer);
 
         utils::io::write_file(get_work_path(header).string(), buff.GetString());

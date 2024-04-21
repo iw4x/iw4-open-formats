@@ -427,8 +427,16 @@ namespace iw4of::interfaces
         output.AddMember("count", ents->count, allocator);
         output.AddMember("head", head, allocator);
 
+        // Write to disk
         rapidjson::StringBuffer buff;
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buff);
+        rapidjson::PrettyWriter<
+            /*typename OutputStream  */ rapidjson::StringBuffer,
+            /*typename SourceEncoding*/ rapidjson::UTF8<>,
+            /*typename TargetEncoding*/ rapidjson::UTF8<>,
+            /*typename StackAllocator*/ rapidjson::CrtAllocator,
+            /*unsigned writeFlags*/ rapidjson::kWriteNanAndInfFlag>
+            writer(buff);
+        writer.SetFormatOptions(rapidjson::PrettyFormatOptions::kFormatSingleLineArray);
         output.Accept(writer);
 
         const auto& dump = buff.GetString();
