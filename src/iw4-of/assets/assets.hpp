@@ -24,7 +24,16 @@ namespace iw4of
             if (check_type_is_supported(iw4_int_type))
             {
                 const auto& path = asset_interfaces[iw4_int_type]->get_work_path({header});
-                if (can_write(path))
+                const bool writes_in_single_file = asset_interfaces[iw4_int_type]->writes_single_file();
+
+				if (writes_in_single_file && !written_assets.contains(path.string()))
+				{
+					// We have never written this file but it exists on disk, so we destroy it because
+					//	we will be appending to it in the future
+                    std::filesystem::remove(path);
+				}
+
+                if (writes_in_single_file || can_write(path))
                 {
                     bool written = asset_interfaces[iw4_int_type]->write<T>(header);
 

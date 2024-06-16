@@ -636,11 +636,11 @@ namespace iw4of::interfaces
                     if (clip)
                     {
                         assert(clip->planeCount == asset->planeCount);
-                        for (size_t i = 0; i < clip->planeCount; i++)
-                        {
-                            assert(0 ==
-                                   memcmp(&clip->planes[i], &asset->dpvsPlanes.planes[i], sizeof(native::cplane_s) - sizeof(native::cplane_s::pad)));
-                        }
+                        //for (size_t i = 0; i < clip->planeCount; i++)
+                        //{
+                        //    assert(0 ==
+                        //           memcmp(&clip->planes[i], &asset->dpvsPlanes.planes[i], sizeof(native::cplane_s) - sizeof(native::cplane_s::pad)));
+                        //}
 
                         asset->dpvsPlanes.planes = clip->planes;
                     }

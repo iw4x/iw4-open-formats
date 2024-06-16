@@ -39,6 +39,11 @@ namespace iw4of
             this->assets = assets;
         }
 
+        bool writes_single_file()
+        {
+            return writes_single_file_internal();
+        }
+
         std::filesystem::path get_work_path(const native::XAssetHeader& header) const;
 
         virtual ~asset_interface() {}
@@ -57,6 +62,11 @@ namespace iw4of
 		{
 			return {};
 		};
+
+		virtual bool writes_single_file_internal()
+        {
+            return false;
+        }
 
         std::filesystem::path get_work_path(const std::string& asset_name) const;
 
