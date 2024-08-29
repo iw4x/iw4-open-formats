@@ -162,6 +162,19 @@ namespace iw4of
         written_assets.clear();
     }
 
+    iw4of::native::MaterialTechnique* assets::read_stray_technique(const std::string& name)
+    {
+        if (is_type_supported(iw4of::native::ASSET_TYPE_TECHNIQUE_SET))
+        {
+            const auto inter = asset_interfaces[iw4of::native::ASSET_TYPE_TECHNIQUE_SET];
+            const auto techset_interface = reinterpret_cast<iw4of::interfaces::itechniqueset*>(inter);
+
+            return techset_interface->read_technique(name);
+        }
+
+        return nullptr;
+    }
+
     assets::assets(const params_t& params)
     {
         this->params = params;

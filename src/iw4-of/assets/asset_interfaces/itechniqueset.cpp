@@ -16,42 +16,49 @@
 
 namespace iw4of::interfaces
 {
-	std::vector<native::XAsset> itechniqueset::get_child_assets(const native::XAssetHeader& header) const
+    native::MaterialTechnique* itechniqueset::read_technique(const std::string& name) const
+    {
+        native::MaterialTechnique* result = local_allocator.allocate<native::MaterialTechnique>();
+
+        read_technique(&result, name);
+
+        return result;
+    }
+
+    std::vector<native::XAsset> itechniqueset::get_child_assets(const native::XAssetHeader& header) const
     {
         std::vector<native::XAsset> result{};
         auto techset = header.techniqueSet;
 
-        if (techset->remappedTechniqueSet &&
-			techset->remappedTechniqueSet != techset &&
-			techset->remappedTechniqueSet->name)
+        if (techset->remappedTechniqueSet && techset->remappedTechniqueSet != techset && techset->remappedTechniqueSet->name)
         {
-			result.push_back({native::ASSET_TYPE_TECHNIQUE_SET, { techset->remappedTechniqueSet } });
+            result.push_back({native::ASSET_TYPE_TECHNIQUE_SET, {techset->remappedTechniqueSet}});
         }
 
         for (size_t i = 0; i < native::TECHNIQUE_COUNT; i++)
         {
             if (techset->techniques[i])
             {
-				const auto technique = techset->techniques[i];
-				for(size_t j = 0; j < technique->passCount; j++)
-				{
-					const auto pass = &technique->passArray[j];
+                const auto technique = techset->techniques[i];
+                for (size_t j = 0; j < technique->passCount; j++)
+                {
+                    const auto pass = &technique->passArray[j];
 
-					if (pass->pixelShader)
-					{
-						result.push_back({native::ASSET_TYPE_PIXELSHADER, {pass->pixelShader}});
-					}
+                    if (pass->pixelShader)
+                    {
+                        result.push_back({native::ASSET_TYPE_PIXELSHADER, {pass->pixelShader}});
+                    }
 
-					if (pass->vertexShader)
-					{
-						result.push_back({native::ASSET_TYPE_VERTEXSHADER, {pass->vertexShader}});
-					}
+                    if (pass->vertexShader)
+                    {
+                        result.push_back({native::ASSET_TYPE_VERTEXSHADER, {pass->vertexShader}});
+                    }
 
-					if (pass->vertexDecl)
-					{
-						result.push_back({native::ASSET_TYPE_VERTEXDECL, {pass->vertexDecl}});
-					}
-				}
+                    if (pass->vertexDecl)
+                    {
+                        result.push_back({native::ASSET_TYPE_VERTEXDECL, {pass->vertexDecl}});
+                    }
+                }
             }
         }
 
@@ -72,9 +79,7 @@ namespace iw4of::interfaces
             output.AddMember("name", RAPIDJSON_STR(techset->name), allocator);
         }
 
-        if (techset->remappedTechniqueSet &&
-			techset->remappedTechniqueSet != techset &&
-			techset->remappedTechniqueSet->name)
+        if (techset->remappedTechniqueSet && techset->remappedTechniqueSet != techset && techset->remappedTechniqueSet->name)
         {
             output.AddMember("remappedTechniqueSet", RAPIDJSON_STR(techset->remappedTechniqueSet->name), allocator);
             write_internal({techset->remappedTechniqueSet});
@@ -107,16 +112,15 @@ namespace iw4of::interfaces
         }
 
         output.AddMember("techniques", technique_map, allocator);
-        
+
         rapidjson::StringBuffer buff;
         rapidjson::PrettyWriter<
-					/*typename OutputStream  */ rapidjson::StringBuffer,
-					/*typename SourceEncoding*/ rapidjson::UTF8<>,
-					/*typename TargetEncoding*/ rapidjson::UTF8<>,
-					/*typename StackAllocator*/ rapidjson::CrtAllocator,
-					/*unsigned writeFlags*/     rapidjson::kWriteNanAndInfNullFlag | rapidjson::kWriteNanAndInfFlag 
-			>
-			writer(buff);
+            /*typename OutputStream  */ rapidjson::StringBuffer,
+            /*typename SourceEncoding*/ rapidjson::UTF8<>,
+            /*typename TargetEncoding*/ rapidjson::UTF8<>,
+            /*typename StackAllocator*/ rapidjson::CrtAllocator,
+            /*unsigned writeFlags*/ rapidjson::kWriteNanAndInfNullFlag | rapidjson::kWriteNanAndInfFlag>
+            writer(buff);
 
         output.Accept(writer);
 
@@ -210,7 +214,7 @@ namespace iw4of::interfaces
         }
 
         rapidjson::Document technique;
-		std::string file;
+        std::string file;
 
         try
         {
@@ -457,13 +461,12 @@ namespace iw4of::interfaces
 
         rapidjson::StringBuffer buff;
         rapidjson::PrettyWriter<
-					/*typename OutputStream  */ rapidjson::StringBuffer,
-					/*typename SourceEncoding*/ rapidjson::UTF8<>,
-					/*typename TargetEncoding*/ rapidjson::UTF8<>,
-					/*typename StackAllocator*/ rapidjson::CrtAllocator,
-					/*unsigned writeFlags*/     rapidjson::kWriteNanAndInfNullFlag 
-			>
-			writer(buff);
+            /*typename OutputStream  */ rapidjson::StringBuffer,
+            /*typename SourceEncoding*/ rapidjson::UTF8<>,
+            /*typename TargetEncoding*/ rapidjson::UTF8<>,
+            /*typename StackAllocator*/ rapidjson::CrtAllocator,
+            /*unsigned writeFlags*/ rapidjson::kWriteNanAndInfNullFlag>
+            writer(buff);
 
         output.Accept(writer);
 

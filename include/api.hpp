@@ -31,6 +31,8 @@ namespace iw4of
 
 		std::unordered_set<iw4_native_asset, iw4_native_asset::hash> get_children(int type, void* asset) const;
 
+        void* read_stray_technique(const std::string& name);
+
         api(const params_t& params);
 
         ~api();

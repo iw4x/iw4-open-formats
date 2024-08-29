@@ -30,7 +30,7 @@ void iw4of::api::set_work_path(const std::filesystem::path& path)
 
 std::unordered_set<iw4of::iw4_native_asset, iw4of::iw4_native_asset::hash> iw4of::api::get_children(int type, void* asset) const
 {
-	return _assets->get_children(type, asset);
+    return _assets->get_children(type, asset);
 }
 
 void iw4of::api::clear_writes() const
@@ -41,4 +41,9 @@ void iw4of::api::clear_writes() const
 bool iw4of::api::is_type_supported(int iw4_type) const
 {
     return _assets->is_type_supported(iw4_type);
+}
+
+void* iw4of::api::read_stray_technique(const std::string& name) {
+
+    return _assets->read_stray_technique(name);
 }

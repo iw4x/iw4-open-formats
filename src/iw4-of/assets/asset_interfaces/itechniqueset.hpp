@@ -11,6 +11,8 @@ namespace iw4of::interfaces
             : asset_interface(assets)
         {
         }
+        
+        native::MaterialTechnique* read_technique(const std::string& name) const;
 
        protected:
         std::vector<native::XAsset> get_child_assets(const native::XAssetHeader& header) const override;

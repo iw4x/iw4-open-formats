@@ -97,6 +97,8 @@ namespace iw4of
 
         void clear_writes();
 
+        iw4of::native::MaterialTechnique* read_stray_technique(const std::string& name);
+
         assets(const params_t& params);
         ~assets();
 
