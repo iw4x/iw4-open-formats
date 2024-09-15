@@ -398,6 +398,28 @@ namespace iw4of::interfaces
             }
         }
 
+		for (size_t i = 0; i < 16; i++)
+		{
+			const auto key = weapon->weapDef->notetrackSoundMapKeys[i];
+			const auto value = weapon->weapDef->notetrackSoundMapValues[i];
+
+			const unsigned short kv[] = {key, value};
+
+			for (size_t j = 0; j < ARRAYSIZE(kv); j++)
+			{
+				const auto data = kv[j];
+				if (data)
+				{
+					const auto name = assets->read_from_stringtable(data);
+					const auto sound = assets->find_other_asset(native::ASSET_TYPE_SOUND, name);
+					if (sound)
+					{
+						result.push_back({native::ASSET_TYPE_SOUND, sound});
+					}
+				}
+			}
+		}
+
         REGISTER_MEMBER_ASSET(weapon->weapDef, viewFlashEffect, native::XAssetType::ASSET_TYPE_FX);
         REGISTER_MEMBER_ASSET(weapon->weapDef, worldFlashEffect, native::XAssetType::ASSET_TYPE_FX);
 
