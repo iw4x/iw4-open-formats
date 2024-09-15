@@ -80,12 +80,12 @@ namespace iw4of::interfaces
     {
         auto weapons = std::vector<native::WeaponCompleteDef*>();
 
-        static std::regex model_catcher("weaponinfo\"? \"([^\\*\\?].*)\"");
+        static const std::regex weapon_catcher("weaponinfo\"? \"([^*?].*)\"");
 
         std::smatch m;
 
         std::string::const_iterator search_start(entity_string.cbegin());
-        while (std::regex_search(search_start, entity_string.cend(), m, model_catcher))
+        while (std::regex_search(search_start, entity_string.cend(), m, weapon_catcher))
         {
             bool skip = true;
             for (auto match : m)

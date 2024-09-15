@@ -2059,11 +2059,29 @@ namespace iw4of::interfaces
 
             READ_MEMBER_SOUND(weapon->weapDef, turretBarrelSpinMaxSnd);
 
-            read_sounds_array(
-                "turretBarrelSpinUpSnd", reinterpret_cast<native::snd_alias_list_t***>(&weapon_def->turretBarrelSpinUpSnd), json_variant);
-            read_sounds_array(
-                "turretBarrelSpinDownSnd", reinterpret_cast<native::snd_alias_list_t***>(&weapon_def->turretBarrelSpinDownSnd), json_variant);
-        }
+			{
+				native::snd_alias_list_t** read_array{};
+				read_sounds_array(
+					"turretBarrelSpinUpSnd", &read_array, json_variant);
+
+				if (read_array)
+				{
+					std::memcpy(weapon_def->turretBarrelSpinUpSnd, read_array, ARRAYSIZE(weapon_def->turretBarrelSpinUpSnd) * sizeof(native::snd_alias_list_t*));
+					local_allocator.free(read_array);
+					read_array = nullptr;
+				}
+
+				read_sounds_array(
+					"turretBarrelSpinDownSnd", &read_array, json_variant);
+				
+				if (read_array)
+				{
+					std::memcpy(weapon_def->turretBarrelSpinDownSnd, read_array, ARRAYSIZE(weapon_def->turretBarrelSpinDownSnd) * sizeof(native::snd_alias_list_t*));
+					local_allocator.free(read_array);
+					read_array = nullptr;
+				}
+			}
+		}
 
         if (weapon_def->weapClass == native::weapClass_t::WEAPCLASS_ROCKETLAUNCHER)
         {
