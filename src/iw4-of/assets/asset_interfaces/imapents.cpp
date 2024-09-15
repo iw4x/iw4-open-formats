@@ -65,11 +65,49 @@ namespace iw4of::interfaces
             asset_list.push_back({native::ASSET_TYPE_XMODEL, xmodel});
         }
 
+        for (auto weapons : get_weapons(entity_string))
+        {
+            asset_list.push_back({native::ASSET_TYPE_WEAPON, weapons});
+        }
+
 		// TODO: Vehicles?
-		// TODO: Weapons?
 		// More?
 
         return asset_list;
+    }
+
+    std::vector<native::WeaponCompleteDef*> imapents::get_weapons(const std::string& entity_string) const
+    {
+        auto weapons = std::vector<native::WeaponCompleteDef*>();
+
+        static std::regex model_catcher("weaponinfo\"? \"([^\\*\\?].*)\"");
+
+        std::smatch m;
+
+        std::string::const_iterator search_start(entity_string.cbegin());
+        while (std::regex_search(search_start, entity_string.cend(), m, model_catcher))
+        {
+            bool skip = true;
+            for (auto match : m)
+            {
+                if (skip)
+                {
+                    skip = false;
+                    continue;
+                }
+
+                auto weapon_name = match.str();
+                auto weapon = find<native::WeaponCompleteDef>(native::ASSET_TYPE_WEAPON, weapon_name);
+                search_start = m.suffix().first;
+
+                if (weapon)
+                {
+                    weapons.push_back(weapon);
+                }
+            }
+        }
+
+        return weapons;
     }
 
     std::vector<native::XModel*> imapents::get_models(const std::string& entity_string) const

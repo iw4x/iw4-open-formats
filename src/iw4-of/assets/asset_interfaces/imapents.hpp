@@ -21,6 +21,7 @@ namespace iw4of::interfaces
 
        private:
         std::vector<native::XAsset> get_assets(const std::string& entity_string) const;
+        std::vector<native::WeaponCompleteDef*> get_weapons(const std::string& entity_string) const;
         std::vector<native::XModel*> get_models(const std::string& entity_string) const;
     };
 } // namespace iw4of::interfaces
