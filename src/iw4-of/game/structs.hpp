@@ -3408,7 +3408,7 @@ namespace iw4of::native
         NAMEOF(WEAPOVERLAYINTERFACE_TURRETSCOPE)
     };
 
-    struct __declspec(align(4)) WeaponDef
+    struct ATTR(align(4)) WeaponDef
     {
         const char* szOverlayName;
         XModel** gunXModel;

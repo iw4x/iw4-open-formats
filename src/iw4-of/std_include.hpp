@@ -26,6 +26,12 @@
     #undef min
 #endif
 
+#ifdef _MSC_VER
+  #define ATTR(...) __declspec((__VA_ARGS__))
+#else
+  #define ATTR(...) __attribute__((__VA_ARGS__))
+#endif
+
 #include <atomic>
 #include <chrono>
 #include <filesystem>
