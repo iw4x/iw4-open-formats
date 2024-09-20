@@ -1127,7 +1127,7 @@ namespace iw4of::native
         PhysCollmap* physCollmap;
     };
 
-    static_assert(sizeof XModel == 304);
+    static_assert(sizeof (XModel) == 304);
 
     struct cStaticModel_t
     {
