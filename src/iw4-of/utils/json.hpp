@@ -3,54 +3,54 @@
 #include <rapidjson/document.h>
 #include <game/structs.hpp>
 
+// Helpers for rapidjson
+template <typename ValueType>
+struct rapidjson::internal::TypeHelper<ValueType, uint16_t>
+{
+    static uint16_t Get(const ValueType& v)
+    {
+        return static_cast<uint16_t>(v.GetInt());
+    }
+};
+
+template <typename ValueType>
+struct rapidjson::internal::TypeHelper<ValueType, short>
+{
+    static short Get(const ValueType& v)
+    {
+        return static_cast<int16_t>(v.GetInt());
+    }
+};
+
+template <typename ValueType>
+struct rapidjson::internal::TypeHelper<ValueType, std::string>
+{
+    static std::string Get(const ValueType& v)
+    {
+        return v.GetString();
+    }
+};
+
+template <typename ValueType>
+struct rapidjson::internal::TypeHelper<ValueType, char>
+{
+    static char Get(const ValueType& v)
+    {
+        return static_cast<char>(v.GetInt());
+    }
+};
+
+template <typename ValueType>
+struct rapidjson::internal::TypeHelper<ValueType, uint8_t>
+{
+    static uint8_t Get(const ValueType& v)
+    {
+        return static_cast<uint8_t>(v.GetInt());
+    }
+};
+
 namespace iw4of::utils::json
 {
-    // Helpers for rapidjson
-    template <typename ValueType>
-    struct rapidjson::internal::TypeHelper<ValueType, uint16_t>
-    {
-        static uint16_t Get(const ValueType& v)
-        {
-            return static_cast<uint16_t>(v.GetInt());
-        }
-    };
-
-    template <typename ValueType>
-    struct rapidjson::internal::TypeHelper<ValueType, short>
-    {
-        static short Get(const ValueType& v)
-        {
-            return static_cast<int16_t>(v.GetInt());
-        }
-    };
-
-    template <typename ValueType>
-    struct rapidjson::internal::TypeHelper<ValueType, std::string>
-    {
-        static std::string Get(const ValueType& v)
-        {
-            return v.GetString();
-        }
-    };
-
-    template <typename ValueType>
-    struct rapidjson::internal::TypeHelper<ValueType, char>
-    {
-        static char Get(const ValueType& v)
-        {
-            return static_cast<char>(v.GetInt());
-        }
-    };
-
-    template <typename ValueType>
-    struct rapidjson::internal::TypeHelper<ValueType, uint8_t>
-    {
-        static uint8_t Get(const ValueType& v)
-        {
-            return static_cast<uint8_t>(v.GetInt());
-        }
-    };
-
     template <class T>
     rapidjson::Value make_json_array(T* arr, size_t length, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
     {
@@ -86,7 +86,7 @@ namespace iw4of::utils::json
     rapidjson::Value to_json(const native::FxIntRange& intRange, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
     rapidjson::Value to_json(const native::FxElemVec3Range& vec3Range, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
     rapidjson::Value to_json(const native::cplane_s* planes, size_t count, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator,
-                             std::function<void(const native::cplane_s*, size_t)> const& callback_when_adding_plane=nullptr);
+                             std::function<void(const native::cplane_s*, size_t)> const& callback_when_adding_plane = nullptr);
     rapidjson::Value to_json(const native::Bounds& bounds, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
     rapidjson::Value to_json(const native::FxElemVisualState& elemVisualState, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
 
