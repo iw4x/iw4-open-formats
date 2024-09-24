@@ -186,7 +186,7 @@ namespace iw4of::interfaces
             for (char i = 0; i < asset->constantCount; ++i)
             {
                 native::MaterialConstantDef constantDef;
-                std::memcpy(&constantDef, &asset->constantTable[i], sizeof native::MaterialConstantDef);
+                std::memcpy(&constantDef, &asset->constantTable[i], sizeof (native::MaterialConstantDef));
 
                 rapidjson::Value constantDefJson(rapidjson::kObjectType);
 
