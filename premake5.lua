@@ -95,6 +95,8 @@ workspace "iw4-of"
 		
 		links { "iw4-of" }
 
+		iw4of_dependencies.imports()
+
 	project "iw4-of"
 		kind "StaticLib"
 		language "C++"
