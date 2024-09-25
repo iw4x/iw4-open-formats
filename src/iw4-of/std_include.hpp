@@ -39,7 +39,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
-
+#include <cstring>
 #include <zlib.h>
 
 #include <tomcrypt.h>
