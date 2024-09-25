@@ -14,7 +14,6 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#define ZeroMemory(ptr, size) std::memset(ptr, 0, size)
 #define ARRAYSIZE(a) ((sizeof(a) / sizeof(*(a))) / static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
 
 // min and max is required by gdi, therefore NOMINMAX won't work
