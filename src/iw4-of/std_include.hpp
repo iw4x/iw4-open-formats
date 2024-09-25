@@ -40,6 +40,9 @@
 #include <utility>
 #include <vector>
 #include <cstring>
+
+#include <math.h>
+
 #include <zlib.h>
 
 #include <tomcrypt.h>
