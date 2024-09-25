@@ -79,7 +79,16 @@ workspace "iw4-of"
 		defines {"DEBUG", "_DEBUG"}
 	filter  {}
 
-	
+	filter { "action:gmake*" }
+	buildoptions {
+		"-Wno-unused-variable",
+		"-Wno-char-subscripts",
+		"-Wno-unused-parameter",
+		"-Wno-unknown-pragmas",
+		"-Wno-sign-compare"
+	}
+	filter {}
+
 	project "iw4-of-interactive"
 		kind "ConsoleApp"
 		language "C++"
