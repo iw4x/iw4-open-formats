@@ -40,6 +40,7 @@
 #include <utility>
 #include <vector>
 #include <cstring>
+#include <cfloat>
 
 #include <math.h>
 
