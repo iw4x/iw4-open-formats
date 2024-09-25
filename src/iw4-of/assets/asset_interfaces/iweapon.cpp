@@ -1504,21 +1504,21 @@ namespace iw4of::interfaces
             }                                                                                                               \
         }                                                                                                                   \
     }
-#define READ_MEMBER_NAMED_ENUM(obj, member, enm_type)                                                 \
-    if (json_variant.HasMember(#member) && !json_variant[#member].IsNull())                           \
-    {                                                                                                 \
-        bool _found = false;                                                                          \
-        for (size_t _ = 0; _ < ARRAYSIZE(##enm_type##_Names); _++)                                    \
-        {                                                                                             \
-            if (std::string(##enm_type##_Names[_]) == std::string(json_variant[#member].GetString())) \
-            {                                                                                         \
-                obj->member = static_cast<enm_type>(_);                                               \
-                _found = true;                                                                        \
-                break;                                                                                \
-            }                                                                                         \
-        }                                                                                             \
-                                                                                                      \
-        if (!_found) obj->member = static_cast<enm_type>(0);                                          \
+#define READ_MEMBER_NAMED_ENUM(obj, member, enm_type)                                               \
+    if (json_variant.HasMember(#member) && !json_variant[#member].IsNull())                         \
+    {                                                                                               \
+        bool _found = false;                                                                        \
+        for (size_t _ = 0; _ < ARRAYSIZE(enm_type##_Names); _++)                                    \
+        {                                                                                           \
+            if (std::string(enm_type##_Names[_]) == std::string(json_variant[#member].GetString())) \
+            {                                                                                       \
+                obj->member = static_cast<enm_type>(_);                                             \
+                _found = true;                                                                      \
+                break;                                                                              \
+            }                                                                                       \
+        }                                                                                           \
+                                                                                                    \
+        if (!_found) obj->member = static_cast<enm_type>(0);                                        \
     }
 
 #define READ_STR_MEMBER_IF_NOT_NULL(obj, member)                             \
