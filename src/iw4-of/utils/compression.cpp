@@ -24,7 +24,7 @@ namespace iw4of::utils::compression
     std::string zlib::decompress(const std::string& data)
     {
         z_stream stream;
-        ZeroMemory(&stream, sizeof(stream));
+        std::memset(&stream, 0, sizeof(stream));
         std::string buffer;
 
         if (inflateInit(&stream) != Z_OK)

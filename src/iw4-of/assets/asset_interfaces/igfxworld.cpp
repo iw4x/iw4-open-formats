@@ -1,6 +1,6 @@
 #include <std_include.hpp>
 
-#include <assets\assets.hpp>
+#include <assets/assets.hpp>
 
 #include "igfxworld.hpp"
 
