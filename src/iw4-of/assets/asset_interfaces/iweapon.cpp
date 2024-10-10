@@ -1411,14 +1411,14 @@ namespace iw4of::interfaces
 
         if (original)
         {
-            std::memcpy(weapon, original, sizeof native::WeaponCompleteDef);
+            std::memcpy(weapon, original, sizeof (native::WeaponCompleteDef));
         }
 
         weapon->weapDef = local_allocator.allocate<native::WeaponDef>();
 
         if (original)
         {
-            std::memcpy(weapon->weapDef, original->weapDef, sizeof native::WeaponDef);
+            std::memcpy(weapon->weapDef, original->weapDef, sizeof (native::WeaponDef));
         }
 
         const rapidjson::Value* obj = nullptr;

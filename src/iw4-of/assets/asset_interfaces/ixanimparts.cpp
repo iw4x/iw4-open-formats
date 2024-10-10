@@ -87,7 +87,7 @@ bool iw4of::interfaces::ixanimparts::write_internal(const native::XAssetHeader& 
     if (parts->deltaPart)
     {
         auto delta = parts->deltaPart;
-        static_assert(sizeof native::XAnimDeltaPart == 12);
+        static_assert(sizeof (native::XAnimDeltaPart) == 12);
 
         buffer.save_object(*delta);
         if (delta->trans)
