@@ -306,13 +306,13 @@ namespace iw4of::interfaces
         std::vector<native::XAsset> result{};
         const auto* weapon = header.weapon;
 
-#define REGISTER_MEMBER_MATERIAL(obj, member)                                          \
+#define REGISTER_MEMBER_MATERIAL(obj, member)                                       \
     if (obj->member)                                                                \
     {                                                                               \
         result.push_back({native::XAssetType::ASSET_TYPE_MATERIAL, {obj->member}}); \
     }
 
-#define REGISTER_MEMBER_SOUND(obj, member)                                                                    \
+#define REGISTER_MEMBER_SOUND(obj, member)                                                                 \
     if (obj->member)                                                                                       \
     {                                                                                                      \
         const auto snd = find<native::snd_alias_list_t>(native::ASSET_TYPE_SOUND, obj->member->aliasName); \
@@ -321,14 +321,13 @@ namespace iw4of::interfaces
             result.push_back({native::ASSET_TYPE_SOUND, {snd}});                                           \
         }                                                                                                  \
     }
-#define REGISTER_MEMBER_ASSET(obj, member, xassettype)    \
+#define REGISTER_MEMBER_ASSET(obj, member, xassettype) \
     if (obj->member)                                   \
     {                                                  \
         result.push_back({xassettype, {obj->member}}); \
     }
 
-
-		if (weapon->szXAnims)
+        if (weapon->szXAnims)
         {
             for (size_t i = 0; i < native::weapAnimFiles_t::NUM_WEAP_ANIMS; i++)
             {
@@ -339,30 +338,30 @@ namespace iw4of::interfaces
                         const auto anim = assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, weapon->szXAnims[i]);
                         if (anim)
                         {
-							result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
+                            result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
                         }
                     }
                 }
             }
         }
-		
+
         REGISTER_MEMBER_MATERIAL(weapon, killIcon);
         REGISTER_MEMBER_MATERIAL(weapon, dpadIcon);
 
         // Dump weapondef
         const auto weapon_def = weapon->weapDef;
-		
+
         for (size_t i = 0; i < 16; i++)
         {
             if (weapon_def->gunXModel[i])
             {
-				result.push_back({iw4of::native::ASSET_TYPE_XMODEL,  weapon_def->gunXModel[i]});
+                result.push_back({iw4of::native::ASSET_TYPE_XMODEL, weapon_def->gunXModel[i]});
             }
         }
 
         REGISTER_MEMBER_ASSET(weapon->weapDef, handXModel, native::XAssetType::ASSET_TYPE_XMODEL);
 
-		if (weapon->weapDef->szXAnimsRightHanded)
+        if (weapon->weapDef->szXAnimsRightHanded)
         {
             for (size_t i = 0; i < native::weapAnimFiles_t::NUM_WEAP_ANIMS; i++)
             {
@@ -373,14 +372,14 @@ namespace iw4of::interfaces
                         const auto anim = assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, weapon->weapDef->szXAnimsRightHanded[i]);
                         if (anim)
                         {
-							result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
+                            result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
                         }
                     }
                 }
             }
         }
-		
-		if (weapon->weapDef->szXAnimsLeftHanded)
+
+        if (weapon->weapDef->szXAnimsLeftHanded)
         {
             for (size_t i = 0; i < native::weapAnimFiles_t::NUM_WEAP_ANIMS; i++)
             {
@@ -391,34 +390,34 @@ namespace iw4of::interfaces
                         const auto anim = assets->find_other_asset(native::ASSET_TYPE_XANIMPARTS, weapon->weapDef->szXAnimsLeftHanded[i]);
                         if (anim)
                         {
-							result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
+                            result.push_back({native::ASSET_TYPE_XANIMPARTS, anim});
                         }
                     }
                 }
             }
         }
 
-		for (size_t i = 0; i < 16; i++)
-		{
-			const auto key = weapon->weapDef->notetrackSoundMapKeys[i];
-			const auto value = weapon->weapDef->notetrackSoundMapValues[i];
+        for (size_t i = 0; i < 16; i++)
+        {
+            const auto key = weapon->weapDef->notetrackSoundMapKeys[i];
+            const auto value = weapon->weapDef->notetrackSoundMapValues[i];
 
-			const unsigned short kv[] = {key, value};
+            const unsigned short kv[] = {key, value};
 
-			for (size_t j = 0; j < ARRAYSIZE(kv); j++)
-			{
-				const auto data = kv[j];
-				if (data)
-				{
-					const auto name = assets->read_from_stringtable(data);
-					const auto sound = assets->find_other_asset(native::ASSET_TYPE_SOUND, name);
-					if (sound)
-					{
-						result.push_back({native::ASSET_TYPE_SOUND, sound});
-					}
-				}
-			}
-		}
+            for (size_t j = 0; j < ARRAYSIZE(kv); j++)
+            {
+                const auto data = kv[j];
+                if (data)
+                {
+                    const auto name = assets->read_from_stringtable(data);
+                    const auto sound = assets->find_other_asset(native::ASSET_TYPE_SOUND, name);
+                    if (sound)
+                    {
+                        result.push_back({native::ASSET_TYPE_SOUND, sound});
+                    }
+                }
+            }
+        }
 
         REGISTER_MEMBER_ASSET(weapon->weapDef, viewFlashEffect, native::XAssetType::ASSET_TYPE_FX);
         REGISTER_MEMBER_ASSET(weapon->weapDef, worldFlashEffect, native::XAssetType::ASSET_TYPE_FX);
@@ -471,16 +470,16 @@ namespace iw4of::interfaces
         REGISTER_MEMBER_SOUND(weapon->weapDef, putawaySoundPlayer);
         REGISTER_MEMBER_SOUND(weapon->weapDef, scanSound);
 
-		if (weapon_def->bounceSound)
-		{
-			for (size_t i = 0; i < 31; i++)
-			{
-				if (weapon_def->bounceSound[i])
-				{
-					result.push_back({iw4of::native::XAssetType::ASSET_TYPE_SOUND, weapon_def->bounceSound[i]});
-				}
-			}
-		}
+        if (weapon_def->bounceSound)
+        {
+            for (size_t i = 0; i < 31; i++)
+            {
+                if (weapon_def->bounceSound[i])
+                {
+                    result.push_back({iw4of::native::XAssetType::ASSET_TYPE_SOUND, weapon_def->bounceSound[i]});
+                }
+            }
+        }
 
         REGISTER_MEMBER_ASSET(weapon->weapDef, viewShellEjectEffect, native::XAssetType::ASSET_TYPE_FX);
         REGISTER_MEMBER_ASSET(weapon->weapDef, worldShellEjectEffect, native::XAssetType::ASSET_TYPE_FX);
@@ -494,7 +493,7 @@ namespace iw4of::interfaces
         {
             if (weapon_def->worldModel[i])
             {
-				result.push_back({iw4of::native::ASSET_TYPE_XMODEL,  weapon_def->worldModel[i]});
+                result.push_back({iw4of::native::ASSET_TYPE_XMODEL, weapon_def->worldModel[i]});
             }
         }
 
@@ -533,28 +532,28 @@ namespace iw4of::interfaces
             REGISTER_MEMBER_ASSET(weapon->weapDef, turretOverheatEffect, native::ASSET_TYPE_FX);
 
             REGISTER_MEMBER_SOUND(weapon->weapDef, turretBarrelSpinMaxSnd);
-			
-			if (weapon_def->turretBarrelSpinUpSnd)
-			{
-				for (size_t i = 0; i < ARRAYSIZE(weapon_def->turretBarrelSpinUpSnd); i++)
-				{
-					if (weapon_def->turretBarrelSpinUpSnd[i])
-					{
-						result.push_back({iw4of::native::XAssetType::ASSET_TYPE_SOUND, weapon_def->turretBarrelSpinUpSnd[i]});
-					}
-				}
-			}
 
-			if (weapon_def->turretBarrelSpinDownSnd)
-			{
-				for (size_t i = 0; i < ARRAYSIZE(weapon_def->turretBarrelSpinDownSnd); i++)
-				{
-					if (weapon_def->turretBarrelSpinDownSnd[i])
-					{
-						result.push_back({iw4of::native::XAssetType::ASSET_TYPE_SOUND, weapon_def->turretBarrelSpinDownSnd[i]});
-					}
-				}
-			}
+            if (weapon_def->turretBarrelSpinUpSnd)
+            {
+                for (size_t i = 0; i < ARRAYSIZE(weapon_def->turretBarrelSpinUpSnd); i++)
+                {
+                    if (weapon_def->turretBarrelSpinUpSnd[i])
+                    {
+                        result.push_back({iw4of::native::XAssetType::ASSET_TYPE_SOUND, weapon_def->turretBarrelSpinUpSnd[i]});
+                    }
+                }
+            }
+
+            if (weapon_def->turretBarrelSpinDownSnd)
+            {
+                for (size_t i = 0; i < ARRAYSIZE(weapon_def->turretBarrelSpinDownSnd); i++)
+                {
+                    if (weapon_def->turretBarrelSpinDownSnd[i])
+                    {
+                        result.push_back({iw4of::native::XAssetType::ASSET_TYPE_SOUND, weapon_def->turretBarrelSpinDownSnd[i]});
+                    }
+                }
+            }
         }
 
         if (weapon_def->weapClass == native::weapClass_t::WEAPCLASS_ROCKETLAUNCHER)
@@ -563,9 +562,9 @@ namespace iw4of::interfaces
             REGISTER_MEMBER_SOUND(weapon->weapDef, missileConeSoundAliasAtBase);
         }
 
-		#undef REGISTER_MEMBER_MATERIAL
-		#undef REGISTER_MEMBER_SOUND
-		#undef REGISTER_MEMBER_ASSET
+#undef REGISTER_MEMBER_MATERIAL
+#undef REGISTER_MEMBER_SOUND
+#undef REGISTER_MEMBER_ASSET
 
         return result;
     } // namespace iw4of::interfaces
@@ -1491,18 +1490,23 @@ namespace iw4of::interfaces
         }                                                                   \
     }
 
-#define READ_SCRIPTSTRING_MEMBER_ARRAY(obj, member, count)                                                                  \
-    if (json_variant.HasMember(#member))                                                                                    \
-    {                                                                                                                       \
-        obj->member = local_allocator.allocate_array<uint16_t>(count);                                                      \
-        const size_t _arrSize = static_cast<size_t>(json_variant[#member].Size());                                          \
-        for (size_t _ = 0; _ < std::min(static_cast<size_t>(count), _arrSize); _++)                                         \
-        {                                                                                                                   \
-            if (json_variant[#member][_].IsString())                                                                        \
-            {                                                                                                               \
-                obj->member[_] = static_cast<uint16_t>(assets->write_in_stringtable(json_variant[#member][_].GetString())); \
-            }                                                                                                               \
-        }                                                                                                                   \
+#define READ_SCRIPTSTRING_MEMBER_ARRAY(obj, member, count, func)                               \
+    if (json_variant.HasMember(#member))                                                       \
+    {                                                                                          \
+        obj->member = local_allocator.allocate_array<uint16_t>(count);                         \
+        if (json_variant[#member].IsArray())                                                   \
+        {                                                                                      \
+            const size_t _arrSize = static_cast<size_t>(json_variant[#member].Size());         \
+            for (size_t _ = 0; _ < std::min(static_cast<size_t>(count), _arrSize); _++)        \
+            {                                                                                  \
+                if (json_variant[#member][_].IsString())                                       \
+                {                                                                              \
+                    const auto str = json_variant[#member][_].GetString();                     \
+                    obj->member[_] = static_cast<uint16_t>(assets->write_in_stringtable(str)); \
+                    func(str);                                                                 \
+                }                                                                              \
+            }                                                                                  \
+        }                                                                                      \
     }
 #define READ_MEMBER_NAMED_ENUM(obj, member, enm_type)                                                 \
     if (json_variant.HasMember(#member) && !json_variant[#member].IsNull())                           \
@@ -1562,7 +1566,12 @@ namespace iw4of::interfaces
 
         READ_STR_MEMBER_IF_NOT_NULL(weapon, szDisplayName);
 
-        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon, hideTags, 32);
+        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon,
+                                       hideTags,
+                                       32,
+                                       [](const std::string& _)
+                                       {
+                                       });
         read_weapon_anims("szXAnims", &weapon->szXAnims, json_variant);
 
         READ_FLOAT_MEMBER_IF_NOT_NULL(weapon, fAdsZoomFov);
@@ -1640,8 +1649,25 @@ namespace iw4of::interfaces
         read_weapon_anims("szXAnimsLeftHanded", &weapon->weapDef->szXAnimsLeftHanded, json_variant);
 
         READ_STR_MEMBER_IF_NOT_NULL(weapon->weapDef, szModeName);
-        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef, notetrackSoundMapKeys, 16);
-        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef, notetrackSoundMapValues, 16);
+        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef,
+                                       notetrackSoundMapKeys,
+                                       16,
+                                       [](const std::string& _)
+                                       {
+                                       });
+
+        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef,
+                                       notetrackSoundMapValues,
+                                       16,
+                                       [&](const std::string& noteName)
+                                       {
+                                           const auto sound = find<native::snd_alias_list_t>(native::ASSET_TYPE_SOUND, noteName);
+										   if (sound == nullptr)
+										   {
+                                                print_error("Could not find sound {} from notetracks!\n", noteName);
+										   }
+                                       });
+
         READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef, notetrackRumbleMapKeys, 16);
         READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef, notetrackRumbleMapValues, 16);
 
@@ -2059,29 +2085,31 @@ namespace iw4of::interfaces
 
             READ_MEMBER_SOUND(weapon->weapDef, turretBarrelSpinMaxSnd);
 
-			{
-				native::snd_alias_list_t** read_array{};
-				read_sounds_array(
-					"turretBarrelSpinUpSnd", &read_array, json_variant);
+            {
+                native::snd_alias_list_t** read_array{};
+                read_sounds_array("turretBarrelSpinUpSnd", &read_array, json_variant);
 
-				if (read_array)
-				{
-					std::memcpy(weapon_def->turretBarrelSpinUpSnd, read_array, ARRAYSIZE(weapon_def->turretBarrelSpinUpSnd) * sizeof(native::snd_alias_list_t*));
-					local_allocator.free(read_array);
-					read_array = nullptr;
-				}
+                if (read_array)
+                {
+                    std::memcpy(weapon_def->turretBarrelSpinUpSnd,
+                                read_array,
+                                ARRAYSIZE(weapon_def->turretBarrelSpinUpSnd) * sizeof(native::snd_alias_list_t*));
+                    local_allocator.free(read_array);
+                    read_array = nullptr;
+                }
 
-				read_sounds_array(
-					"turretBarrelSpinDownSnd", &read_array, json_variant);
-				
-				if (read_array)
-				{
-					std::memcpy(weapon_def->turretBarrelSpinDownSnd, read_array, ARRAYSIZE(weapon_def->turretBarrelSpinDownSnd) * sizeof(native::snd_alias_list_t*));
-					local_allocator.free(read_array);
-					read_array = nullptr;
-				}
-			}
-		}
+                read_sounds_array("turretBarrelSpinDownSnd", &read_array, json_variant);
+
+                if (read_array)
+                {
+                    std::memcpy(weapon_def->turretBarrelSpinDownSnd,
+                                read_array,
+                                ARRAYSIZE(weapon_def->turretBarrelSpinDownSnd) * sizeof(native::snd_alias_list_t*));
+                    local_allocator.free(read_array);
+                    read_array = nullptr;
+                }
+            }
+        }
 
         if (weapon_def->weapClass == native::weapClass_t::WEAPCLASS_ROCKETLAUNCHER)
         {
