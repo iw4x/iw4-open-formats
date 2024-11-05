@@ -152,7 +152,7 @@ namespace iw4of::interfaces
         output.AddMember("textureTable", textureTable, allocator);
         rapidjson::Value gfxDrawSurface(rapidjson::kObjectType);
 
-#define SAME_NAME_GFXDRAWSURF_MEMBER(x) gfxDrawSurface.AddMember(#x, asset->info.drawSurf.fields.##x##, allocator)
+#define SAME_NAME_GFXDRAWSURF_MEMBER(x) gfxDrawSurface.AddMember(#x, asset->info.drawSurf.fields.x, allocator)
 
         SAME_NAME_GFXDRAWSURF_MEMBER(objectId);
         SAME_NAME_GFXDRAWSURF_MEMBER(reflectionProbeIndex);

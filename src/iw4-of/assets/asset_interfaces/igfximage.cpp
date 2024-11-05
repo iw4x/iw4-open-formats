@@ -122,7 +122,7 @@ namespace iw4of::interfaces
         image->texture.loadDef->format = reader.read<int32_t>();
       }
 
-      ZeroMemory(image->texture.loadDef->pad, 3);
+      std::memset(image->texture.loadDef->pad, 0, 3);
 
       std::memcpy(image->texture.loadDef->data, reader.read(dataLength), dataLength);
 
