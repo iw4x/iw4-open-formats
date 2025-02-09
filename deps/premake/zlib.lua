@@ -15,6 +15,10 @@ function iw4of.zlib.includes()
 	defines {
 		"ZLIB_CONST",
 	}
+
+	if os.isfile("/usr/include/unistd.h") then
+		defines { "HAVE_UNISTD_H" }
+	end
 end
 
 function iw4of.zlib.project()

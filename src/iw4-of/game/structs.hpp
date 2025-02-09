@@ -1127,7 +1127,7 @@ namespace iw4of::native
         PhysCollmap* physCollmap;
     };
 
-    static_assert(sizeof XModel == 304);
+    static_assert(sizeof (XModel) == 304);
 
     struct cStaticModel_t
     {
@@ -2767,7 +2767,7 @@ namespace iw4of::native
         MSSChannelMap channelMaps[2][2];
     };
 
-    const struct snd_alias_t
+    struct snd_alias_t
     {
         const char* aliasName;
         const char* subtitle;
@@ -3416,10 +3416,10 @@ namespace iw4of::native
         const char** szXAnimsRightHanded;
         const char** szXAnimsLeftHanded;
         const char* szModeName;
-        unsigned __int16* notetrackSoundMapKeys;
-        unsigned __int16* notetrackSoundMapValues;
-        unsigned __int16* notetrackRumbleMapKeys;
-        unsigned __int16* notetrackRumbleMapValues;
+        uint16_t* notetrackSoundMapKeys;
+        uint16_t* notetrackSoundMapValues;
+        uint16_t* notetrackRumbleMapKeys;
+        uint16_t* notetrackRumbleMapValues;
         int playerAnimType;
         weapType_t weapType;
         weapClass_t weapClass;
@@ -3713,7 +3713,7 @@ namespace iw4of::native
         float maxDist;
         const char* accuracyGraphName[2];
         float (*originalAccuracyGraphKnots[2])[2];
-        unsigned __int16 originalAccuracyGraphKnotCount[2];
+        uint16_t originalAccuracyGraphKnotCount[2];
         int iPositionReloadTransTime;
         float leftArc;
         float rightArc;
@@ -3829,13 +3829,13 @@ namespace iw4of::native
         bool missileConeSoundCrossfadeEnabled;
         bool offhandHoldIsCancelable;
     };
-	
+
 	struct  WeaponCompleteDef
     {
         const char* szInternalName;
         WeaponDef* weapDef;
         const char* szDisplayName;
-        unsigned __int16* hideTags;
+        uint16_t* hideTags;
         const char** szXAnims;
         float fAdsZoomFov;
         int iAdsTransInTime;
@@ -3857,7 +3857,7 @@ namespace iw4of::native
         int ammoDropStockMax;
         float adsDofStart;
         float adsDofEnd;
-        unsigned __int16 accuracyGraphKnotCount[2];
+        uint16_t accuracyGraphKnotCount[2];
         float (*accuracyGraphKnots[2])[2];
         bool motionTracker;
         bool enhanced;

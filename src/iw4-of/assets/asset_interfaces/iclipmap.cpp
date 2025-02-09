@@ -14,16 +14,16 @@ namespace iw4of::interfaces
 {
 #define IW4X_CLIPMAP_VERSION 3
 
-    static_assert(sizeof native::ClipMaterial == 12);
-    static_assert(sizeof native::cbrushside_t == 8);
-    static_assert(sizeof native::cNode_t == 8);
-    static_assert(sizeof native::cLeaf_t == 40);
-    static_assert(sizeof native::cLeafBrushNode_s == 20);
-    static_assert(sizeof native::CollisionBorder == 28);
-    static_assert(sizeof native::CollisionPartition == 12);
-    static_assert(sizeof native::CollisionAabbTree == 32);
-    static_assert(sizeof native::cmodel_t == 68);
-    static_assert(sizeof native::SModelAabbNode == 28);
+    static_assert(sizeof (native::ClipMaterial) == 12);
+    static_assert(sizeof (native::cbrushside_t) == 8);
+    static_assert(sizeof (native::cNode_t) == 8);
+    static_assert(sizeof (native::cLeaf_t) == 40);
+    static_assert(sizeof (native::cLeafBrushNode_s) == 20);
+    static_assert(sizeof (native::CollisionBorder) == 28);
+    static_assert(sizeof (native::CollisionPartition) == 12);
+    static_assert(sizeof (native::CollisionAabbTree) == 32);
+    static_assert(sizeof (native::cmodel_t) == 68);
+    static_assert(sizeof (native::SModelAabbNode) == 28);
 
     std::filesystem::path iclipmap::get_file_name(const std::string& name) const
     {
@@ -948,9 +948,9 @@ namespace iw4of::interfaces
         // ENTITIES
         if (clip_map->mapEnts)
         {
-            static_assert(sizeof native::TriggerSlab == 20);
-            static_assert(sizeof native::TriggerModel == 8);
-            static_assert(sizeof native::TriggerHull == 32);
+            static_assert(sizeof (native::TriggerSlab) == 20);
+            static_assert(sizeof (native::TriggerModel) == 8);
+            static_assert(sizeof (native::TriggerHull) == 32);
 
             rapidjson::Value json_map_ents(rapidjson::kObjectType);
             const auto ents = clip_map->mapEnts;

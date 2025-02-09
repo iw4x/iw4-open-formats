@@ -152,7 +152,7 @@ namespace iw4of::interfaces
         output.AddMember("textureTable", textureTable, allocator);
         rapidjson::Value gfxDrawSurface(rapidjson::kObjectType);
 
-#define SAME_NAME_GFXDRAWSURF_MEMBER(x) gfxDrawSurface.AddMember(#x, asset->info.drawSurf.fields.##x##, allocator)
+#define SAME_NAME_GFXDRAWSURF_MEMBER(x) gfxDrawSurface.AddMember(#x, asset->info.drawSurf.fields.x, allocator)
 
         SAME_NAME_GFXDRAWSURF_MEMBER(objectId);
         SAME_NAME_GFXDRAWSURF_MEMBER(reflectionProbeIndex);
@@ -186,7 +186,7 @@ namespace iw4of::interfaces
             for (char i = 0; i < asset->constantCount; ++i)
             {
                 native::MaterialConstantDef constantDef;
-                std::memcpy(&constantDef, &asset->constantTable[i], sizeof native::MaterialConstantDef);
+                std::memcpy(&constantDef, &asset->constantTable[i], sizeof (native::MaterialConstantDef));
 
                 rapidjson::Value constantDefJson(rapidjson::kObjectType);
 
