@@ -1,4 +1,4 @@
-﻿#include <std_include.hpp>
+#include <std_include.hpp>
 
 #include "ixanimparts.hpp"
 
@@ -9,7 +9,7 @@
 #include <rapidjson/document.h>
 #include <rapidjson/prettywriter.h>
 
-#define IW4X_ANIM_VERSION 2
+#define IW4X_ANIM_VERSION 3
 
 bool iw4of::interfaces::ixanimparts::write_internal(const native::XAssetHeader& header) const
 {
@@ -114,13 +114,69 @@ bool iw4of::interfaces::ixanimparts::write_internal(const native::XAssetHeader& 
                     }
                     else
                     {
-                        buffer.save(delta->trans->u.frames.frames._1, 6, delta->trans->size + 1);
+                        buffer.save(delta->trans->u.frames.frames._2, 6, delta->trans->size + 1);
                     }
                 }
             }
             else
             {
                 buffer.save_array(delta->trans->u.frame0, 3);
+            }
+        }
+
+        if (delta->quat2)
+        {
+            buffer.save_object(*delta->quat2);
+
+            if (delta->quat2->size)
+            {
+                buffer.save_object(delta->quat2->u.frames);
+
+                if (parts->numframes > 0xFF)
+                {
+                    buffer.save(delta->quat2->u.frames.indices._2, 2, delta->quat2->size + 1);
+                }
+                else
+                {
+                    buffer.save(delta->quat2->u.frames.indices._1, 1, delta->quat2->size + 1);
+                }
+
+                if (delta->quat2->u.frames.frames)
+                {
+                    buffer.save(delta->quat2->u.frames.frames, 4, delta->quat2->size + 1);
+                }
+            }
+            else
+            {
+                buffer.save_object(delta->quat2->u.frame0);
+            }
+        }
+
+        if (delta->quat)
+        {
+            buffer.save_object(*delta->quat);
+
+            if (delta->quat->size)
+            {
+                buffer.save_object(&delta->quat->u.frames);
+
+                if (parts->numframes > 0xFF)
+                {
+                    buffer.save(delta->quat->u.frames.indices._2, 2, delta->quat->size + 1);
+                }
+                else
+                {
+                    buffer.save(delta->quat->u.frames.indices._1, 1, delta->quat->size + 1);
+                }
+
+                if (delta->quat->u.frames.frames)
+                {
+                    buffer.save(delta->quat->u.frames.frames, 4, delta->quat->size + 1);
+                }
+            }
+            else
+            {
+                buffer.save_object(delta->quat->u.frame0);
             }
         }
     }
@@ -263,6 +319,80 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
                             memcpy(delta->trans->u.frame0, frames, 3 * sizeof(float));
                         }
                     }
+
+                    if (version > 2)
+                    {
+                        if (delta->quat2)
+                        {
+                            delta->quat2 =  reader.read_object<iw4of::native::XAnimDeltaPartQuat2>();
+
+                            if (delta->quat2->size)
+                            {
+                                delta->quat2->u.frames = reader.read<iw4of::native::XAnimDeltaPartQuatDataFrames2>();
+
+                                if (xanim->numframes > 0xFF)
+                                {
+									auto indices2 = reader.read_array<uint16_t>(delta->quat2->size + 1);
+									memcpy(delta->quat2->u.frames.indices._2, indices2, sizeof(uint16_t) * (delta->quat2->size + 1));
+                                }
+                                else
+                                {
+									auto indices1 = reader.read_array<uint8_t>(delta->quat2->size + 1);
+									memcpy(delta->quat2->u.frames.indices._1, indices1, sizeof(uint8_t) * (delta->quat2->size + 1));
+                                }
+
+                                if (delta->quat2->u.frames.frames)
+                                {
+									// Pairs of uint16_t
+									auto frames = reader.read_array<uint16_t>(2 * (delta->quat2->size + 1));
+									memcpy(delta->quat2->u.frames.frames, frames, sizeof(uint16_t) * 2 *  (delta->quat2->size + 1));
+                                }
+                            }
+                            else
+                            {
+								auto frames = reader.read_array<uint16_t>(2);
+								memcpy(delta->quat2->u.frame0, frames, 2 * sizeof(uint16_t));
+                            }
+                        }
+
+                        if (delta->quat)
+                        {
+                            delta->quat =  reader.read_object<iw4of::native::XAnimDeltaPartQuat>();
+
+                            if (delta->quat->size)
+                            {
+                                delta->quat->u.frames = reader.read<iw4of::native::XAnimDeltaPartQuatDataFrames>();
+
+                                if (xanim->numframes > 0xFF)
+                                {
+									auto indices2 = reader.read_array<uint16_t>(delta->quat->size + 1);
+									memcpy(delta->quat->u.frames.indices._2, indices2, sizeof(uint16_t) * (delta->quat->size + 1));
+                                }
+                                else
+                                {
+									auto indices1 = reader.read_array<uint8_t>(delta->quat->size + 1);
+									memcpy(delta->quat->u.frames.indices._1, indices1, sizeof(uint8_t) * (delta->quat->size + 1));
+                                }
+
+                                if (delta->quat->u.frames.frames)
+                                {
+									// Pairs of uint16_t
+									auto frames = reader.read_array<uint16_t>(4 * (delta->quat->size + 1));
+									memcpy(delta->quat->u.frames.frames, frames, sizeof(uint16_t) * 4 *  (delta->quat->size + 1));
+                                }
+                            }
+                            else
+                            {
+								auto frames = reader.read_array<uint16_t>(4);
+								memcpy(delta->quat->u.frame0, frames, 4 * sizeof(uint16_t));
+                            }
+                        }
+                    }
+					else
+					{
+						delta->quat = nullptr;
+						delta->quat2 = nullptr;
+					}
                 }
             }
 
