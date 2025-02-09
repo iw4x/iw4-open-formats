@@ -1411,14 +1411,14 @@ namespace iw4of::interfaces
 
         if (original)
         {
-            std::memcpy(weapon, original, sizeof (native::WeaponCompleteDef));
+            std::memcpy(weapon, original, sizeof(native::WeaponCompleteDef));
         }
 
         weapon->weapDef = local_allocator.allocate<native::WeaponDef>();
 
         if (original)
         {
-            std::memcpy(weapon->weapDef, original->weapDef, sizeof (native::WeaponDef));
+            std::memcpy(weapon->weapDef, original->weapDef, sizeof(native::WeaponDef));
         }
 
         const rapidjson::Value* obj = nullptr;
@@ -1662,14 +1662,25 @@ namespace iw4of::interfaces
                                        [&](const std::string& noteName)
                                        {
                                            const auto sound = find<native::snd_alias_list_t>(native::ASSET_TYPE_SOUND, noteName);
-										   if (sound == nullptr)
-										   {
-                                                print_error("Could not find sound {} from notetracks!\n", noteName);
-										   }
+                                           if (sound == nullptr)
+                                           {
+                                               print_error("Could not find sound {} from notetracks!\n", noteName);
+                                           }
                                        });
 
-        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef, notetrackRumbleMapKeys, 16);
-        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef, notetrackRumbleMapValues, 16);
+        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef,
+                                       notetrackRumbleMapKeys,
+                                       16,
+                                       [](const std::string& _)
+                                       {
+                                       });
+
+        READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef,
+                                       notetrackRumbleMapValues,
+                                       16,
+                                       [](const std::string& _)
+                                       {
+                                       });
 
         READ_INT_MEMBER_IF_NOT_NULL(weapon->weapDef, playerAnimType);
 
