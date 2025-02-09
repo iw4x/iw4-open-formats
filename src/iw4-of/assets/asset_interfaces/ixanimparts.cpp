@@ -148,7 +148,7 @@ bool iw4of::interfaces::ixanimparts::write_internal(const native::XAssetHeader& 
             }
             else
             {
-                buffer.save_object(delta->quat2->u.frame0);
+                buffer.save_array(delta->quat2->u.frame0, 2);
             }
         }
 
@@ -176,7 +176,7 @@ bool iw4of::interfaces::ixanimparts::write_internal(const native::XAssetHeader& 
             }
             else
             {
-                buffer.save_object(delta->quat->u.frame0);
+                buffer.save_array(delta->quat->u.frame0, 4);
             }
         }
     }
