@@ -159,7 +159,8 @@ namespace iw4of::interfaces
         }
     }
 
-    void iweapon::read_weapon_anims(const std::string& name, const char*** destination, const rapidjson::Value& container) const
+    void iweapon::read_weapon_anims(const std::string& name, const char*** destination, const char*** original,
+                                    const rapidjson::Value& container) const
     {
         const auto rapidjson_key = RAPIDJSON_STR(name.data());
         if (container.HasMember(rapidjson_key) && container[rapidjson_key].IsObject())
@@ -168,6 +169,11 @@ namespace iw4of::interfaces
             if (destination)
             {
                 *destination = local_allocator.allocate_array<const char*>(native::weapAnimFiles_t::NUM_WEAP_ANIMS);
+
+                if (original)
+                {
+                    std::memcpy(*destination, *original, native::weapAnimFiles_t::NUM_WEAP_ANIMS * sizeof(void*));
+                }
 
                 for (const auto& elem : obj)
                 {
@@ -265,9 +271,12 @@ namespace iw4of::interfaces
             rapidjson::Value szAnims(rapidjson::kObjectType);
             for (size_t i = 0; i < native::weapAnimFiles_t::NUM_WEAP_ANIMS; i++)
             {
+                auto key = RAPIDJSON_STR(native::weapAnimFiles_Names[i]);
+                rapidjson::Value value;
+
                 if (arr[i])
                 {
-                    szAnims.AddMember(RAPIDJSON_STR(native::weapAnimFiles_Names[i]), RAPIDJSON_STR(arr[i]), allocator);
+                    value = RAPIDJSON_STR(arr[i]);
 
                     if (strnlen(arr[i], 1) > 0)
                     {
@@ -284,12 +293,13 @@ namespace iw4of::interfaces
                 }
                 else
                 {
-                    szAnims.AddMember(RAPIDJSON_STR(native::weapAnimFiles_Names[i]), rapidjson::Value(rapidjson::kNullType), allocator);
+                    value = rapidjson::kNullType;
                 }
 
                 if (!original_arr || ((arr[i] == nullptr) != (original_arr[i] == nullptr)) || arr[i] && std::string(arr[i]) != original_arr[i])
                 {
                     should_write = true;
+                    szAnims.AddMember(key, value, allocator);
                 }
             }
 
@@ -634,6 +644,19 @@ namespace iw4of::interfaces
         }                                                        \
     }
 
+#define WRITE_MATERIAL_NAME_EVEN_IF_NULL(obj, member)                                        \
+    if (obj->member)                                                                         \
+    {                                                                                        \
+        WRITE_MATERIAL_NAME(obj, member)                                                     \
+    }                                                                                        \
+    else                                                                                     \
+    {                                                                                        \
+        if (original_weapon != nullptr && obj->member != original_##obj->member)             \
+        {                                                                                    \
+            container.AddMember(#member, rapidjson::Value(rapidjson::kNullType), allocator); \
+        }                                                                                    \
+    }
+
 #define WRITE_MATERIAL_NAME(obj, member)                                                                              \
     if (obj->member)                                                                                                  \
     {                                                                                                                 \
@@ -648,6 +671,16 @@ namespace iw4of::interfaces
     {                                                                        \
         assets->write(native::XAssetType::ASSET_TYPE_MATERIAL, obj->member); \
         WRITE_MATERIAL_NAME(obj, member);                                    \
+    }
+
+#define WRITE_MEMBER_MATERIAL_EVEN_IF_NULL(obj, member) \
+    if (obj->member)                                    \
+    {                                                   \
+        WRITE_MEMBER_MATERIAL(obj, member);             \
+    }                                                   \
+    else                                                \
+    {                                                   \
+        WRITE_MATERIAL_NAME_EVEN_IF_NULL(obj, member);  \
     }
 
 #define WRITE_SOUND_NAME(obj, member)                                                                                 \
@@ -1016,10 +1049,10 @@ namespace iw4of::interfaces
         WRITE_MEMBER_IF_NOT_NULL(weapon->weapDef, fAdsZoomInFrac);
         WRITE_MEMBER_IF_NOT_NULL(weapon->weapDef, fAdsZoomOutFrac);
 
-        WRITE_MEMBER_MATERIAL(weapon->weapDef, overlayMaterial);
-        WRITE_MEMBER_MATERIAL(weapon->weapDef, overlayMaterialLowRes);
-        WRITE_MEMBER_MATERIAL(weapon->weapDef, overlayMaterialEMP);
-        WRITE_MEMBER_MATERIAL(weapon->weapDef, overlayMaterialEMPLowRes);
+        WRITE_MEMBER_MATERIAL_EVEN_IF_NULL(weapon->weapDef, overlayMaterial);
+        WRITE_MEMBER_MATERIAL_EVEN_IF_NULL(weapon->weapDef, overlayMaterialLowRes);
+        WRITE_MEMBER_MATERIAL_EVEN_IF_NULL(weapon->weapDef, overlayMaterialEMP);
+        WRITE_MEMBER_MATERIAL_EVEN_IF_NULL(weapon->weapDef, overlayMaterialEMPLowRes);
 
         WRITE_MEMBER_NAMED_ENUM(weapon->weapDef, overlayReticle, iw4of::native::weapOverlayReticle_t_Names);
         WRITE_MEMBER_NAMED_ENUM(weapon->weapDef, overlayInterface, iw4of::native::WeapOverlayInteface_t_Names);
@@ -1472,9 +1505,23 @@ namespace iw4of::interfaces
     {                                                                          \
         obj->member = find<t>(xasset_type, json_variant[#member].GetString()); \
     }
+#define READ_MEMBER_ASSET_EVEN_IF_NULL(obj, member, t, xasset_type)                \
+    if (json_variant.HasMember(#member))                                           \
+    {                                                                              \
+        if (json_variant[#member].IsString())                                      \
+        {                                                                          \
+            obj->member = find<t>(xasset_type, json_variant[#member].GetString()); \
+        }                                                                          \
+        else                                                                       \
+        {                                                                          \
+            obj->member = nullptr;                                                 \
+        }                                                                          \
+    }
 
 #define READ_MEMBER_SOUND(obj, member) READ_MEMBER_ASSET(obj, member, native::snd_alias_list_t, native::XAssetType::ASSET_TYPE_SOUND)
 #define READ_MEMBER_MATERIAL(obj, member) READ_MEMBER_ASSET(obj, member, native::Material, native::XAssetType::ASSET_TYPE_MATERIAL)
+#define READ_MEMBER_MATERIAL_EVEN_IF_NULL(obj, member) \
+    READ_MEMBER_ASSET_EVEN_IF_NULL(obj, member, native::Material, native::XAssetType::ASSET_TYPE_MATERIAL)
 
 #define READ_MEMBER_ARRAY_WITH_COUNT(obj, member, count, t)                 \
     if (json_variant.HasMember(#member) && json_variant[#member].IsArray()) \
@@ -1572,7 +1619,7 @@ namespace iw4of::interfaces
                                        [](const std::string& _)
                                        {
                                        });
-        read_weapon_anims("szXAnims", &weapon->szXAnims, json_variant);
+        read_weapon_anims("szXAnims", &weapon->szXAnims, original ? &original->szXAnims : nullptr, json_variant);
 
         READ_FLOAT_MEMBER_IF_NOT_NULL(weapon, fAdsZoomFov);
         READ_INT_MEMBER_IF_NOT_NULL(weapon, iAdsTransInTime);
@@ -1644,9 +1691,11 @@ namespace iw4of::interfaces
         READ_MEMBER_ASSET(weapon->weapDef, handXModel, native::XModel, native::XAssetType::ASSET_TYPE_XMODEL);
 
         // szXAnimsRightHanded
-        read_weapon_anims("szXAnimsRightHanded", &weapon->weapDef->szXAnimsRightHanded, json_variant);
+        read_weapon_anims(
+            "szXAnimsRightHanded", &weapon->weapDef->szXAnimsRightHanded, original ? &original->weapDef->szXAnimsRightHanded : nullptr, json_variant);
         // szXAnimsLeftHanded
-        read_weapon_anims("szXAnimsLeftHanded", &weapon->weapDef->szXAnimsLeftHanded, json_variant);
+        read_weapon_anims(
+            "szXAnimsLeftHanded", &weapon->weapDef->szXAnimsLeftHanded, original ? &original->weapDef->szXAnimsLeftHanded : nullptr, json_variant);
 
         READ_STR_MEMBER_IF_NOT_NULL(weapon->weapDef, szModeName);
         READ_SCRIPTSTRING_MEMBER_ARRAY(weapon->weapDef,
@@ -1861,10 +1910,10 @@ namespace iw4of::interfaces
         READ_FLOAT_MEMBER_IF_NOT_NULL(weapon->weapDef, fAdsZoomInFrac);
         READ_FLOAT_MEMBER_IF_NOT_NULL(weapon->weapDef, fAdsZoomOutFrac);
 
-        READ_MEMBER_MATERIAL(weapon->weapDef, overlayMaterial);
-        READ_MEMBER_MATERIAL(weapon->weapDef, overlayMaterialLowRes);
-        READ_MEMBER_MATERIAL(weapon->weapDef, overlayMaterialEMP);
-        READ_MEMBER_MATERIAL(weapon->weapDef, overlayMaterialEMPLowRes);
+        READ_MEMBER_MATERIAL_EVEN_IF_NULL(weapon->weapDef, overlayMaterial);
+        READ_MEMBER_MATERIAL_EVEN_IF_NULL(weapon->weapDef, overlayMaterialLowRes);
+        READ_MEMBER_MATERIAL_EVEN_IF_NULL(weapon->weapDef, overlayMaterialEMP);
+        READ_MEMBER_MATERIAL_EVEN_IF_NULL(weapon->weapDef, overlayMaterialEMPLowRes);
 
         READ_MEMBER_NAMED_ENUM(weapon->weapDef, overlayReticle, iw4of::native::weapOverlayReticle_t);
         READ_MEMBER_NAMED_ENUM(weapon->weapDef, overlayInterface, iw4of::native::WeapOverlayInteface_t);

@@ -60,7 +60,7 @@ namespace iw4of::interfaces
         void write_sounds_array(const std::string& name, native::snd_alias_list_t** arr, size_t count, native::snd_alias_list_t** original_arr,
                                 rapidjson::Value& container, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) const;
 
-        void read_weapon_anims(const std::string& name, const char*** arr, const rapidjson::Value& container) const;
+        void read_weapon_anims(const std::string& name, const char*** arr, const char*** original, const rapidjson::Value& container) const;
 
 		void read_sounds_array(const std::string& name, native::snd_alias_list_t*** destination, const rapidjson::Value& container) const;
 
