@@ -763,6 +763,7 @@ namespace iw4of::interfaces
 
         WRITE_STR_MEMBER_IF_NOT_NULL(weapon, szDisplayName);
 
+        // We always write the full hidetags array because sometimes the variant has LESS hide tags than the parent!
         WRITE_SCRIPTSTRING_MEMBER_ARRAY(weapon, hideTags, 32);
         write_weapon_anims("szXAnims", weapon->szXAnims, original_weapon ? original_weapon->szXAnims : nullptr, container, allocator);
 
