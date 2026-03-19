@@ -55,12 +55,10 @@ workspace "iw4-of"
 	warnings "Extra"
 	characterset "ASCII"
 
-	flags {
-		"NoIncrementalLink",
-		"NoMinimalRebuild",
-		"MultiProcessorCompile",
-		"No64BitChecks"
-	}
+	incrementallink "Off"
+	minimalrebuild "Off"
+	multiprocessorcompile "On"
+	enable64bitchecks "Off"
 
 	filter "platforms:Win*"
 		defines {"_WINDOWS", "WIN32"}
@@ -71,7 +69,7 @@ workspace "iw4-of"
 		buildoptions {"/GL"}
 		linkoptions {"/IGNORE:4702", "/LTCG"}
 		defines {"NDEBUG"}
-		flags {"FatalCompileWarnings"}
+		fatalwarnings { "all" }
 	filter {}
 
 	filter "configurations:Debug"
@@ -101,7 +99,7 @@ workspace "iw4-of"
 		includedirs {
 			"./include"
 		}
-		
+
 		links { "iw4-of" }
 
 		iw4of_dependencies.imports()
@@ -112,12 +110,12 @@ workspace "iw4-of"
 
 		pchheader "std_include.hpp" -- must be exactly same as used in #include directives
 		pchsource "src/iw4-of/std_include.cpp" -- real path
-		
+
 		files {
 			"./src/iw4-of/**.hpp",
 			"./src/iw4-of/**.cpp"
 		}
-		
+
 		includedirs {
 			"./src/iw4-of",
 			"./include"
