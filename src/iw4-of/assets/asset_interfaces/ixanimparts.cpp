@@ -158,7 +158,7 @@ bool iw4of::interfaces::ixanimparts::write_internal(const native::XAssetHeader& 
 
             if (delta->quat->size)
             {
-                buffer.save_object(&delta->quat->u.frames);
+                buffer.save_object(delta->quat->u.frames);
 
                 if (parts->numframes > 0xFF)
                 {
@@ -171,7 +171,7 @@ bool iw4of::interfaces::ixanimparts::write_internal(const native::XAssetHeader& 
 
                 if (delta->quat->u.frames.frames)
                 {
-                    buffer.save(delta->quat->u.frames.frames, 4, delta->quat->size + 1);
+                    buffer.save(delta->quat->u.frames.frames, sizeof(*delta->quat->u.frames.frames), delta->quat->size + 1);
                 }
             }
             else
