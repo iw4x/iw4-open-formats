@@ -283,33 +283,36 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
                 {
                     xanim->deltaPart = reader.read_object<native::XAnimDeltaPart>();
                     auto delta = xanim->deltaPart;
+
+                    const auto index_size = xanim->numframes > 0xFF ? sizeof(uint16_t) : sizeof(uint8_t);
+
+                    const auto reallocate_with_indices = [&](void* object, std::size_t object_size, std::size_t indices_offset, std::size_t index_count)
+                    {
+                        auto* block = local_allocator.allocate(std::max(object_size, indices_offset + index_size * index_count));
+                        std::memcpy(block, object, object_size);
+                        return block;
+                    };
+
                     if (delta->trans)
                     {
                         delta->trans = reader.read_object<native::XAnimPartTrans>();
                         if (delta->trans->size)
                         {
-                            delta->trans->u.frames = reader.read<native::XAnimPartTransFrames>();
+                            const auto count = delta->trans->size + 1u;
+                            delta->trans = static_cast<native::XAnimPartTrans*>(reallocate_with_indices(delta->trans, sizeof(native::XAnimPartTrans), offsetof(native::XAnimPartTrans, u.frames.indices), count));
 
-                            if (xanim->numframes > 0xFF)
-                            {
-                                auto indices2 = reader.read_array<uint16_t>(delta->trans->size + 1);
-                                memcpy(delta->trans->u.frames.indices._2, indices2, sizeof(short) * (delta->trans->size + 1));
-                            }
-                            else
-                            {
-                                auto indices1 = reader.read_array<char>(delta->trans->size + 1);
-                                memcpy(delta->trans->u.frames.indices._1, indices1, delta->trans->size + 1);
-                            }
+                            delta->trans->u.frames = reader.read<native::XAnimPartTransFrames>();
+                            std::memcpy(&delta->trans->u.frames.indices, reader.read_array<uint8_t>(index_size * count), index_size * count);
 
                             if (delta->trans->u.frames.frames._1)
                             {
                                 if (delta->trans->smallTrans)
                                 {
-                                    delta->trans->u.frames.frames._1 = reinterpret_cast<char(*)[3]>(3, (delta->trans->size + 1));
+                                    delta->trans->u.frames.frames._1 = reinterpret_cast<char(*)[3]>(reader.read_array<char>(3 * count));
                                 }
                                 else
                                 {
-                                    delta->trans->u.frames.frames._2 = reinterpret_cast<uint16_t(*)[3]>(6, (delta->trans->size + 1));
+                                    delta->trans->u.frames.frames._2 = reinterpret_cast<uint16_t(*)[3]>(reader.read_array<uint16_t>(3 * count));
                                 }
                             }
                         }
@@ -324,67 +327,47 @@ void* iw4of::interfaces::ixanimparts::read_internal(const std::string& name) con
                     {
                         if (delta->quat2)
                         {
-                            delta->quat2 =  reader.read_object<iw4of::native::XAnimDeltaPartQuat2>();
+                            delta->quat2 = reader.read_object<native::XAnimDeltaPartQuat2>();
 
                             if (delta->quat2->size)
                             {
-                                delta->quat2->u.frames = reader.read<iw4of::native::XAnimDeltaPartQuatDataFrames2>();
+                                const auto count = delta->quat2->size + 1u;
+                                delta->quat2 = static_cast<native::XAnimDeltaPartQuat2*>(reallocate_with_indices(delta->quat2, sizeof(native::XAnimDeltaPartQuat2), offsetof(native::XAnimDeltaPartQuat2, u.frames.indices), count));
 
-                                if (xanim->numframes > 0xFF)
-                                {
-									auto indices2 = reader.read_array<uint16_t>(delta->quat2->size + 1);
-									memcpy(delta->quat2->u.frames.indices._2, indices2, sizeof(uint16_t) * (delta->quat2->size + 1));
-                                }
-                                else
-                                {
-									auto indices1 = reader.read_array<uint8_t>(delta->quat2->size + 1);
-									memcpy(delta->quat2->u.frames.indices._1, indices1, sizeof(uint8_t) * (delta->quat2->size + 1));
-                                }
+                                delta->quat2->u.frames = reader.read<native::XAnimDeltaPartQuatDataFrames2>();
+                                std::memcpy(&delta->quat2->u.frames.indices, reader.read_array<uint8_t>(index_size * count), index_size * count);
 
                                 if (delta->quat2->u.frames.frames)
                                 {
-									// Pairs of uint16_t
-									auto frames = reader.read_array<uint16_t>(2 * (delta->quat2->size + 1));
-									memcpy(delta->quat2->u.frames.frames, frames, sizeof(uint16_t) * 2 *  (delta->quat2->size + 1));
+                                    delta->quat2->u.frames.frames = reinterpret_cast<int16_t(*)[2]>(reader.read_array<int16_t>(2 * count));
                                 }
                             }
                             else
                             {
-								auto frames = reader.read_array<uint16_t>(2);
-								memcpy(delta->quat2->u.frame0, frames, 2 * sizeof(uint16_t));
+                                std::memcpy(delta->quat2->u.frame0, reader.read_array<int16_t>(2), 2 * sizeof(int16_t));
                             }
                         }
 
                         if (delta->quat)
                         {
-                            delta->quat =  reader.read_object<iw4of::native::XAnimDeltaPartQuat>();
+                            delta->quat = reader.read_object<native::XAnimDeltaPartQuat>();
 
                             if (delta->quat->size)
                             {
-                                delta->quat->u.frames = reader.read<iw4of::native::XAnimDeltaPartQuatDataFrames>();
+                                const auto count = delta->quat->size + 1u;
+                                delta->quat = static_cast<native::XAnimDeltaPartQuat*>(reallocate_with_indices(delta->quat, sizeof(native::XAnimDeltaPartQuat), offsetof(native::XAnimDeltaPartQuat, u.frames.indices), count));
 
-                                if (xanim->numframes > 0xFF)
-                                {
-									auto indices2 = reader.read_array<uint16_t>(delta->quat->size + 1);
-									memcpy(delta->quat->u.frames.indices._2, indices2, sizeof(uint16_t) * (delta->quat->size + 1));
-                                }
-                                else
-                                {
-									auto indices1 = reader.read_array<uint8_t>(delta->quat->size + 1);
-									memcpy(delta->quat->u.frames.indices._1, indices1, sizeof(uint8_t) * (delta->quat->size + 1));
-                                }
+                                delta->quat->u.frames = reader.read<native::XAnimDeltaPartQuatDataFrames>();
+                                std::memcpy(&delta->quat->u.frames.indices, reader.read_array<uint8_t>(index_size * count), index_size * count);
 
                                 if (delta->quat->u.frames.frames)
                                 {
-									// Pairs of uint16_t
-									auto frames = reader.read_array<uint16_t>(4 * (delta->quat->size + 1));
-									memcpy(delta->quat->u.frames.frames, frames, sizeof(uint16_t) * 4 *  (delta->quat->size + 1));
+                                    delta->quat->u.frames.frames = reinterpret_cast<int16_t(*)[4]>(reader.read_array<int16_t>(4 * count));
                                 }
                             }
                             else
                             {
-								auto frames = reader.read_array<uint16_t>(4);
-								memcpy(delta->quat->u.frame0, frames, 4 * sizeof(uint16_t));
+                                std::memcpy(delta->quat->u.frame0, reader.read_array<int16_t>(4), 4 * sizeof(int16_t));
                             }
                         }
                     }
