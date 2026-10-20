@@ -66,14 +66,14 @@ namespace iw4of::interfaces
                 return nullptr;
             }
 
-            alias_list->head->soundFile = local_allocator.allocate<native::SoundFile>();
-            if (!alias_list->head->soundFile)
+            native::snd_alias_t* alias = &alias_list->head[i];
+
+            alias->soundFile = local_allocator.allocate<native::SoundFile>();
+            if (!alias->soundFile)
             {
                 print_error("Error allocating memory for sound alias structure!\n");
                 return nullptr;
             }
-
-            native::snd_alias_t* alias = alias_list->head;
 
             // try and parse everything and if it fails then fail for the whole file
             const auto& type = head["type"];
@@ -246,8 +246,6 @@ namespace iw4of::interfaces
                 print_error("Failed to parse sound {}! Invalid sound type {}", name, type.GetString());
                 return nullptr;
             }
-
-            alias_list->head[i] = *alias;
         }
 
         return alias_list;
